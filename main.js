@@ -257,9 +257,31 @@ class WebGLGrid {
     addEventListeners() {
         window.addEventListener('resize', this.onWindowResize.bind(this));
 
-        const updatePointerTarget = (clientX, clientY) => {
-            this.targetMouse.x = (clientX / window.innerWidth) * 2 - 1;
-            this.targetMouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        const touchState = {
+            pointerId: null,
+            startX: 0,
+            startY: 0,
+            isHorizontalDrag: false,
+            hasMoved: false,
+            hasClaimedTap: false
+        };
+
+        const updatePointerTarget = (clientX, clientY, syncIntersection = false) => {
+            const normalizedX = (clientX / window.innerWidth) * 2 - 1;
+            const normalizedY = -(clientY / window.innerHeight) * 2 + 1;
+
+            this.targetMouse.x = normalizedX;
+            this.targetMouse.y = normalizedY;
+
+            if (syncIntersection) {
+                this.mouse.set(normalizedX, normalizedY);
+                this.raycaster.setFromCamera(this.mouse, this.camera);
+                this.raycaster.ray.intersectPlane(this.plane, this.intersection);
+            }
+        };
+
+        const clearPointerTarget = () => {
+            this.targetMouse.set(-9999, -9999);
         };
 
         const triggerPulse = () => {
@@ -300,37 +322,78 @@ class WebGLGrid {
             updatePointerTarget(e.clientX, e.clientY);
         });
 
-        window.addEventListener('pointermove', (e) => {
-            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-                updatePointerTarget(e.clientX, e.clientY);
-            }
-        }, { passive: true });
-
         window.addEventListener('mouseout', () => {
-            this.targetMouse.set(-9999, -9999);
+            clearPointerTarget();
         });
 
-        window.addEventListener('pointerup', (e) => {
-            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-                this.targetMouse.set(-9999, -9999);
-            }
-        }, { passive: true });
-
-        window.addEventListener('pointercancel', (e) => {
-            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-                this.targetMouse.set(-9999, -9999);
-            }
-        }, { passive: true });
-
-        window.addEventListener('mousedown', triggerPulse);
+        window.addEventListener('mousedown', (e) => {
+            updatePointerTarget(e.clientX, e.clientY, true);
+            triggerPulse();
+        });
 
         if (this.container) {
             this.container.addEventListener('pointerdown', (e) => {
-                if (e.pointerType === 'touch' || e.pointerType === 'pen') {
-                    updatePointerTarget(e.clientX, e.clientY);
+                if (e.pointerType !== 'touch' && e.pointerType !== 'pen') {
+                    return;
+                }
+
+                touchState.pointerId = e.pointerId;
+                touchState.startX = e.clientX;
+                touchState.startY = e.clientY;
+                touchState.isHorizontalDrag = false;
+                touchState.hasMoved = false;
+                touchState.hasClaimedTap = true;
+            }, { passive: true });
+
+            this.container.addEventListener('pointermove', (e) => {
+                if ((e.pointerType !== 'touch' && e.pointerType !== 'pen') || touchState.pointerId !== e.pointerId) {
+                    return;
+                }
+
+                const dx = e.clientX - touchState.startX;
+                const dy = e.clientY - touchState.startY;
+
+                if (!touchState.hasMoved && Math.hypot(dx, dy) > 6) {
+                    touchState.hasMoved = true;
+                }
+
+                if (!touchState.isHorizontalDrag) {
+                    if (Math.abs(dx) > 12 && Math.abs(dx) > Math.abs(dy)) {
+                        touchState.isHorizontalDrag = true;
+                        touchState.hasClaimedTap = false;
+                    } else if (Math.abs(dy) > 12 && Math.abs(dy) >= Math.abs(dx)) {
+                        touchState.hasClaimedTap = false;
+                        clearPointerTarget();
+                        return;
+                    } else {
+                        return;
+                    }
+                }
+
+                e.preventDefault();
+                updatePointerTarget(e.clientX, e.clientY, true);
+            }, { passive: false });
+
+            const finishTouchInteraction = (e) => {
+                if ((e.pointerType !== 'touch' && e.pointerType !== 'pen') || touchState.pointerId !== e.pointerId) {
+                    return;
+                }
+
+                if (!touchState.isHorizontalDrag && !touchState.hasMoved && touchState.hasClaimedTap) {
+                    e.preventDefault();
+                    updatePointerTarget(e.clientX, e.clientY, true);
                     triggerPulse();
                 }
-            }, { passive: true });
+
+                clearPointerTarget();
+                touchState.pointerId = null;
+                touchState.isHorizontalDrag = false;
+                touchState.hasMoved = false;
+                touchState.hasClaimedTap = false;
+            };
+
+            this.container.addEventListener('pointerup', finishTouchInteraction, { passive: false });
+            this.container.addEventListener('pointercancel', finishTouchInteraction, { passive: true });
         }
 
         const navbar = document.querySelector('.navbar');
