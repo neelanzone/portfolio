@@ -986,11 +986,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const photoSelf = document.getElementById('photo-self');
 
     let activeItem = null;
-    let dragType = 'move'; // 'move', 'rotate', 'scale'
+    let dragType = 'move'; // 'move', 'rotate', 'scale', 'gesture'
     let startX = 0, startY = 0;
     let startRot = 0, startScale = 1;
     let rectCenter = {x: 0, y: 0};
     let initialDist = 0, initialAngle = 0;
+    let gestureStart = null;
+    const activePointers = new Map();
 
     draggables.forEach(item => {
         // We use pointer events for better mouse/touch unification
@@ -1003,25 +1005,45 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     function dragStart(e) {
-        // Find the wrapper element
-        activeItem = e.target.closest('.draggable');
-        if (!activeItem || activeItem.classList.contains('snap-back')) return;
-        
+        const targetItem = e.target.closest('.draggable');
+        if (!targetItem || targetItem.classList.contains('snap-back')) return;
+
         // Stop the pointer event from bubbling down to the photo-self and triggering a reset
         e.stopPropagation();
 
         // Handle quick click actions (Layer Adjustments) immediately
         if (e.target.closest('.gui-layer-up')) {
-            const currentZ = parseInt(window.getComputedStyle(activeItem).zIndex) || 10;
-            activeItem.style.zIndex = currentZ + 1;
-            activeItem = null;
+            const currentZ = parseInt(window.getComputedStyle(targetItem).zIndex) || 10;
+            targetItem.style.zIndex = currentZ + 1;
             return;
         } else if (e.target.closest('.gui-layer-down')) {
-            const currentZ = parseInt(window.getComputedStyle(activeItem).zIndex) || 10;
-            activeItem.style.zIndex = Math.max(1, currentZ - 1); // Don't let it drop behind background
-            activeItem = null;
+            const currentZ = parseInt(window.getComputedStyle(targetItem).zIndex) || 10;
+            targetItem.style.zIndex = Math.max(1, currentZ - 1); // Don't let it drop behind background
             return;
         }
+
+        const isTouchPointer = e.pointerType === 'touch' || e.pointerType === 'pen';
+
+        if (isTouchPointer && activeItem === targetItem && activePointers.size === 1 && !activePointers.has(e.pointerId)) {
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+            activeItem.setPointerCapture(e.pointerId);
+
+            const points = Array.from(activePointers.values());
+            const dx = points[1].x - points[0].x;
+            const dy = points[1].y - points[0].y;
+            dragType = 'gesture';
+            gestureStart = {
+                angle: Math.atan2(dy, dx) * (180 / Math.PI),
+                distance: Math.hypot(dx, dy)
+            };
+
+            const style = window.getComputedStyle(activeItem);
+            startRot = parseFloat(style.getPropertyValue('--rot')) || 0;
+            startScale = parseFloat(style.getPropertyValue('--scale')) || 1;
+            return;
+        }
+
+        activeItem = targetItem;
 
         // Determine what action we're taking based on the specific element clicked
         if (e.target.closest('.gui-rotate')) dragType = 'rotate';
@@ -1031,12 +1053,18 @@ document.addEventListener('DOMContentLoaded', () => {
         activeItem.classList.add('dragging');
         activeItem.setPointerCapture(e.pointerId);
 
+        activePointers.clear();
+        if (isTouchPointer) {
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        }
+
         // Read current CSS variables
         const style = window.getComputedStyle(activeItem);
         const currDragX = parseFloat(style.getPropertyValue('--drag-x')) || 0;
         const currDragY = parseFloat(style.getPropertyValue('--drag-y')) || 0;
         startRot = parseFloat(style.getPropertyValue('--rot')) || 0;
         startScale = parseFloat(style.getPropertyValue('--scale')) || 1;
+        gestureStart = null;
 
         if (dragType === 'move') {
             startX = e.clientX - currDragX;
@@ -1045,7 +1073,7 @@ document.addEventListener('DOMContentLoaded', () => {
             // For rotate and scale, we need the mathematical center of the element on screen
             const rect = activeItem.getBoundingClientRect();
             rectCenter = { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 };
-            
+
             if (dragType === 'rotate') {
                 initialAngle = Math.atan2(e.clientY - rectCenter.y, e.clientX - rectCenter.x) * (180 / Math.PI);
             } else if (dragType === 'scale') {
@@ -1061,11 +1089,27 @@ document.addEventListener('DOMContentLoaded', () => {
     function dragMove(e) {
         if (!activeItem) return;
 
+        if (activePointers.has(e.pointerId)) {
+            activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
+        }
+
         if (dragType === 'move') {
             const currentX = e.clientX - startX;
             const currentY = e.clientY - startY;
             activeItem.style.setProperty('--drag-x', `${currentX}px`);
             activeItem.style.setProperty('--drag-y', `${currentY}px`);
+        } else if (dragType === 'gesture') {
+            if (activePointers.size < 2 || !gestureStart) return;
+            const points = Array.from(activePointers.values());
+            const dx = points[1].x - points[0].x;
+            const dy = points[1].y - points[0].y;
+            const currentAngle = Math.atan2(dy, dx) * (180 / Math.PI);
+            const currentDistance = Math.hypot(dx, dy);
+            const dAngle = currentAngle - gestureStart.angle;
+            let newScale = gestureStart.distance > 0 ? startScale * (currentDistance / gestureStart.distance) : startScale;
+            newScale = Math.max(0.2, Math.min(newScale, 5));
+            activeItem.style.setProperty('--rot', `${startRot + dAngle}deg`);
+            activeItem.style.setProperty('--scale', newScale);
         } else if (dragType === 'rotate') {
             const currentAngle = Math.atan2(e.clientY - rectCenter.y, e.clientX - rectCenter.x) * (180 / Math.PI);
             const dAngle = currentAngle - initialAngle;
@@ -1084,12 +1128,25 @@ document.addEventListener('DOMContentLoaded', () => {
     function dragEnd(e) {
         if (!activeItem) return;
 
+        activePointers.delete(e.pointerId);
+
+        try {
+            activeItem.releasePointerCapture(e.pointerId);
+        } catch {
+            // Ignore release errors when pointer capture is already gone.
+        }
+
+        if (dragType === 'gesture' && activePointers.size > 0) {
+            return;
+        }
+
         activeItem.classList.remove('dragging');
         activeItem.removeEventListener('pointermove', dragMove);
         activeItem.removeEventListener('pointerup', dragEnd);
         activeItem.removeEventListener('pointercancel', dragEnd);
-        activeItem.releasePointerCapture(e.pointerId);
-        
+        gestureStart = null;
+        activePointers.clear();
+
         activeItem = null;
     }
 
