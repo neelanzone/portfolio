@@ -1492,7 +1492,7 @@ footer {
     }
 
     .hero-content h1 {
-        font-size: 5rem;
+        font-size: var(--type-h1);
         line-height: 0.98;
     }
 
@@ -1657,7 +1657,7 @@ footer {
     }
 
     .hero-content h1 {
-        font-size: 5rem;
+        font-size: var(--type-h1);
     }
 
     .hero-content h3 {
