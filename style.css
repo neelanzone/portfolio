@@ -255,6 +255,10 @@ a:hover {
     color: var(--text-color);
 }
 
+:root.light-theme .work-info h4 {
+    color: rgba(0, 0, 0, 0.7);
+}
+
 :root.light-theme .work-info p {
     color: rgba(0, 0, 0, 0.7);
 }
@@ -1411,8 +1415,8 @@ footer {
 
     #about {
         min-height: 100svh;
-        padding-top: calc(var(--nav-height) + 1.8rem);
-        padding-bottom: 2.4rem;
+        padding-top: calc(var(--nav-height) + 0.35rem);
+        padding-bottom: 3rem;
         display: flex;
         align-items: center;
     }
@@ -1421,7 +1425,7 @@ footer {
         display: flex;
         flex-direction: column;
         align-items: center;
-        justify-content: center;
+        justify-content: flex-start;
         min-height: calc(100svh - var(--nav-height));
         padding: 0 1.25rem;
     }
@@ -1497,7 +1501,7 @@ footer {
     }
 
     .work-card.is-active .work-info {
-        padding-top: 140px;
+        padding-top: 44px;
     }
 
     .work-card:hover .work-desc {
@@ -1543,14 +1547,15 @@ footer {
 
     .about-grid {
         width: 100%;
-        gap: 2rem;
+        gap: 0.5rem;
         align-items: center;
     }
 
     #about .section-title {
         order: 0;
         width: 100%;
-        margin-bottom: 2.1rem;
+        margin-top: -1.5rem;
+        margin-bottom: 0.9rem;
         text-align: center;
     }
 
@@ -1558,12 +1563,14 @@ footer {
         order: 1;
         width: 100%;
         justify-content: center;
+        padding: 5rem 0 4rem;
+        overflow: visible;
     }
 
     .about-text {
         order: 2;
         width: 100%;
-        margin-top: 2.66rem;
+        margin-top: 3.25rem;
         justify-content: center;
     }
 
@@ -1647,14 +1654,15 @@ footer {
 
     #about {
         min-height: 100svh;
-        padding-top: calc(72px + 1.25rem);
-        padding-bottom: 1.8rem;
+        padding-top: calc(72px + 0.2rem);
+        padding-bottom: 2.75rem;
     }
 
     #about .container {
         min-height: calc(100svh - 72px);
         padding: 0 1rem;
         flex-direction: column;
+        justify-content: flex-start;
     }
 
     #work.section {
@@ -1695,7 +1703,7 @@ footer {
     }
 
     .work-card.is-active .work-info {
-        padding-top: 120px;
+        padding-top: 38px;
     }
 
     .work-desc {
@@ -1721,16 +1729,18 @@ footer {
     }
 
     #about .section-title {
-        margin-bottom: 1.75rem;
+        margin-top: -1.25rem;
+        margin-bottom: 0.65rem;
     }
 
     .collage-container {
         order: 1;
+        padding: 4.75rem 0 3.75rem;
     }
 
     .about-text {
         order: 2;
-        margin-top: 2.95rem;
+        margin-top: 3.1rem;
     }
 
     .about-text p {

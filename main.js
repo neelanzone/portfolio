@@ -875,7 +875,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
             const depthPadding = isMobileViewport ? Math.max(96, cardWidth * 0.62) : Math.max(24, cardWidth * 0.16);
-            const minMobileRadius = Math.max(220, cardWidth * 1.15);
+            const minMobileRadius = Math.max(280, cardWidth * 1.35);
             radius = isMobileViewport ? Math.max(baseRadius + depthPadding, minMobileRadius) : baseRadius + depthPadding;
 
             cards.forEach((card, index) => {
