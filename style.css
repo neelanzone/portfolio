@@ -1434,6 +1434,8 @@ footer {
         padding: calc(var(--nav-height) + 0.75rem) 0 1.5rem;
         display: flex;
         align-items: center;
+        background-color: #050505;
+        overflow: hidden;
     }
 
     #work .container {
@@ -1474,8 +1476,37 @@ footer {
         opacity: 0.28;
     }
 
+    .work-card:hover .work-image {
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    }
+
+    .work-card:hover .work-image::before {
+        border: 1px solid rgba(255, 255, 255, 0.15);
+        box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.05), inset 0 3px 0 rgba(255, 255, 255, 0.25), inset 0 -3px 0 rgba(0, 0, 0, 0.5);
+    }
+
+    .work-card:hover .work-bg-image {
+        transform: none;
+    }
+
+    .work-card:hover .work-image::after {
+        opacity: 0;
+    }
+
+    .work-card:hover .work-info {
+        padding-top: 44px;
+    }
+
+    .work-card:hover .work-desc {
+        max-height: 0;
+        opacity: 0;
+        margin-top: 0;
+    }
+
     .hero {
         height: 100svh;
+        background-color: #050505;
+        overflow: hidden;
     }
 
     .hero-content {
@@ -1557,6 +1588,7 @@ footer {
 
     .about-text p {
         max-width: 25rem;
+        font-size: var(--type-copy);
     }
 
     .contact-text {
@@ -1619,6 +1651,8 @@ footer {
     #work.section {
         min-height: 100svh;
         padding: calc(72px + 0.5rem) 0 1.15rem;
+        background-color: #050505;
+        overflow: hidden;
     }
 
     #work .container {
@@ -1644,8 +1678,12 @@ footer {
     }
 
     .carousel-control {
-        font-size: var(--mobile-type-control);
+        font-size: var(--type-control);
         opacity: 0.22;
+    }
+
+    .work-card:hover .work-info {
+        padding-top: 38px;
     }
 
     .work-desc {
@@ -1685,6 +1723,7 @@ footer {
 
     .about-text p {
         max-width: 19rem;
+        font-size: var(--type-copy);
     }
 
     .button {

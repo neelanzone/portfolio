@@ -857,7 +857,10 @@ document.addEventListener('DOMContentLoaded', () => {
         const updateCarouselGeometry = () => {
             const sampleCard = cards[0];
             const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
-            radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards)) + Math.max(24, cardWidth * 0.16);
+            const isMobileViewport = window.innerWidth <= 768;
+            const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
+            const depthPadding = isMobileViewport ? Math.max(96, cardWidth * 0.62) : Math.max(24, cardWidth * 0.16);
+            radius = baseRadius + depthPadding;
 
             cards.forEach((card, index) => {
                 const angle = theta * index;
