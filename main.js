@@ -891,11 +891,9 @@ document.addEventListener('DOMContentLoaded', () => {
         let targetRotation = -centerIndex * theta;
         let isDraggingCarousel = false;
         let startXCarousel = 0;
-        let startYCarousel = 0;
         let currentXCarousel = 0;
         let dragStartRotation = targetRotation;
         let dragPointerType = 'mouse';
-        let tiltedTouchCard = null;
         
         // Animation loop for smooth easing
         function animateCarousel() {
@@ -908,26 +906,6 @@ document.addEventListener('DOMContentLoaded', () => {
         // Start animation loop
         animateCarousel();
 
-
-        const normalizeAngle = (angle) => {
-            let normalized = angle % 360;
-            if (normalized > 180) normalized -= 360;
-            if (normalized < -180) normalized += 360;
-            return normalized;
-        };
-
-        const getFrontTiltCard = () => {
-            return cards.reduce((closestCard, card) => {
-                if (!card.querySelector('.work-image')) return closestCard;
-                if (!closestCard) return card;
-
-                const cardAngle = parseFloat(card.dataset.angle) || 0;
-                const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
-                const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
-                const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
-                return currentDistance < closestDistance ? card : closestCard;
-            }, null);
-        };
 
         // Arrow button logic
         const prevBtn = carouselContainer.querySelector('.carousel-control.prev');
@@ -951,7 +929,6 @@ document.addEventListener('DOMContentLoaded', () => {
             isDraggingCarousel = true;
             dragPointerType = e.pointerType || 'mouse';
             startXCarousel = e.clientX;
-            startYCarousel = e.clientY;
             currentXCarousel = e.clientX;
             dragStartRotation = targetRotation;
             carouselContainer.style.cursor = 'grabbing';
@@ -966,21 +943,6 @@ document.addEventListener('DOMContentLoaded', () => {
             
             const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
             targetRotation += dx * dragSensitivity;
-
-            if (dragPointerType === 'touch') {
-                const totalDragX = e.clientX - startXCarousel;
-                const totalDragY = e.clientY - startYCarousel;
-                const isHorizontalSwipe = Math.abs(totalDragX) > Math.abs(totalDragY);
-
-                if (isHorizontalSwipe) {
-                    const nextTiltCard = getFrontTiltCard();
-                    if (tiltedTouchCard && tiltedTouchCard !== nextTiltCard) {
-                        resetWorkCardTilt(tiltedTouchCard);
-                    }
-                    tiltedTouchCard = nextTiltCard;
-                    applyWorkCardTilt(tiltedTouchCard, e.clientX, e.clientY, 1.015);
-                }
-            }
         });
 
         window.addEventListener('pointerup', (e) => {
@@ -992,10 +954,6 @@ document.addEventListener('DOMContentLoaded', () => {
             const startSnapIndex = Math.round(dragStartRotation / theta);
             const touchSwipeThreshold = Math.min(72, window.innerWidth * 0.09);
 
-            if (tiltedTouchCard) {
-                resetWorkCardTilt(tiltedTouchCard);
-                tiltedTouchCard = null;
-            }
 
             if (dragPointerType === 'touch' && Math.abs(totalDrag) > touchSwipeThreshold) {
                 const direction = totalDrag < 0 ? -1 : 1;

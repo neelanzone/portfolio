@@ -1348,9 +1348,9 @@ footer {
     :root {
         --type-h1: 4rem;
         --type-h2: 3rem;
-        --type-h3: 2rem;
-        --type-h4: 1.5rem;
-        --type-copy: 1.15rem;
+        --type-h3: 1.5rem;
+        --type-h4: 1.25rem;
+        --type-copy: 1rem;
         --type-copy-sm: 1rem;
         --type-menu: 1.15rem;
         --type-control: 1.85rem;
@@ -1492,7 +1492,7 @@ footer {
     }
 
     .hero-content h1 {
-        font-size: 6rem;
+        font-size: 5rem;
         line-height: 0.98;
     }
 
@@ -1574,9 +1574,9 @@ footer {
     :root {
         --type-h1: 4rem;
         --type-h2: 3rem;
-        --type-h3: 2rem;
-        --type-h4: 1.5rem;
-        --type-copy: 1.15rem;
+        --type-h3: 1.5rem;
+        --type-h4: 1.25rem;
+        --type-copy: 1rem;
         --type-copy-sm: 1rem;
         --type-menu: 1.15rem;
         --type-control: 1.55rem;
@@ -1657,7 +1657,7 @@ footer {
     }
 
     .hero-content h1 {
-        font-size: 6rem;
+        font-size: 5rem;
     }
 
     .hero-content h3 {
