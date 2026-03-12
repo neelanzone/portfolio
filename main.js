@@ -853,11 +853,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const numCards = cards.length;
         const theta = 360 / numCards;
         let radius = 0;
+        let lastViewportWidth = window.innerWidth;
+        let lastMeasuredCardWidth = 0;
 
-        const updateCarouselGeometry = () => {
+        const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
             const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
             const isMobileViewport = window.innerWidth <= 768;
+
+            if (!force && isMobileViewport && Math.abs(cardWidth - lastMeasuredCardWidth) < 1 && Math.abs(window.innerWidth - lastViewportWidth) < 1) {
+                return;
+            }
+
+            lastMeasuredCardWidth = cardWidth;
+            lastViewportWidth = window.innerWidth;
+
             const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
             const depthPadding = isMobileViewport ? Math.max(96, cardWidth * 0.62) : Math.max(24, cardWidth * 0.16);
             radius = baseRadius + depthPadding;
@@ -884,8 +894,8 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        updateCarouselGeometry();
-        window.addEventListener('resize', updateCarouselGeometry);
+        updateCarouselGeometry(true);
+        window.addEventListener('resize', () => updateCarouselGeometry(false));
 
         // Current rotation state
         const titleCardIndex = cards.findIndex(card => card.classList.contains('title-card'));
