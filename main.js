@@ -886,6 +886,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // Native click listener to rigidly snap to this specific card
             card.addEventListener('click', () => {
+                if (window.innerWidth <= 768) return;
                 // Ignore clicks if the user was actually dragging across the card
                 if (Math.abs(currentXCarousel - startXCarousel) > 5) return;
 
@@ -907,12 +908,51 @@ document.addEventListener('DOMContentLoaded', () => {
         let currentXCarousel = 0;
         let dragStartRotation = targetRotation;
         let dragPointerType = 'mouse';
+        let activeFrontCard = null;
+
+        const normalizeAngle = (angle) => {
+            let normalized = angle % 360;
+            if (normalized > 180) normalized -= 360;
+            if (normalized < -180) normalized += 360;
+            return normalized;
+        };
+
+        const getFrontCard = () => cards.reduce((closestCard, card) => {
+            if (!card.querySelector('.work-image')) return closestCard;
+            if (!closestCard) return card;
+
+            const cardAngle = parseFloat(card.dataset.angle) || 0;
+            const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
+            const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
+            const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
+            return currentDistance < closestDistance ? card : closestCard;
+        }, null);
+
+        const syncActiveFrontCard = () => {
+            if (window.innerWidth > 768) {
+                if (activeFrontCard) {
+                    activeFrontCard.classList.remove('is-active');
+                    activeFrontCard = null;
+                }
+                return;
+            }
+
+            const nextActiveCard = getFrontCard();
+            if (activeFrontCard && activeFrontCard !== nextActiveCard) {
+                activeFrontCard.classList.remove('is-active');
+            }
+            if (nextActiveCard) {
+                nextActiveCard.classList.add('is-active');
+            }
+            activeFrontCard = nextActiveCard;
+        };
         
         // Animation loop for smooth easing
         function animateCarousel() {
             // Lerp towards target rotation for smooth sliding
             currentRotation += (targetRotation - currentRotation) * 0.1;
             carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
+            syncActiveFrontCard();
             requestAnimationFrame(animateCarousel);
         }
         
