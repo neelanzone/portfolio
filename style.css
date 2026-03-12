@@ -241,8 +241,7 @@ a:hover {
     box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
 }
 
-:root.light-theme .work-card:hover .work-image,
-.work-card.is-active .work-image {
+:root.light-theme .work-card:hover .work-image {
     box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.5);
 }
 
@@ -272,8 +271,7 @@ a:hover {
         inset 0 -3px 0 rgba(0, 0, 0, 0.1);
 }
 
-:root.light-theme .work-card:hover .work-image::before,
-.work-card.is-active .work-image::before {
+:root.light-theme .work-card:hover .work-image::before {
     border: 1px solid rgba(0, 0, 0, 0.1);
     box-shadow: 
         inset 0 0 0 1px rgba(255, 255, 255, 0.8),
@@ -862,8 +860,7 @@ a:hover {
     transition: transform 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.work-card:hover .work-bg-image,
-.work-card.is-active .work-bg-image {
+.work-card:hover .work-bg-image {
     transform: scale(1.05);
 }
 
@@ -901,8 +898,7 @@ a:hover {
     );
 }
 
-.work-card:hover .work-image::after,
-.work-card.is-active .work-image::after {
+.work-card:hover .work-image::after {
     opacity: 1;
 }
 
@@ -916,8 +912,7 @@ a:hover {
     transition: padding 0.6s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
-.work-card:hover .work-info,
-.work-card.is-active .work-info {
+.work-card:hover .work-info {
     padding-top: 140px; /* Stretch the background up 20% more on expansion */
 }
 
@@ -962,8 +957,7 @@ a:hover {
     color: rgba(255, 255, 255, 0.6) !important;
 }
 
-.work-card:hover .work-desc,
-.work-card.is-active .work-desc {
+.work-card:hover .work-desc {
     max-height: 120px;
     opacity: 1;
     margin-top: 0.75rem;
@@ -1440,7 +1434,7 @@ footer {
         padding: calc(var(--nav-height) + 0.75rem) 0 1.5rem;
         display: flex;
         align-items: center;
-        background-color: #050505;
+        background-color: var(--bg-color);
         overflow: hidden;
     }
 
@@ -1520,7 +1514,7 @@ footer {
 
     .hero {
         height: 100svh;
-        background-color: #050505;
+        background-color: var(--bg-color);
         overflow: hidden;
     }
 
@@ -1666,7 +1660,7 @@ footer {
     #work.section {
         min-height: 100svh;
         padding: calc(72px + 0.5rem) 0 1.15rem;
-        background-color: #050505;
+        background-color: var(--bg-color);
         overflow: hidden;
     }
 

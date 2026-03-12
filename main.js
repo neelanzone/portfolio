@@ -823,20 +823,25 @@ document.addEventListener('DOMContentLoaded', () => {
         workCards.forEach((card) => resetWorkCardTilt(card));
     };
 
+    const hoverTiltQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
+
     workCards.forEach(card => {
         const imgContainer = card.querySelector('.work-image');
         if (!imgContainer) return;
 
         card.addEventListener('mouseenter', () => {
+            if (!hoverTiltQuery.matches) return;
             imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
             imgContainer.style.willChange = 'transform';
         });
 
         card.addEventListener('mousemove', (e) => {
+            if (!hoverTiltQuery.matches) return;
             applyWorkCardTilt(card, e.clientX, e.clientY, 1.02);
         });
 
         card.addEventListener('mouseleave', () => {
+            if (!hoverTiltQuery.matches) return;
             resetWorkCardTilt(card);
         });
     });
@@ -870,7 +875,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
             const depthPadding = isMobileViewport ? Math.max(96, cardWidth * 0.62) : Math.max(24, cardWidth * 0.16);
-            radius = baseRadius + depthPadding;
+            const minMobileRadius = Math.max(220, cardWidth * 1.15);
+            radius = isMobileViewport ? Math.max(baseRadius + depthPadding, minMobileRadius) : baseRadius + depthPadding;
 
             cards.forEach((card, index) => {
                 const angle = theta * index;
