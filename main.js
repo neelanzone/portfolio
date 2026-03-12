@@ -783,9 +783,49 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // 3D Tilt Effect for Work Cards (Applied to Inner Image Wrapper)
-    document.querySelectorAll('.work-card').forEach(card => {
+    const workCards = Array.from(document.querySelectorAll('.work-card'));
+
+    const applyWorkCardTilt = (card, clientX, clientY, scale = 1.02) => {
+        const imgContainer = card?.querySelector('.work-image');
+        if (!imgContainer) return;
+
+        const rect = card.getBoundingClientRect();
+        const x = clientX - rect.left;
+        const y = clientY - rect.top;
+        const centerX = rect.width / 2;
+        const centerY = rect.height / 2;
+        const maxTilt = 10;
+        const rotateX = ((y - centerY) / centerY) * -maxTilt;
+        const rotateY = ((x - centerX) / centerX) * maxTilt;
+        const mouseX = (x / rect.width) * 100;
+        const mouseY = (y / rect.height) * 100;
+
+        imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
+        imgContainer.style.willChange = 'transform';
+        imgContainer.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
+        imgContainer.style.setProperty('--mouse-x', `${mouseX}%`);
+        imgContainer.style.setProperty('--mouse-y', `${mouseY}%`);
+    };
+
+    const resetWorkCardTilt = (card) => {
+        const imgContainer = card?.querySelector('.work-image');
+        if (!imgContainer) return;
+
+        imgContainer.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+        imgContainer.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+
+        setTimeout(() => {
+            imgContainer.style.willChange = 'auto';
+        }, 600);
+    };
+
+    const clearWorkCardTilts = () => {
+        workCards.forEach((card) => resetWorkCardTilt(card));
+    };
+
+    workCards.forEach(card => {
         const imgContainer = card.querySelector('.work-image');
-        if (!imgContainer) return; // Skip the title card which doesn't have an image surface
+        if (!imgContainer) return;
 
         card.addEventListener('mouseenter', () => {
             imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
@@ -793,36 +833,11 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mousemove', (e) => {
-            const rect = card.getBoundingClientRect();
-            // Get mouse position relative to the center of the card (-1 to 1) for tilt
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            const centerX = rect.width / 2;
-            const centerY = rect.height / 2;
-            
-            // Calculate tilt angles based on mouse distance from center
-            const maxTilt = 10; // Max rotation in degrees
-            const rotateX = ((y - centerY) / centerY) * -maxTilt;
-            const rotateY = ((x - centerX) / centerX) * maxTilt;
-
-            imgContainer.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(1.02, 1.02, 1.02)`;
-
-            // Calculate mouse position as a percentage for the rim light shader
-            const mouseX = (x / rect.width) * 100;
-            const mouseY = (y / rect.height) * 100;
-            imgContainer.style.setProperty('--mouse-x', `${mouseX}%`);
-            imgContainer.style.setProperty('--mouse-y', `${mouseY}%`);
+            applyWorkCardTilt(card, e.clientX, e.clientY, 1.02);
         });
 
         card.addEventListener('mouseleave', () => {
-            // Restore a slower transition for smoothly snapping back to flat
-            imgContainer.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-            imgContainer.style.transform = `rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)`;
-            
-            // Remove willChange to free up browser memory after animation
-            setTimeout(() => {
-                imgContainer.style.willChange = 'auto';
-            }, 600);
+            resetWorkCardTilt(card);
         });
     });
 
@@ -876,7 +891,11 @@ document.addEventListener('DOMContentLoaded', () => {
         let targetRotation = -centerIndex * theta;
         let isDraggingCarousel = false;
         let startXCarousel = 0;
+        let startYCarousel = 0;
         let currentXCarousel = 0;
+        let dragStartRotation = targetRotation;
+        let dragPointerType = 'mouse';
+        let tiltedTouchCard = null;
         
         // Animation loop for smooth easing
         function animateCarousel() {
@@ -888,6 +907,27 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Start animation loop
         animateCarousel();
+
+
+        const normalizeAngle = (angle) => {
+            let normalized = angle % 360;
+            if (normalized > 180) normalized -= 360;
+            if (normalized < -180) normalized += 360;
+            return normalized;
+        };
+
+        const getFrontTiltCard = () => {
+            return cards.reduce((closestCard, card) => {
+                if (!card.querySelector('.work-image')) return closestCard;
+                if (!closestCard) return card;
+
+                const cardAngle = parseFloat(card.dataset.angle) || 0;
+                const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
+                const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
+                const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
+                return currentDistance < closestDistance ? card : closestCard;
+            }, null);
+        };
 
         // Arrow button logic
         const prevBtn = carouselContainer.querySelector('.carousel-control.prev');
@@ -909,8 +949,11 @@ document.addEventListener('DOMContentLoaded', () => {
         // Pointer event dragging logic
         carouselContainer.addEventListener('pointerdown', (e) => {
             isDraggingCarousel = true;
+            dragPointerType = e.pointerType || 'mouse';
             startXCarousel = e.clientX;
+            startYCarousel = e.clientY;
             currentXCarousel = e.clientX;
+            dragStartRotation = targetRotation;
             carouselContainer.style.cursor = 'grabbing';
             carouselTrack.style.transition = 'none';
         });
@@ -921,9 +964,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const dx = e.clientX - currentXCarousel;
             currentXCarousel = e.clientX;
             
-            // Reduced sensitivity so you have to swipe intentionally for one card
-            targetRotation += dx * 0.15;
-            // Removed clamping to allow infinite dragging
+            const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
+            targetRotation += dx * dragSensitivity;
+
+            if (dragPointerType === 'touch') {
+                const totalDragX = e.clientX - startXCarousel;
+                const totalDragY = e.clientY - startYCarousel;
+                const isHorizontalSwipe = Math.abs(totalDragX) > Math.abs(totalDragY);
+
+                if (isHorizontalSwipe) {
+                    const nextTiltCard = getFrontTiltCard();
+                    if (tiltedTouchCard && tiltedTouchCard !== nextTiltCard) {
+                        resetWorkCardTilt(tiltedTouchCard);
+                    }
+                    tiltedTouchCard = nextTiltCard;
+                    applyWorkCardTilt(tiltedTouchCard, e.clientX, e.clientY, 1.015);
+                }
+            }
         });
 
         window.addEventListener('pointerup', (e) => {
@@ -931,9 +988,22 @@ document.addEventListener('DOMContentLoaded', () => {
             isDraggingCarousel = false;
             carouselContainer.style.cursor = 'grab';
             
-            // It was a drag: Snap to nearest card based on inertia
-            const snapIndex = Math.round(targetRotation / theta);
-            targetRotation = snapIndex * theta;
+            const totalDrag = e.clientX - startXCarousel;
+            const startSnapIndex = Math.round(dragStartRotation / theta);
+            const touchSwipeThreshold = Math.min(72, window.innerWidth * 0.09);
+
+            if (tiltedTouchCard) {
+                resetWorkCardTilt(tiltedTouchCard);
+                tiltedTouchCard = null;
+            }
+
+            if (dragPointerType === 'touch' && Math.abs(totalDrag) > touchSwipeThreshold) {
+                const direction = totalDrag < 0 ? -1 : 1;
+                targetRotation = (startSnapIndex + direction) * theta;
+            } else {
+                const snapIndex = Math.round(targetRotation / theta);
+                targetRotation = snapIndex * theta;
+            }
         });
         
         // Mouse wheel strictly for horizontal sweeps
@@ -960,8 +1030,30 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Theme Toggle Logic
-    const themeToggleBtn = document.getElementById('theme-toggle');
-    if (themeToggleBtn) {
+    const themeToggleButtons = document.querySelectorAll('[data-theme-toggle]');
+    const menuToggleButton = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+
+    const closeMobileMenu = () => {
+        if (!menuToggleButton || !mobileMenu) return;
+        menuToggleButton.classList.remove('is-open');
+        menuToggleButton.setAttribute('aria-expanded', 'false');
+        menuToggleButton.setAttribute('aria-label', 'Open navigation menu');
+        mobileMenu.classList.remove('is-open');
+        mobileMenu.setAttribute('aria-hidden', 'true');
+    };
+
+    const toggleMobileMenu = () => {
+        if (!menuToggleButton || !mobileMenu) return;
+        const isOpen = mobileMenu.classList.toggle('is-open');
+        menuToggleButton.classList.toggle('is-open', isOpen);
+        menuToggleButton.setAttribute('aria-expanded', String(isOpen));
+        menuToggleButton.setAttribute('aria-label', isOpen ? 'Close navigation menu' : 'Open navigation menu');
+        mobileMenu.setAttribute('aria-hidden', String(!isOpen));
+    };
+
+    themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {
             const isLight = document.documentElement.classList.toggle('light-theme');
 
@@ -979,11 +1071,35 @@ document.addEventListener('DOMContentLoaded', () => {
                 webgl.points.material.needsUpdate = true;
             }
         });
+    });
+
+    if (menuToggleButton) {
+        menuToggleButton.addEventListener('click', toggleMobileMenu);
     }
+
+    mobileMenuLinks.forEach((link) => {
+        link.addEventListener('click', closeMobileMenu);
+    });
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Escape') {
+            closeMobileMenu();
+        }
+    });
+
+    window.addEventListener('resize', () => {
+        if (window.innerWidth > 768) {
+            closeMobileMenu();
+        }
+    });
 
     // Interactive Collage Logic
     const draggables = document.querySelectorAll('.draggable');
     const photoSelf = document.getElementById('photo-self');
+
+    const clearSelectedDraggables = () => {
+        draggables.forEach((item) => item.classList.remove('is-selected'));
+    };
 
     let activeItem = null;
     let dragType = 'move'; // 'move', 'rotate', 'scale', 'gesture'
@@ -1043,6 +1159,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
+        clearSelectedDraggables();
+        targetItem.classList.add('is-selected');
         activeItem = targetItem;
 
         // Determine what action we're taking based on the specific element clicked
@@ -1149,6 +1267,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         activeItem = null;
     }
+
+    document.addEventListener('pointerdown', (event) => {
+        if (!event.target.closest('.draggable')) {
+            clearSelectedDraggables();
+        }
+    });
 
     // Pull-to-Reset Logic
     const resetTab = document.getElementById('reset-tab');

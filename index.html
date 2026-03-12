@@ -93,33 +93,65 @@
             <li><a href="#about">About</a></li>
             <li><a href="#work-anchor">Work</a></li>
             <li><a href="#contact">Contact</a></li>
-            <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
-                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-                    </svg>
-                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
-                        <circle cx="12" cy="12" r="5"></circle>
-                        <line x1="12" y1="1" x2="12" y2="3"></line>
-                        <line x1="12" y1="21" x2="12" y2="23"></line>
-                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-                        <line x1="1" y1="12" x2="3" y2="12"></line>
-                        <line x1="21" y1="12" x2="23" y2="12"></line>
-                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-                    </svg>
-                </button></li>
         </ul>
+        <div class="nav-actions">
+            <button class="theme-toggle" data-theme-toggle aria-label="Toggle Dark Mode">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+        </div>
+        <div class="mobile-nav-actions">
+            <button class="theme-toggle mobile-theme-toggle" data-theme-toggle aria-label="Toggle Dark Mode">
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                    stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </button>
+            <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation menu" aria-controls="mobile-menu" aria-expanded="false">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </div>
     </nav>
+    <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+        <a href="#about">About</a>
+        <a href="#work-anchor">Work</a>
+        <a href="#contact">Contact</a>
+    </div>
 
     <header class="hero" id="hero">
         <div id="three-container"></div>
         <div class="hero-content">
             <div class="hero-content-inner">
                 <h1>Endlessly<br><span class="highlight">Curious</span></h1>
-                <p>Drawn to systems, obsessed with play.</p>
+                <h3>Drawn to systems,<br class="mobile-break">obsessed with play.</h3>
             </div>
         </div>
     </header>
@@ -136,7 +168,7 @@
                                 <img src="Assets/ludo-cards.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
                                 <div class="work-info">
                                     <h3>Ludo Reimagined</h3>
-                                    <p>Game Design & Development, 2026</p>
+                                    <h4>Game Design & Development, 2026</h4>
                                     <p class="work-desc"> A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p>
                                 </div>
                             </div>
@@ -147,7 +179,7 @@
                                 <img src="Assets/DAM-TE.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
                                 <div class="work-info">
                                     <h3>Managed Asset Search</h3>
-                                    <p>Information Architecture, 2021</p>
+                                    <h4>Information Architecture, 2021</h4>
                                     <p class="work-desc">A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.</p>
                                 </div>
                             </div>
@@ -162,7 +194,7 @@
                                 <img src="Assets/grid-discovery.png" alt="Fintech Dashboard Animation" class="work-bg-image">
                                 <div class="work-info">
                                     <h3>EV Charger Discovery</h3>
-                                    <p>UX/UI, 2026</p>
+                                    <h4>UX/UI, 2026</h4>
                                     <p class="work-desc">A charger discovery experience designed for gig workers and urban EV users, centered on queue transparency, station availability, and trust scores. </p>
                                 </div>
                             </div>
@@ -173,7 +205,7 @@
                                 <img src="Assets/accelerator-dashboard.png" alt="Fintech Dashboard Animation" class="work-bg-image">
                                 <div class="work-info">
                                     <h3>Venture Hub</h3>
-                                    <p>UX/UI & System Design, 2026</p>
+                                    <h4>UX/UI & System Design, 2026</h4>
                                     <p class="work-desc">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p>
                                 </div>
                             </div>
@@ -184,7 +216,7 @@
                                 <img src="Assets/10x-bag.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
                                 <div class="work-info">
                                     <h3>ProtoPack</h3>
-                                    <p>Product Design, 2022</p>
+                                    <h4>Product Design, 2022</h4>
                                     <p class="work-desc">A backpack designed to transform learning into a more hands-on, exploratory, and creative experience.</p>
                                 </div>
                             </div>
