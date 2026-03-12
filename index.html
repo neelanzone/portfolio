@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <style>
+        body.is-loading {
+            overflow: hidden;
+            background: #050505;
+        }
+
+        body.is-loading > :not(.page-loader) {
+            visibility: hidden;
+        }
+
+        .page-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 1000;
+            display: grid;
+            place-items: center;
+            background: #050505;
+            color: #f0f0f0;
+        }
+
+        .page-loader__inner {
+            display: grid;
+            justify-items: center;
+            gap: 1rem;
+        }
+
+        .page-loader__logo {
+            width: 112px;
+            height: 112px;
+            object-fit: contain;
+        }
+
+        .page-loader__text {
+            font: 0.75rem/1.2 "Space Mono", monospace;
+            letter-spacing: 0.28em;
+            text-transform: uppercase;
+            opacity: 0.7;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portfolio | Designer </title>
+    <!-- SEO & Meta Tags -->
+    <meta name="description"
+        content="Experience designer creative portfolio">
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+
+    <!-- Styles -->
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="is-loading">
+    <div class="page-loader" aria-live="polite" aria-label="Loading page">
+        <div class="page-loader__inner">
+            <img src="Assets/identity-motion-active.gif" alt="" class="page-loader__logo" width="112" height="112">
+            <p class="page-loader__text">Loading</p>
+        </div>
+    </div>
+    <nav class="navbar">
+        <div class="logo">
+            <a href="#hero" style="display:block; position:relative; width:90px; height:90px; overflow:hidden;">
+                <img src="Assets/identity-motion-active.gif" alt="neel Logo" class="logo-default" width="90" height="90" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
+                <img src="Assets/identity-motion-hover.gif" alt="neel Logo" class="logo-hover" width="90" height="90" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
+            </a>
+        </div>
+        <ul class="nav-links">
+            <li><a href="#about">About</a></li>
+            <li><a href="#work-anchor">Work</a></li>
+            <li><a href="#contact">Contact</a></li>
+            <li><button id="theme-toggle" class="theme-toggle" aria-label="Toggle Dark Mode">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button></li>
+        </ul>
+    </nav>
+
+    <header class="hero" id="hero">
+        <div id="three-container"></div>
+        <div class="hero-content">
+            <div class="hero-content-inner">
+                <h1>Endlessly<br><span class="highlight">Curious</span></h1>
+                <p>Drawn to systems, obsessed with play.</p>
+            </div>
+        </div>
+    </header>
+
+        <div id="work-anchor" aria-hidden="true"></div>
+        <section id="work" class="section">
+            <div class="container">
+                <div class="carousel-container">
+                    <button class="carousel-control prev" aria-label="Previous">&lt;</button>
+                    <button class="carousel-control next" aria-label="Next">&gt;</button>
+                    <div class="carousel-track">
+                        <article class="work-card">
+                            <div class="work-image placeholder-image">
+                                <img src="Assets/ludo-cards.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
+                                <div class="work-info">
+                                    <h3>Ludo Reimagined</h3>
+                                    <p>Game Design & Development, 2026</p>
+                                    <p class="work-desc"> A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="work-card">
+                            <div class="work-image placeholder-image">
+                                <img src="Assets/DAM-TE.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
+                                <div class="work-info">
+                                    <h3>Managed Asset Search</h3>
+                                    <p>Information Architecture, 2021</p>
+                                    <p class="work-desc">A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.</p>
+                                </div>
+                            </div>
+                        </article>                    
+                        
+                        <article class="work-card title-card">
+                            <h2 class="carousel-title">Projects</h2>
+                        </article>
+                        
+                        <article class="work-card">
+                            <div class="work-image placeholder-image">
+                                <img src="Assets/grid-discovery.png" alt="Fintech Dashboard Animation" class="work-bg-image">
+                                <div class="work-info">
+                                    <h3>EV Charger Discovery</h3>
+                                    <p>UX/UI, 2026</p>
+                                    <p class="work-desc">A charger discovery experience designed for gig workers and urban EV users, centered on queue transparency, station availability, and trust scores. </p>
+                                </div>
+                            </div>
+                        </article>
+                        
+                        <article class="work-card">
+                            <div class="work-image placeholder-image">
+                                <img src="Assets/accelerator-dashboard.png" alt="Fintech Dashboard Animation" class="work-bg-image">
+                                <div class="work-info">
+                                    <h3>Venture Hub</h3>
+                                    <p>UX/UI & System Design, 2026</p>
+                                    <p class="work-desc">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        <article class="work-card">
+                            <div class="work-image placeholder-image">
+                                <img src="Assets/10x-bag.gif" alt="Fintech Dashboard Animation" class="work-bg-image">
+                                <div class="work-info">
+                                    <h3>ProtoPack</h3>
+                                    <p>Product Design, 2022</p>
+                                    <p class="work-desc">A backpack designed to transform learning into a more hands-on, exploratory, and creative experience.</p>
+                                </div>
+                            </div>
+                        </article>
+
+                        
+                    </div>
+                </div>
+            </div>
+        </section>
+
+
+    <main>
+        <section id="about" class="section">
+            <div class="container">
+                <h2 class="section-title">Hey! I'm Neel</h2>
+                <div class="about-grid">
+                    <div class="collage-container">
+                        <div class="photo-wrapper">
+                            <img src="Assets/About-me/photo-self.png" id="photo-self" class="collage-photo" alt="Neel's Portrait" draggable="false">
+                            <div id="reset-tab" class="pull-tab">
+                                <span class="tab-label-reset">TO RESET</span>
+                                <span class="tab-label-pull">PULL</span>
+                            </div>
+
+                            <div class="accessory-wrapper draggable" style="--base-x: -210px; --base-y: -98px; --mobile-base-x: -132px; --mobile-base-y: -75px; --rot: -12deg; --scale: 1;">
+                                <img src="Assets/About-me/denim-cap.png" class="accessory" id="acc-denim" alt="Denim Cap" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                            <div class="accessory-wrapper draggable" style="--base-x: 214px; --base-y: -94px; --mobile-base-x: 134px; --mobile-base-y: -74px; --rot: 8deg; --scale: 1;">
+                                <img src="Assets/About-me/sewn-hat.png" class="accessory" id="acc-sewn" alt="Sewn Hat" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                            <div class="accessory-wrapper draggable" style="--base-x: -306px; --base-y: 18px; --mobile-base-x: -185px; --mobile-base-y: 16px; --rot: 7deg; --scale: 1;">
+                                <img src="Assets/About-me/noir-hat.png" class="accessory" id="acc-noir" alt="Noir Hat" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                            <div class="accessory-wrapper draggable" style="--base-x: -204px; --base-y: 146px; --mobile-base-x: -130px; --mobile-base-y: 111px; --rot: -8deg; --scale: 1.5;">
+                                <img src="Assets/About-me/gandhi-glasses.png" class="accessory" id="acc-gandhi" alt="Round Glasses" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                            <div class="accessory-wrapper draggable" style="--base-x: 202px; --base-y: 146px; --mobile-base-x: 130px; --mobile-base-y: 113px; --rot: 7deg; --scale: 1.5;">
+                                <img src="Assets/About-me/swag-glasses.png" class="accessory" id="acc-swag" alt="Swag Glasses" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                            <div class="accessory-wrapper draggable" style="--base-x: 306px; --base-y: 22px; --mobile-base-x: 185px; --mobile-base-y: 20px; --rot: -8deg; --scale: 1;">
+                                <img src="Assets/About-me/venetian-mask.png" class="accessory" id="acc-venetian" alt="Venetian Mask" draggable="false">
+                                <div class="gui-container">
+                                    <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                    <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                    <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                    <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="about-text">
+                        <p>I have worn many hats through my design journey. I design interfaces and product experiences that make information easier to understand,
+                            decisions easier to take, and systems easier to use.</p>
+                    </div>
+
+                    <!--
+                    <details class="resume-dropdown">
+                        <summary class="resume-toggle">
+                            <span>Resume</span>
+                            <span class="resume-toggle-icon" aria-hidden="true"></span>
+                        </summary>
+                        <div class="resume-panel">
+                            <div class="experience-timeline">
+                                <div class="timeline-item">
+                                    <div class="timeline-date">March 2026 - May 2025</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Personal projects and Freelance</h4>
+                                        <span class="timeline-location">Bangalore</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">May 2025 - Feb 2022</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Founding Designer & Facilitator at StartupYou</h4>
+                                        <span class="timeline-location">Bangalore</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Nov 2021 - Sep 2020</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Graphic Designer at Total Environment</h4>
+                                        <span class="timeline-location">Bangalore</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Aug 2020 - Aug 2018</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Master of Arts, Visual Communication <br> at Srishti Institute of Arts, Design and Technology</h4>
+                                        <span class="timeline-location">Bangalore</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">July 2018 - Jan 2015</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Co-Founder at TAP Media Solutions LLP</h4>
+                                        <span class="timeline-location">Kolkata</span>
+                                    </div>
+                                </div>
+                                <div class="timeline-item">
+                                    <div class="timeline-date">Aug 2017 - Aug 2014</div>
+                                    <div class="timeline-content">
+                                        <h4 class="timeline-title">Bachelor of Arts in English Literature, RKMRC</h4>
+                                        <span class="timeline-location">Kolkata</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+                    -->
+                </div>
+        </section>
+
+    
+        <section id="contact" class="section">
+            <div class="container contact-container">
+                <h2 class="section-title">Let's Connect</h2>
+                <p class="contact-text">Open for freelance opportunities and striking collaborations.</p>
+                <a href="mailto:hello@example.com" class="button">hello@example.com</a>
+
+
+            </div>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>&copy; 2026 Creative Developer. All rights reserved.</p>
+            <div class="social-links">
+                <a href="#">Twitter</a>
+                <a href="#">GitHub</a>
+                <a href="#">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Three.js and dependencies from CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <!-- Include GSAP for potential smooth scrolling or complex animations (optional but good for premium feel) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="main.js"></script>
+</body>
+
+</html>
+
