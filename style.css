@@ -345,6 +345,7 @@ a:hover {
     align-items: center;
     justify-content: center;
     overflow: hidden;
+    touch-action: none;
     /* Allow ThreeJS canvas to stay fixed behind everything */
 }
 
@@ -1152,6 +1153,64 @@ footer {
 }
 
 /* Responsive */
+@media (max-width: 1024px) {
+    .navbar {
+        padding: 0 2rem;
+    }
+
+    .nav-links {
+        gap: 2rem;
+    }
+
+    #about {
+        padding-top: 4.8rem;
+        padding-bottom: 7.8rem;
+    }
+
+    #work.section {
+        top: 2vh;
+        margin-bottom: 18vh;
+    }
+
+    .carousel-container {
+        height: 520px;
+        margin: 0.5rem 0;
+    }
+
+    .carousel-track,
+    .work-card,
+    .work-image {
+        width: 260px;
+        height: 390px;
+    }
+
+    .carousel-title {
+        font-size: 3rem;
+    }
+
+    .work-info {
+        padding: 52px 12px 20px 18px;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(3rem, 10vw, 5.4rem);
+    }
+
+    .hero-content p {
+        font-size: clamp(1rem, 2.6vw, 1.3rem);
+        max-width: 32rem;
+    }
+
+    .about-text p {
+        max-width: 38rem;
+    }
+
+    .collage-photo {
+        width: 232px;
+        height: 232px;
+    }
+}
+
 @media (max-width: 768px) {
     .navbar {
         padding: 0 1.5rem;
@@ -1160,6 +1219,71 @@ footer {
     .nav-links {
         display: none;
         /* Simple mobile nav hiding for minimal setup */
+    }
+
+    #about {
+        padding-top: 4.2rem;
+        padding-bottom: 7rem;
+    }
+
+    #work.section {
+        position: relative;
+        top: 0;
+        margin-bottom: 0;
+        padding: 1.25rem 0 4rem;
+    }
+
+    #work .container {
+        padding: 0 1rem;
+    }
+
+    .carousel-container {
+        height: 440px;
+        overflow: hidden;
+        perspective: 1200px;
+    }
+
+    .carousel-track,
+    .work-card,
+    .work-image {
+        width: min(72vw, 240px);
+        height: min(108vw, 360px);
+    }
+
+    .carousel-title {
+        font-size: clamp(2rem, 10vw, 2.8rem);
+    }
+
+    .work-info {
+        padding: 44px 10px 18px 16px;
+    }
+
+    .work-info h3 {
+        font-size: 1.05rem;
+    }
+
+    .work-info p {
+        font-size: 0.82rem;
+    }
+
+    .carousel-control {
+        font-size: 2.4rem;
+        opacity: 0.75;
+    }
+
+    .hero-content {
+        width: 100%;
+        padding: 0 1.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2.8rem, 15vw, 4.4rem);
+        line-height: 0.98;
+    }
+
+    .hero-content p {
+        font-size: 1rem;
+        max-width: 20rem;
     }
 
     .about-grid {
@@ -1176,9 +1300,91 @@ footer {
         --active-y: var(--mobile-base-y, var(--base-y));
     }
 
+    .about-text {
+        margin-top: 1.9rem;
+    }
+
+    .about-text p {
+        max-width: 22rem;
+        font-size: 1rem;
+    }
+
+    .contact-text {
+        font-size: clamp(1.25rem, 6vw, 2rem);
+    }
+
     .footer-content {
         flex-direction: column;
         gap: 1rem;
         text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .navbar {
+        height: 72px;
+        padding: 0 1rem;
+    }
+
+    #about {
+        padding-top: 3.8rem;
+        padding-bottom: 6.2rem;
+    }
+
+    #work.section {
+        padding: 1rem 0 3.4rem;
+    }
+
+    #work .container {
+        padding: 0 0.75rem;
+    }
+
+    .carousel-container {
+        height: 392px;
+    }
+
+    .carousel-track,
+    .work-card,
+    .work-image {
+        width: min(74vw, 212px);
+        height: min(112vw, 320px);
+    }
+
+    .work-info {
+        padding: 38px 10px 16px 14px;
+    }
+
+    .work-desc {
+        font-size: 0.78rem !important;
+    }
+
+    .hero-content {
+        padding: 0 1rem;
+    }
+
+    .hero-content h1 {
+        font-size: clamp(2.4rem, 16vw, 3.5rem);
+    }
+
+    .hero-content p {
+        max-width: 17rem;
+    }
+
+    .collage-photo {
+        width: 196px;
+        height: 196px;
+    }
+
+    .about-text {
+        margin-top: 2.1rem;
+    }
+
+    .about-text p {
+        max-width: 18rem;
+    }
+
+    .button {
+        padding: 1rem 2rem;
+        font-size: 1rem;
     }
 }

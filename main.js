@@ -10,13 +10,89 @@ function hidePageLoader() {
     }, 450);
 }
 
-if (document.readyState === 'complete') {
-    window.setTimeout(hidePageLoader, 150);
-} else {
-    window.addEventListener('load', () => {
-        window.setTimeout(hidePageLoader, 150);
-    }, { once: true });
+function initializePageLoader() {
+    const loaderFill = document.querySelector('.page-loader__bar-fill');
+    if (!loaderFill) {
+        if (document.readyState === 'complete') {
+            hidePageLoader();
+        } else {
+            window.addEventListener('load', hidePageLoader, { once: true });
+        }
+        return;
+    }
+
+    const trackedImages = Array.from(document.images).filter((img) => !img.classList.contains('logo-hover'));
+    const progressState = {
+        target: 0.08,
+        current: 0.08,
+        completed: 0,
+        total: trackedImages.length + 2,
+        isFinishing: false,
+        hasHidden: false
+    };
+
+    const markComplete = () => {
+        progressState.completed += 1;
+        const rawProgress = progressState.total > 0 ? progressState.completed / progressState.total : 1;
+        progressState.target = Math.max(progressState.target, Math.min(0.98, 0.08 + rawProgress * 0.92));
+    };
+
+    const renderProgress = () => {
+        progressState.current += (progressState.target - progressState.current) * 0.16;
+        if (Math.abs(progressState.target - progressState.current) < 0.002) {
+            progressState.current = progressState.target;
+        }
+
+        loaderFill.style.transform = `scaleX(${progressState.current})`;
+
+        if (progressState.current < 1 || !progressState.hasHidden) {
+            window.requestAnimationFrame(renderProgress);
+        }
+
+        if (progressState.isFinishing && !progressState.hasHidden && progressState.current >= 0.995) {
+            progressState.hasHidden = true;
+            window.setTimeout(hidePageLoader, 120);
+        }
+    };
+
+    trackedImages.forEach((img) => {
+        if (img.complete) {
+            markComplete();
+            return;
+        }
+
+        const onDone = () => {
+            markComplete();
+            img.removeEventListener('load', onDone);
+            img.removeEventListener('error', onDone);
+        };
+
+        img.addEventListener('load', onDone, { once: true });
+        img.addEventListener('error', onDone, { once: true });
+    });
+
+    if (document.fonts && document.fonts.ready) {
+        document.fonts.ready.then(markComplete);
+    } else {
+        markComplete();
+    }
+
+    const finishLoading = () => {
+        markComplete();
+        progressState.target = 1;
+        progressState.isFinishing = true;
+    };
+
+    if (document.readyState === 'complete') {
+        finishLoading();
+    } else {
+        window.addEventListener('load', finishLoading, { once: true });
+    }
+
+    window.requestAnimationFrame(renderProgress);
 }
+
+initializePageLoader();
 
 /**
  * Portfolio Main Script
@@ -181,46 +257,81 @@ class WebGLGrid {
     addEventListeners() {
         window.addEventListener('resize', this.onWindowResize.bind(this));
 
+        const updatePointerTarget = (clientX, clientY) => {
+            this.targetMouse.x = (clientX / window.innerWidth) * 2 - 1;
+            this.targetMouse.y = -(clientY / window.innerHeight) * 2 + 1;
+        };
+
+        const triggerPulse = () => {
+            if (this.intersection.x === -9999) {
+                return;
+            }
+
+            this.clickCount++;
+
+            if (this.clickCount >= 3) {
+                this.pulseActive = false; // Suppress the lingering slow wave from clicks 1 and 2
+                this.eruptionActive = true;
+                this.eruptionTime = 0;
+                this.pulseOrigin.copy(this.intersection);
+                this.clickCount = 0; // Reset counter after eruption
+
+                // Add a massive bright shockwave flash
+                const flash = new THREE.PointLight(0xffffff, 8, 150); // White blinding initial color
+                flash.position.copy(this.intersection);
+                this.scene.add(flash);
+
+                const fadeFlash = setInterval(() => {
+                    flash.intensity *= 0.85; // Faster fade
+                    flash.distance += 2.0; // Huge explosion radius
+                    if (flash.intensity < 0.1) {
+                        this.scene.remove(flash);
+                        clearInterval(fadeFlash);
+                    }
+                }, 30);
+            } else {
+                this.pulseActive = true;
+                this.pulseTime = 0;
+                this.pulseOrigin.copy(this.intersection);
+            }
+        };
+
         window.addEventListener('mousemove', (e) => {
-            this.targetMouse.x = (e.clientX / window.innerWidth) * 2 - 1;
-            this.targetMouse.y = -(e.clientY / window.innerHeight) * 2 + 1;
+            updatePointerTarget(e.clientX, e.clientY);
         });
+
+        window.addEventListener('pointermove', (e) => {
+            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+                updatePointerTarget(e.clientX, e.clientY);
+            }
+        }, { passive: true });
 
         window.addEventListener('mouseout', () => {
             this.targetMouse.set(-9999, -9999);
         });
 
-        window.addEventListener('mousedown', () => {
-            if (this.intersection.x !== -9999) {
-                this.clickCount++;
-                
-                if (this.clickCount >= 3) {
-                    this.pulseActive = false; // Suppress the lingering slow wave from clicks 1 and 2
-                    this.eruptionActive = true;
-                    this.eruptionTime = 0;
-                    this.pulseOrigin.copy(this.intersection);
-                    this.clickCount = 0; // Reset counter after eruption
-                    
-                    // Add a massive bright shockwave flash
-                    const flash = new THREE.PointLight(0xffffff, 8, 150); // White blinding initial color
-                    flash.position.copy(this.intersection);
-                    this.scene.add(flash);
-
-                    const fadeFlash = setInterval(() => {
-                        flash.intensity *= 0.85; // Faster fade
-                        flash.distance += 2.0; // Huge explosion radius
-                        if (flash.intensity < 0.1) {
-                            this.scene.remove(flash);
-                            clearInterval(fadeFlash);
-                        }
-                    }, 30);
-                } else {
-                    this.pulseActive = true;
-                    this.pulseTime = 0;
-                    this.pulseOrigin.copy(this.intersection);
-                }
+        window.addEventListener('pointerup', (e) => {
+            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+                this.targetMouse.set(-9999, -9999);
             }
-        });
+        }, { passive: true });
+
+        window.addEventListener('pointercancel', (e) => {
+            if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+                this.targetMouse.set(-9999, -9999);
+            }
+        }, { passive: true });
+
+        window.addEventListener('mousedown', triggerPulse);
+
+        if (this.container) {
+            this.container.addEventListener('pointerdown', (e) => {
+                if (e.pointerType === 'touch' || e.pointerType === 'pen') {
+                    updatePointerTarget(e.clientX, e.clientY);
+                    triggerPulse();
+                }
+            }, { passive: true });
+        }
 
         const navbar = document.querySelector('.navbar');
         const workSection = document.getElementById('work');
@@ -662,26 +773,38 @@ document.addEventListener('DOMContentLoaded', () => {
     if (carouselContainer && carouselTrack) {
         const cards = Array.from(carouselTrack.querySelectorAll('.work-card'));
         const numCards = cards.length;
-        
-        // Calculate a perfect 360 circle
         const theta = 360 / numCards;
-        const radius = Math.round((320 / 2) / Math.tan(Math.PI / numCards)) + 50; // Dynamic radius with a little extra padding
+        let radius = 0;
+
+        const updateCarouselGeometry = () => {
+            const sampleCard = cards[0];
+            const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
+            radius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards)) + Math.max(24, cardWidth * 0.16);
+
+            cards.forEach((card, index) => {
+                const angle = theta * index;
+                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                card.dataset.angle = angle;
+            });
+        };
 
         // Initialize card positions and attach reliable click listeners
         cards.forEach((card, index) => {
             const angle = theta * index;
-            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
             card.dataset.angle = angle;
-            
+
             // Native click listener to rigidly snap to this specific card
-            card.addEventListener('click', (e) => {
+            card.addEventListener('click', () => {
                 // Ignore clicks if the user was actually dragging across the card
                 if (Math.abs(currentXCarousel - startXCarousel) > 5) return;
-                
+
                 targetRotation = -angle;
                 // No clamping, allow free rotation
             });
         });
+
+        updateCarouselGeometry();
+        window.addEventListener('resize', updateCarouselGeometry);
 
         // Current rotation state
         const titleCardIndex = cards.findIndex(card => card.classList.contains('title-card'));
