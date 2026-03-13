@@ -1283,23 +1283,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const isTouchPointer = e.pointerType === 'touch' || e.pointerType === 'pen';
 
-        if (isTouchPointer && activeItem === targetItem && activePointers.size === 1 && !activePointers.has(e.pointerId)) {
+        if (isTouchPointer && activeItem === targetItem && !activePointers.has(e.pointerId)) {
             activePointers.set(e.pointerId, { x: e.clientX, y: e.clientY });
             activeItem.setPointerCapture(e.pointerId);
 
-            const points = Array.from(activePointers.values());
-            const dx = points[1].x - points[0].x;
-            const dy = points[1].y - points[0].y;
-            dragType = 'gesture';
-            gestureStart = {
-                angle: Math.atan2(dy, dx) * (180 / Math.PI),
-                distance: Math.hypot(dx, dy)
-            };
+            if (activePointers.size >= 2) {
+                const points = Array.from(activePointers.values()).slice(0, 2);
+                const dx = points[1].x - points[0].x;
+                const dy = points[1].y - points[0].y;
+                dragType = 'gesture';
+                gestureStart = {
+                    angle: Math.atan2(dy, dx) * (180 / Math.PI),
+                    distance: Math.hypot(dx, dy)
+                };
 
-            const style = window.getComputedStyle(activeItem);
-            startRot = parseFloat(style.getPropertyValue('--rot')) || 0;
-            startScale = parseFloat(style.getPropertyValue('--scale')) || 1;
-            return;
+                const style = window.getComputedStyle(activeItem);
+                startRot = parseFloat(style.getPropertyValue('--rot')) || 0;
+                startScale = parseFloat(style.getPropertyValue('--scale')) || 1;
+                activeItem.classList.add('dragging');
+                return;
+            }
         }
 
         clearSelectedDraggables();
