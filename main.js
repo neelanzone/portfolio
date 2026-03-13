@@ -21,7 +21,7 @@ function initializePageLoader() {
         return;
     }
 
-    const trackedImages = Array.from(document.images).filter((img) => !img.classList.contains('logo-hover'));
+    const trackedImages = Array.from(document.images).filter((img) => !img.classList.contains('logo-hover') && img.getAttribute('loading') !== 'lazy');
     const progressState = {
         target: 0.08,
         current: 0.08,
@@ -128,6 +128,19 @@ class WebGLGrid {
         // Define theme colors
         this.darkBgColor = 0x050505;
         this.lightBgColor = 0xf4f4f5; // Matches CSS --bg-color for light theme
+        this.isLightMode = document.documentElement.classList.contains('light-theme');
+        this.tempColor = new THREE.Color();
+        this.neonColor1 = new THREE.Color(0xff00ff);
+        this.neonColor2 = new THREE.Color(0x00ffff);
+        this.lightNeonColor1 = new THREE.Color(0x0088ff);
+        this.lightNeonColor2 = new THREE.Color(0xff0088);
+        this.elapsedTime = 0;
+        this.lastFrameTime = null;
+        this.rafId = null;
+        this.isAnimating = false;
+        this.isVisible = true;
+        this.isDocumentVisible = !document.hidden;
+        this.animate = this.animate.bind(this);
 
         // Initial fog uses dark color
         this.scene.fog = new THREE.FogExp2(this.darkBgColor, 0.015);
@@ -154,11 +167,9 @@ class WebGLGrid {
         this.colorCool = new THREE.Color(0x3d7cff); // Cool blue/cyan
 
         this.initGrid();
+        this.applyTheme(this.isLightMode);
         this.addEventListeners();
-
-        // Start Loop
-        this.clock = new THREE.Clock();
-        this.animate();
+        this.updateAnimationState();
     }
 
     initGrid() {
@@ -254,8 +265,67 @@ class WebGLGrid {
         this.scene.add(this.points);
     }
 
+
+    applyTheme(isLight) {
+        this.isLightMode = isLight;
+
+        if (this.scene?.fog) {
+            this.scene.fog.color.setHex(isLight ? this.lightBgColor : this.darkBgColor);
+        }
+
+        if (this.points?.material) {
+            this.points.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
+            this.points.material.opacity = isLight ? 0.3 : 0.6;
+            this.points.material.needsUpdate = true;
+        }
+    }
+
+    startAnimation() {
+        if (this.isAnimating) {
+            return;
+        }
+
+        this.isAnimating = true;
+        this.lastFrameTime = null;
+        this.rafId = window.requestAnimationFrame(this.animate);
+    }
+
+    stopAnimation() {
+        if (!this.isAnimating) {
+            return;
+        }
+
+        this.isAnimating = false;
+        this.lastFrameTime = null;
+        if (this.rafId) {
+            window.cancelAnimationFrame(this.rafId);
+            this.rafId = null;
+        }
+    }
+
+    updateAnimationState() {
+        if (this.isVisible && this.isDocumentVisible) {
+            this.startAnimation();
+            return;
+        }
+
+        this.stopAnimation();
+    }
+
     addEventListeners() {
         window.addEventListener('resize', this.onWindowResize.bind(this));
+        document.addEventListener('visibilitychange', () => {
+            this.isDocumentVisible = !document.hidden;
+            this.updateAnimationState();
+        });
+
+        if ('IntersectionObserver' in window && this.container) {
+            this.visibilityObserver = new IntersectionObserver((entries) => {
+                this.isVisible = entries.some((entry) => entry.isIntersecting);
+                this.updateAnimationState();
+            }, { threshold: 0.01 });
+            this.visibilityObserver.observe(this.container);
+        }
 
         const touchState = {
             pointerId: null,
@@ -465,7 +535,7 @@ class WebGLGrid {
         this.renderer.setSize(window.innerWidth, window.innerHeight);
     }
 
-    updateGrid() {
+    updateGrid(time, delta) {
         this.mouse.lerp(this.targetMouse, 0.15);
 
         this.raycaster.setFromCamera(this.mouse, this.camera);
@@ -475,20 +545,22 @@ class WebGLGrid {
             this.intersection.set(-9999, 0, -9999);
         }
 
-        const time = this.clock.getElapsedTime();
         const positions = this.points.geometry.attributes.position.array;
         const colors = this.points.geometry.attributes.color.array;
 
         let cIndex = 0;
         let vIndex = 0;
 
-        const tempColor = new THREE.Color();
-        const neonColor1 = new THREE.Color(0xff00ff); // Neon Pink
-        const neonColor2 = new THREE.Color(0x00ffff); // Neon Cyan
+        const tempColor = this.tempColor;
+        const neonColor1 = this.neonColor1;
+        const neonColor2 = this.neonColor2;
+        const lightNeonColor1 = this.lightNeonColor1;
+        const lightNeonColor2 = this.lightNeonColor2;
+        const isLightMode = this.isLightMode;
 
         // Progress supernova pulse (much slower now)
         if (this.pulseActive) {
-            this.pulseTime += 0.015; // Slow unfolding
+            this.pulseTime += delta * 0.9; // Slow unfolding, frame-rate independent
             if (this.pulseTime > 5.0) { // Long lifetime
                 this.pulseActive = false;
             }
@@ -496,7 +568,7 @@ class WebGLGrid {
         
         // Progress Eruption shockwave (faster, sharper)
         if (this.eruptionActive) {
-            this.eruptionTime += 0.03;
+            this.eruptionTime += delta * 1.8;
             if (this.eruptionTime > 4.0) {
                 this.eruptionActive = false;
             }
@@ -654,9 +726,6 @@ class WebGLGrid {
             positions[i + 2] += this.velocities[i + 2];
 
             // Color update logic
-            // Check if light mode is active by reading the document element class
-            const isLightMode = document.documentElement.classList.contains('light-theme');
-            // Leaving the base color completely unchanged as requested
             const baseColor = this.baseColors[cIndex];
 
             if (influence > 0.01 || pulseColorInfluence > 0.01) {
@@ -672,7 +741,7 @@ class WebGLGrid {
 
                     if (isLightMode) {
                         // Use vibrant, mid-tone neons that look good on light backgrounds
-                        tempColor.lerpColors(new THREE.Color(0x0088ff), new THREE.Color(0xff0088), mixRatio);
+                        tempColor.lerpColors(lightNeonColor1, lightNeonColor2, mixRatio);
 
                         // Subtle intensity boost, not too washed out
                         const pulseIntensity = pulseColorInfluence * 0.5;
@@ -705,7 +774,7 @@ class WebGLGrid {
 
                     if (isLightMode) {
                         // Vibrant saturated gradient for light mode hover
-                        tempColor.lerpColors(new THREE.Color(0xff0088), new THREE.Color(0x0088ff), mixRatio);
+                        tempColor.lerpColors(lightNeonColor2, lightNeonColor1, mixRatio);
 
                         // Mild intensity boost
                         tempColor.r = Math.min(1.1, tempColor.r + influence * 0.4);
@@ -740,15 +809,26 @@ class WebGLGrid {
         this.points.geometry.attributes.color.needsUpdate = true;
     }
 
-    animate() {
-        requestAnimationFrame(this.animate.bind(this));
+    animate(timestamp) {
+        if (!this.isAnimating) {
+            return;
+        }
 
-        const time = this.clock.getElapsedTime();
+        this.rafId = window.requestAnimationFrame(this.animate);
+
+        if (this.lastFrameTime === null) {
+            this.lastFrameTime = timestamp;
+        }
+
+        const delta = Math.min((timestamp - this.lastFrameTime) / 1000, 0.05);
+        this.lastFrameTime = timestamp;
+        this.elapsedTime += delta;
+        const time = this.elapsedTime;
 
         // Gentle scene ambient rotation for scale feel
         this.scene.rotation.y = Math.sin(time * 0.05) * 0.08;
 
-        this.updateGrid();
+        this.updateGrid(time, delta);
         this.renderer.render(this.scene, this.camera);
     }
 }
@@ -847,7 +927,14 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Initialize WebGL Hero Background
-    const webgl = new WebGLGrid();
+    let webgl = null;
+    if (window.THREE) {
+        try {
+            webgl = new WebGLGrid();
+        } catch (error) {
+            console.warn('WebGL hero failed to initialize.', error);
+        }
+    }
 
     // 3D Zoetrope Carousel Logic
     const carouselContainer = document.querySelector('.carousel-container');
@@ -915,6 +1002,10 @@ document.addEventListener('DOMContentLoaded', () => {
         let dragStartRotation = targetRotation;
         let dragPointerType = 'mouse';
         let activeFrontCard = null;
+        let carouselFrameId = null;
+        let isCarouselAnimating = false;
+        let isCarouselVisible = true;
+        let isDocumentVisible = !document.hidden;
 
         const normalizeAngle = (angle) => {
             let normalized = angle % 360;
@@ -955,16 +1046,64 @@ document.addEventListener('DOMContentLoaded', () => {
         
         // Animation loop for smooth easing
         function animateCarousel() {
-            // Lerp towards target rotation for smooth sliding
+            if (!isCarouselAnimating) {
+                return;
+            }
+
             currentRotation += (targetRotation - currentRotation) * 0.1;
             carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
             syncActiveFrontCard();
-            requestAnimationFrame(animateCarousel);
+            carouselFrameId = requestAnimationFrame(animateCarousel);
         }
-        
-        // Start animation loop
-        animateCarousel();
 
+        const startCarouselAnimation = () => {
+            if (isCarouselAnimating) {
+                return;
+            }
+
+            isCarouselAnimating = true;
+            animateCarousel();
+        };
+
+        const stopCarouselAnimation = () => {
+            if (!isCarouselAnimating) {
+                return;
+            }
+
+            isCarouselAnimating = false;
+            if (carouselFrameId) {
+                cancelAnimationFrame(carouselFrameId);
+                carouselFrameId = null;
+            }
+        };
+
+        const updateCarouselAnimationState = () => {
+            if (isCarouselVisible && isDocumentVisible) {
+                startCarouselAnimation();
+                return;
+            }
+
+            stopCarouselAnimation();
+        };
+
+        if ('IntersectionObserver' in window) {
+            const carouselObserver = new IntersectionObserver((entries) => {
+                isCarouselVisible = entries.some((entry) => entry.isIntersecting);
+                if (isCarouselVisible) {
+                    syncActiveFrontCard();
+                }
+                updateCarouselAnimationState();
+            }, { threshold: 0.05 });
+            carouselObserver.observe(carouselContainer);
+        }
+
+        document.addEventListener('visibilitychange', () => {
+            isDocumentVisible = !document.hidden;
+            updateCarouselAnimationState();
+        });
+
+        syncActiveFrontCard();
+        updateCarouselAnimationState();
 
         // Arrow button logic
         const prevBtn = carouselContainer.querySelector('.carousel-control.prev');
@@ -1073,20 +1212,7 @@ document.addEventListener('DOMContentLoaded', () => {
     themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {
             const isLight = document.documentElement.classList.toggle('light-theme');
-
-            // Update Three.js scene fog to match background
-            if (webgl.scene.fog) {
-                const targetHex = isLight ? webgl.lightBgColor : webgl.darkBgColor;
-                // We use a quick tween or manual lerp if we wanted smooth, but instant is fine for fog
-                webgl.scene.fog.color.setHex(targetHex);
-            }
-
-            // Toggle blending mode so colors don't wash out into pure white in light mode
-            if (webgl.points && webgl.points.material) {
-                webgl.points.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-                webgl.points.material.opacity = isLight ? 0.3 : 0.6; // 30% opacity in light mode, 60% in dark
-                webgl.points.material.needsUpdate = true;
-            }
+            webgl?.applyTheme(isLight);
         });
     });
 
@@ -1343,12 +1469,15 @@ document.addEventListener('DOMContentLoaded', () => {
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
             const targetId = this.getAttribute('href');
-            if (targetId === '#') return; // Ignore empty hashes
-            
+            if (targetId === '#') {
+                e.preventDefault();
+                return;
+            }
+
             const targetElement = document.querySelector(targetId);
             if (targetElement) {
                 e.preventDefault();
-                
+
                 // For sticky elements covered by z-index overlap, getBoundingClientRect() and native scrolling fail.
                 // We calculate offsetTop accumulation to retrieve the pristine static page coordinate instead.
                 let staticTop = 0;
@@ -1357,14 +1486,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     staticTop += cur.offsetTop;
                     cur = cur.offsetParent;
                 }
-                
-                // Fine-tune offset specifically for the work section which has top: 10vh sticky
+
                 let offset = 0;
                 if (targetId === '#work') {
-                    // Compensate roughly for the 10vh sticky offset so the title isn't perfectly glued to top edge
                     offset = window.innerHeight * 0.1;
                 }
-                
+
+                if (window.history?.replaceState) {
+                    window.history.replaceState(null, '', targetId);
+                }
+
                 window.scrollTo({
                     top: staticTop - offset,
                     behavior: 'smooth'
