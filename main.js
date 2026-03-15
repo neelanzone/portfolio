@@ -474,76 +474,6 @@ class WebGLGrid {
             this.container.addEventListener('pointercancel', finishTouchInteraction, { passive: true });
         }
 
-        const navbar = document.querySelector('.navbar');
-        const workSection = document.getElementById('work');
-        const aboutSection = document.getElementById('about');
-        const contactSection = document.getElementById('contact');
-
-        const updateScrollEffects = () => {
-            const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
-
-            document.body.style.setProperty('--scroll-progress', scrollProgress.toString());
-
-            if (navbar && workSection) {
-                const workTop = workSection.offsetTop;
-                const fadeStart = Math.max(0, workTop - 600);
-                const fadeEnd = workTop - 100;
-
-                let navBgOpacity = 0;
-                if (scrollTop >= fadeEnd) {
-                    navBgOpacity = 1.0;
-                } else if (scrollTop > fadeStart) {
-                    const progress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
-                    navBgOpacity = progress;
-                }
-
-                navbar.style.setProperty('--nav-bg-opacity', navBgOpacity.toString());
-            }
-
-            if (navbar) {
-                const navHeight = navbar.offsetHeight;
-                const isGlobalLightTheme = document.documentElement.classList.contains('light-theme');
-                const aboutRect = aboutSection ? aboutSection.getBoundingClientRect() : null;
-                const contactRect = contactSection ? contactSection.getBoundingClientRect() : null;
-                let navLightProgress = 0;
-                let navDarkProgress = 0;
-
-                if (aboutRect && aboutRect.bottom > 0) {
-                    if (aboutRect.top <= 0) {
-                        navLightProgress = 1;
-                    } else if (aboutRect.top < navHeight) {
-                        navLightProgress = 1 - (aboutRect.top / navHeight);
-                    }
-                }
-
-                if (!isGlobalLightTheme && contactRect && contactRect.bottom > 0) {
-                    if (contactRect.top <= 0) {
-                        navDarkProgress = 1;
-                    } else if (contactRect.top < navHeight) {
-                        navDarkProgress = 1 - (contactRect.top / navHeight);
-                    }
-                }
-
-                const visibleLightProgress = Math.max(0, navLightProgress - navDarkProgress);
-                navbar.style.setProperty('--nav-light-progress', navLightProgress.toString());
-                navbar.style.setProperty('--nav-dark-progress', navDarkProgress.toString());
-                navbar.classList.toggle('navbar-light', visibleLightProgress > 0.5 || isGlobalLightTheme);
-            }
-        };
-
-        let scrollRafPending = false;
-        window.addEventListener('scroll', () => {
-            if (!scrollRafPending) {
-                scrollRafPending = true;
-                requestAnimationFrame(() => {
-                    updateScrollEffects();
-                    scrollRafPending = false;
-                });
-            }
-        });
-        updateScrollEffects();
     }
 
     onWindowResize() {
@@ -951,6 +881,80 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch (error) {
             console.warn('WebGL hero failed to initialize.', error);
         }
+    }
+
+    // Scroll effects — runs unconditionally so parallax works even if WebGL fails
+    {
+        const navbar = document.querySelector('.navbar');
+        const workSection = document.getElementById('work');
+        const aboutSection = document.getElementById('about');
+        const contactSection = document.getElementById('contact');
+
+        const updateScrollEffects = () => {
+            const scrollTop = window.scrollY || document.documentElement.scrollTop;
+            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
+            const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+
+            document.body.style.setProperty('--scroll-progress', scrollProgress.toString());
+
+            if (navbar && workSection) {
+                const workTop = workSection.offsetTop;
+                const fadeStart = Math.max(0, workTop - 600);
+                const fadeEnd = workTop - 100;
+
+                let navBgOpacity = 0;
+                if (scrollTop >= fadeEnd) {
+                    navBgOpacity = 1.0;
+                } else if (scrollTop > fadeStart) {
+                    const progress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
+                    navBgOpacity = progress;
+                }
+
+                navbar.style.setProperty('--nav-bg-opacity', navBgOpacity.toString());
+            }
+
+            if (navbar) {
+                const navHeight = navbar.offsetHeight;
+                const isGlobalLightTheme = document.documentElement.classList.contains('light-theme');
+                const aboutRect = aboutSection ? aboutSection.getBoundingClientRect() : null;
+                const contactRect = contactSection ? contactSection.getBoundingClientRect() : null;
+                let navLightProgress = 0;
+                let navDarkProgress = 0;
+
+                if (aboutRect && aboutRect.bottom > 0) {
+                    if (aboutRect.top <= 0) {
+                        navLightProgress = 1;
+                    } else if (aboutRect.top < navHeight) {
+                        navLightProgress = 1 - (aboutRect.top / navHeight);
+                    }
+                }
+
+                if (!isGlobalLightTheme && contactRect && contactRect.bottom > 0) {
+                    if (contactRect.top <= 0) {
+                        navDarkProgress = 1;
+                    } else if (contactRect.top < navHeight) {
+                        navDarkProgress = 1 - (contactRect.top / navHeight);
+                    }
+                }
+
+                const visibleLightProgress = Math.max(0, navLightProgress - navDarkProgress);
+                navbar.style.setProperty('--nav-light-progress', navLightProgress.toString());
+                navbar.style.setProperty('--nav-dark-progress', navDarkProgress.toString());
+                navbar.classList.toggle('navbar-light', visibleLightProgress > 0.5 || isGlobalLightTheme);
+            }
+        };
+
+        let scrollRafPending = false;
+        window.addEventListener('scroll', () => {
+            if (!scrollRafPending) {
+                scrollRafPending = true;
+                requestAnimationFrame(() => {
+                    updateScrollEffects();
+                    scrollRafPending = false;
+                });
+            }
+        });
+        updateScrollEffects();
     }
 
     // 3D Zoetrope Carousel Logic
