@@ -1139,17 +1139,17 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Keyboard navigation
-        carouselContainer.addEventListener('keydown', (e) => {
+        // Keyboard navigation — fires globally, only acts when carousel is in view
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
+            if (!isCarouselVisible) return;
+            e.preventDefault();
             if (e.key === 'ArrowLeft') {
-                e.preventDefault();
                 targetRotation += theta;
-                targetRotation = Math.round(targetRotation / theta) * theta;
-            } else if (e.key === 'ArrowRight') {
-                e.preventDefault();
+            } else {
                 targetRotation -= theta;
-                targetRotation = Math.round(targetRotation / theta) * theta;
             }
+            targetRotation = Math.round(targetRotation / theta) * theta;
         });
 
         // Pointer event dragging logic
