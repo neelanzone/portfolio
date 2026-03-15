@@ -1139,6 +1139,19 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
+        // Keyboard navigation
+        carouselContainer.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft') {
+                e.preventDefault();
+                targetRotation += theta;
+                targetRotation = Math.round(targetRotation / theta) * theta;
+            } else if (e.key === 'ArrowRight') {
+                e.preventDefault();
+                targetRotation -= theta;
+                targetRotation = Math.round(targetRotation / theta) * theta;
+            }
+        });
+
         // Pointer event dragging logic
         carouselContainer.addEventListener('pointerdown', (e) => {
             isDraggingCarousel = true;

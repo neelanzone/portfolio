@@ -638,6 +638,16 @@ a:hover {
     cursor: grabbing;
 }
 
+.carousel-container:focus {
+    outline: none;
+}
+
+.carousel-container:focus-visible {
+    outline: 1px solid var(--surface-border);
+    outline-offset: 8px;
+    border-radius: 4px;
+}
+
 .carousel-control {
     position: absolute;
     top: 50%;
@@ -901,8 +911,8 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    --about-orbit-radius: clamp(15.12rem, 23.52vw, 17.64rem);
-    --about-mobile-orbit-radius: min(7.14rem, calc(29.75vw - 16.8px));
+    --about-orbit-radius: clamp(12.1rem, 18.82vw, 14.11rem);
+    --about-mobile-orbit-radius: min(5.71rem, calc(23.8vw - 13.44px));
 }
 
 .collage-photo {
@@ -1225,7 +1235,7 @@ footer {
     }
 
     .photo-wrapper {
-        --about-orbit-radius: clamp(13.02rem, 25.2vw, 15.12rem);
+        --about-orbit-radius: clamp(10.42rem, 20.16vw, 12.1rem);
     }
 
     #work.section {
@@ -1504,7 +1514,7 @@ footer {
     }
 
     .photo-wrapper {
-        --about-mobile-orbit-radius: min(7.14rem, calc(29.75vw - 11.9px));
+        --about-mobile-orbit-radius: min(5.71rem, calc(23.8vw - 9.52px));
     }
 
     .accessory-wrapper {
