@@ -911,8 +911,8 @@ a:hover {
     display: flex;
     flex-direction: column;
     align-items: center;
-    --about-orbit-radius: clamp(12.1rem, 18.82vw, 14.11rem);
-    --about-mobile-orbit-radius: min(5.71rem, calc(23.8vw - 13.44px));
+    --about-orbit-radius: clamp(10.29rem, 16vw, 11.99rem);
+    --about-mobile-orbit-radius: min(4.85rem, calc(20.23vw - 11.42px));
 }
 
 .collage-photo {
@@ -1235,7 +1235,7 @@ footer {
     }
 
     .photo-wrapper {
-        --about-orbit-radius: clamp(10.42rem, 20.16vw, 12.1rem);
+        --about-orbit-radius: clamp(8.86rem, 17.14vw, 10.29rem);
     }
 
     #work.section {
@@ -1514,7 +1514,7 @@ footer {
     }
 
     .photo-wrapper {
-        --about-mobile-orbit-radius: min(5.71rem, calc(23.8vw - 9.52px));
+        --about-mobile-orbit-radius: min(4.85rem, calc(20.23vw - 8.09px));
     }
 
     .accessory-wrapper {
