@@ -127,6 +127,7 @@ h3 {
 p {
     font-size: var(--type-copy);
     color: var(--text-muted);
+    font-family: 'Nunito Sans', sans-serif;
 }
 
 a {
