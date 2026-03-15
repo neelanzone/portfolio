@@ -388,8 +388,16 @@ class WebGLGrid {
             }
         };
 
+        let mousemoveRafPending = false;
         window.addEventListener('mousemove', (e) => {
-            updatePointerTarget(e.clientX, e.clientY);
+            if (!mousemoveRafPending) {
+                mousemoveRafPending = true;
+                const x = e.clientX, y = e.clientY;
+                requestAnimationFrame(() => {
+                    updatePointerTarget(x, y);
+                    mousemoveRafPending = false;
+                });
+            }
         });
 
         window.addEventListener('mouseout', () => {
@@ -525,7 +533,16 @@ class WebGLGrid {
             }
         };
 
-        window.addEventListener('scroll', updateScrollEffects);
+        let scrollRafPending = false;
+        window.addEventListener('scroll', () => {
+            if (!scrollRafPending) {
+                scrollRafPending = true;
+                requestAnimationFrame(() => {
+                    updateScrollEffects();
+                    scrollRafPending = false;
+                });
+            }
+        });
         updateScrollEffects();
     }
 
@@ -855,7 +872,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealObserver = new IntersectionObserver(handleReveals, observerOptions);
 
     // Setup initial state for elements and observe
-    document.querySelectorAll('.section-title, .about-text, .stat-item, .contact-container').forEach(el => {
+    document.querySelectorAll('.section-title, .about-text, .contact-container').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
         el.style.transition = 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
@@ -1209,9 +1226,15 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenu.setAttribute('aria-hidden', String(!isOpen));
     };
 
+    if (localStorage.getItem('theme') === 'light') {
+        document.documentElement.classList.add('light-theme');
+        webgl?.applyTheme(true);
+    }
+
     themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {
             const isLight = document.documentElement.classList.toggle('light-theme');
+            localStorage.setItem('theme', isLight ? 'light' : 'dark');
             webgl?.applyTheme(isLight);
         });
     });
