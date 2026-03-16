@@ -850,25 +850,23 @@ document.addEventListener('DOMContentLoaded', () => {
         workCards.forEach((card) => resetWorkCardTilt(card));
     };
 
-    const hoverTiltQuery = window.matchMedia('(hover: hover) and (pointer: fine)');
-
     workCards.forEach(card => {
         const imgContainer = card.querySelector('.work-image');
+        const bgImg = card.querySelector('.work-bg-image');
         if (!imgContainer) return;
 
         card.addEventListener('mouseenter', () => {
-            if (!hoverTiltQuery.matches) return;
             imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
             imgContainer.style.willChange = 'transform';
+            if (bgImg) bgImg.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
         });
 
         card.addEventListener('mousemove', (e) => {
-            if (!hoverTiltQuery.matches) return;
             applyWorkCardTilt(card, e.clientX, e.clientY, 1.02);
         });
 
         card.addEventListener('mouseleave', () => {
-            if (!hoverTiltQuery.matches) return;
+            if (bgImg) bgImg.style.transition = 'none';
             resetWorkCardTilt(card);
         });
     });
@@ -896,6 +894,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
 
             document.body.style.setProperty('--scroll-progress', scrollProgress.toString());
+
+            // Background image parallax for the work section (desktop only)
+            if (workSection && window.innerWidth > 768) {
+                const stickyTop = window.innerHeight * 0.04;
+                const stickyStart = workSection.offsetTop - stickyTop;
+                const maxStickyScroll = window.innerHeight * 0.3; // matches margin-bottom: 30vh
+                const stickyScroll = Math.min(maxStickyScroll, Math.max(0, scrollTop - stickyStart));
+                workSection.style.setProperty('--parallax-y', `${-stickyScroll * 0.1}px`);
+            }
 
             if (navbar && workSection) {
                 const workTop = workSection.offsetTop;
