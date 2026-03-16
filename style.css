@@ -1559,7 +1559,7 @@ footer {
     }
 
     .photo-wrapper {
-        --about-mobile-orbit-radius: min(4.85rem, calc(20.23vw - 8.09px));
+        --about-mobile-orbit-radius: min(5.82rem, calc(24.28vw - 8.09px));
     }
 
     .accessory-wrapper {
