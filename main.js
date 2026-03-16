@@ -821,9 +821,13 @@ document.addEventListener('DOMContentLoaded', () => {
         const y = clientY - rect.top;
         const centerX = rect.width / 2;
         const centerY = rect.height / 2;
-        const maxTilt = 10;
-        const rotateX = ((y - centerY) / centerY) * -maxTilt;
-        const rotateY = ((x - centerX) / centerX) * maxTilt;
+        const maxTilt = 4.5;
+        const rawNormalizedX = (x - centerX) / centerX;
+        const rawNormalizedY = (y - centerY) / centerY;
+        const normalizedX = Math.max(-0.65, Math.min(0.65, rawNormalizedX));
+        const normalizedY = Math.max(-0.65, Math.min(0.65, rawNormalizedY));
+        const rotateX = normalizedY * -maxTilt;
+        const rotateY = normalizedX * maxTilt;
         const mouseX = (x / rect.width) * 100;
         const mouseY = (y / rect.height) * 100;
 
@@ -884,38 +888,70 @@ document.addEventListener('DOMContentLoaded', () => {
     // Scroll effects — runs unconditionally so parallax works even if WebGL fails
     {
         const navbar = document.querySelector('.navbar');
+        const heroSection = document.getElementById('hero');
         const workSection = document.getElementById('work');
         const aboutSection = document.getElementById('about');
         const contactSection = document.getElementById('contact');
+        const clamp = (value, min = 0, max = 1) => Math.min(max, Math.max(min, value));
+        const getStaticTop = (element) => {
+            let staticTop = 0;
+            let current = element;
+
+            while (current) {
+                staticTop += current.offsetTop;
+                current = current.offsetParent;
+            }
+
+            return staticTop;
+        };
+        const getWorkStickyTop = () => {
+            if (!workSection) {
+                return 0;
+            }
+
+            const stickyTop = parseFloat(window.getComputedStyle(workSection).top);
+            return Number.isFinite(stickyTop) ? stickyTop : 0;
+        };
 
         const updateScrollEffects = () => {
             const scrollTop = window.scrollY || document.documentElement.scrollTop;
-            const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-            const scrollProgress = maxScroll > 0 ? scrollTop / maxScroll : 0;
+            const heroHeight = heroSection ? heroSection.offsetHeight : window.innerHeight;
+            const workTop = workSection ? getStaticTop(workSection) : heroHeight;
+            const workStickyTop = getWorkStickyTop();
+            const heroProgressEnd = Math.max(1, workTop - workStickyTop);
+            const scrollProgress = clamp(scrollTop / heroProgressEnd);
+            const workRect = workSection ? workSection.getBoundingClientRect() : null;
+            const aboutRect = aboutSection ? aboutSection.getBoundingClientRect() : null;
 
             document.body.style.setProperty('--scroll-progress', scrollProgress.toString());
 
-            // Background image parallax for the work section (desktop only)
+            // Work section parallax and tilt handoff (desktop only)
             if (workSection && window.innerWidth > 768) {
-                const stickyTop = window.innerHeight * 0.04;
-                const stickyStart = workSection.offsetTop - stickyTop;
-                const maxStickyScroll = window.innerHeight * 0.3; // matches margin-bottom: 30vh
-                const stickyScroll = Math.min(maxStickyScroll, Math.max(0, scrollTop - stickyStart));
-                workSection.style.setProperty('--parallax-y', `${-stickyScroll * 0.1}px`);
+                const viewportHeight = window.innerHeight;
+                const entryProgress = workRect
+                    ? clamp((viewportHeight - workRect.top) / Math.max(1, viewportHeight - workStickyTop))
+                    : 0;
+                const takeoverProgress = aboutRect
+                    ? clamp((viewportHeight - aboutRect.top) / viewportHeight)
+                    : 0;
+
+                workSection.style.setProperty('--parallax-y', `${-(entryProgress * 30 + takeoverProgress * 96)}px`);
+                workSection.style.setProperty('--work-tilt-x', `${takeoverProgress * 32}deg`);
+                workSection.style.setProperty('--work-translate-y', `${takeoverProgress * 132}px`);
+                workSection.style.setProperty('--work-scale', `${1 - takeoverProgress * 0.14}`);
+            } else if (workSection) {
+                workSection.style.setProperty('--parallax-y', '0px');
+                workSection.style.setProperty('--work-tilt-x', '0deg');
+                workSection.style.setProperty('--work-translate-y', '0px');
+                workSection.style.setProperty('--work-scale', '1');
             }
 
             if (navbar && workSection) {
-                const workTop = workSection.offsetTop;
-                const fadeStart = Math.max(0, workTop - 600);
-                const fadeEnd = workTop - 100;
-
-                let navBgOpacity = 0;
-                if (scrollTop >= fadeEnd) {
-                    navBgOpacity = 1.0;
-                } else if (scrollTop > fadeStart) {
-                    const progress = (scrollTop - fadeStart) / (fadeEnd - fadeStart);
-                    navBgOpacity = progress;
-                }
+                const stickyStart = workTop - workStickyTop;
+                const fadeDistance = Math.min(600, window.innerHeight * 0.65);
+                const fadeStart = Math.max(0, stickyStart - fadeDistance);
+                const fadeEnd = stickyStart;
+                const navBgOpacity = clamp((scrollTop - fadeStart) / Math.max(1, fadeEnd - fadeStart));
 
                 navbar.style.setProperty('--nav-bg-opacity', navBgOpacity.toString());
             }
@@ -923,7 +959,6 @@ document.addEventListener('DOMContentLoaded', () => {
             if (navbar) {
                 const navHeight = navbar.offsetHeight;
                 const isGlobalLightTheme = document.documentElement.classList.contains('light-theme');
-                const aboutRect = aboutSection ? aboutSection.getBoundingClientRect() : null;
                 const contactRect = contactSection ? contactSection.getBoundingClientRect() : null;
                 let navLightProgress = 0;
                 let navDarkProgress = 0;
@@ -944,6 +979,10 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                 }
 
+                if (navDarkProgress > 0) {
+                    navLightProgress = Math.min(navLightProgress, 1 - navDarkProgress);
+                }
+
                 const visibleLightProgress = Math.max(0, navLightProgress - navDarkProgress);
                 navbar.style.setProperty('--nav-light-progress', navLightProgress.toString());
                 navbar.style.setProperty('--nav-dark-progress', navDarkProgress.toString());
@@ -961,6 +1000,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
             }
         });
+        window.addEventListener('resize', updateScrollEffects);
         updateScrollEffects();
     }
 
@@ -1240,6 +1280,9 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenu.classList.remove('is-open');
         mobileMenu.setAttribute('aria-hidden', 'true');
     };
+    const refreshNavbarState = () => {
+        window.dispatchEvent(new Event('scroll'));
+    };
 
     const toggleMobileMenu = () => {
         if (!menuToggleButton || !mobileMenu) return;
@@ -1253,6 +1296,7 @@ document.addEventListener('DOMContentLoaded', () => {
     if (localStorage.getItem('theme') === 'light') {
         document.documentElement.classList.add('light-theme');
         webgl?.applyTheme(true);
+        refreshNavbarState();
     }
 
     themeToggleButtons.forEach((themeToggleBtn) => {
@@ -1260,6 +1304,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const isLight = document.documentElement.classList.toggle('light-theme');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             webgl?.applyTheme(isLight);
+            refreshNavbarState();
         });
     });
 
@@ -1528,18 +1573,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (targetElement) {
                 e.preventDefault();
 
-                // For sticky elements covered by z-index overlap, getBoundingClientRect() and native scrolling fail.
-                // We calculate offsetTop accumulation to retrieve the pristine static page coordinate instead.
-                let staticTop = 0;
-                let cur = targetElement;
-                while (cur) {
-                    staticTop += cur.offsetTop;
-                    cur = cur.offsetParent;
-                }
+                const getStaticTop = (element) => {
+                    let staticTop = 0;
+                    let current = element;
 
-                let offset = 0;
-                if (targetId === '#work') {
-                    offset = window.innerHeight * 0.1;
+                    while (current) {
+                        staticTop += current.offsetTop;
+                        current = current.offsetParent;
+                    }
+
+                    return staticTop;
+                };
+
+                const workSection = document.getElementById('work');
+                let destinationTop = getStaticTop(targetElement);
+                let offset = parseFloat(window.getComputedStyle(targetElement).scrollMarginTop) || 0;
+
+                if (targetId === '#work-anchor' && workSection) {
+                    destinationTop = getStaticTop(workSection);
+                    offset = parseFloat(window.getComputedStyle(workSection).top) || 0;
+                } else if (targetId === '#about') {
+                    offset -= window.innerHeight * 0.14;
                 }
 
                 if (window.history?.replaceState) {
@@ -1547,7 +1601,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
 
                 window.scrollTo({
-                    top: staticTop - offset,
+                    top: Math.max(0, destinationTop - offset),
                     behavior: 'smooth'
                 });
             }

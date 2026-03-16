@@ -14,11 +14,12 @@
     --spacing-xl: 12rem;
 
     --type-h1: clamp(3rem, 8vw, 6rem);
-    --type-h2: clamp(2rem, 5vw, 4rem);
-    --type-h3: 1.5rem;
-    --type-h4: 1.25rem;
-    --type-copy: 1.125rem;
-    --type-copy-sm: 0.875rem;
+    --type-h2: clamp(2rem, 5vw, 3.5rem);
+    --type-h3: 1.25rem;
+    --type-h4: 1rem;
+    --type-h5: 0.9rem;
+    --type-copy: 0.9rem;
+    --type-copy-sm: 0.9rem;
     --type-body-sm: 0.875rem;
     --type-menu: 0.9rem;
 }
@@ -93,7 +94,8 @@ body.is-ready .page-loader__inner {
 h1,
 h2,
 h3,
-h4 {
+h4,
+h5 {
     font-weight: 400;
     line-height: 1.1;
     letter-spacing: -0.03em;
@@ -101,6 +103,10 @@ h4 {
 
 h4 {
     font-size: var(--type-h4);
+}
+
+h5 {
+    font-size: var(--type-h5);
 }
 
 h1, h2 {
@@ -614,18 +620,39 @@ a:hover {
 
 /* Work Section - 3D Carousel */
 #work.section {
+    --work-handoff-space: 0px;
     padding: 0.75rem 0 2rem; /* Reduce the top gap while keeping some breathing room below */
     position: sticky;
     top: 4vh; /* Pull the section higher in the viewport when it sticks */
     z-index: 10;
-    margin-bottom: 30vh; /* Breathing room before the next section slides up */
+    margin-bottom: var(--work-handoff-space); /* Breathing room before the next section slides up */
     scroll-margin-top: 4vh; /* Keep anchor alignment matched to the sticky position */
     min-height: 100svh; /* Fill the viewport so the fixed hero background doesn't show through */
     display: flex;
     align-items: center;
+    isolation: isolate;
+    background-color: var(--bg-color);
+}
+
+#work.section::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: calc(-1 * var(--work-handoff-space));
+    height: var(--work-handoff-space);
+    background: var(--bg-color);
+    pointer-events: none;
+    z-index: 0;
+}
+
+#work.section > .container {
+    position: relative;
+    z-index: 1;
 }
 
 .carousel-container {
+    --carousel-control-gutter: clamp(0.5rem, 1.25vw, 1.25rem);
     position: relative;
     width: 100%;
     height: 600px; /* Fixed height to hold the rotating cards */
@@ -636,6 +663,12 @@ a:hover {
     margin: 1rem 0; /* Reduced from 4rem 0 */
     cursor: grab;
     transform-style: preserve-3d;
+    transform-origin: center 42%;
+    transform:
+        translateY(var(--work-translate-y, 0px))
+        rotateX(var(--work-tilt-x, 0deg))
+        scale(var(--work-scale, 1));
+    will-change: transform;
 }
 
 .carousel-container:active {
@@ -656,7 +689,7 @@ a:hover {
     position: absolute;
     top: 50%;
     transform: translateY(-50%);
-    z-index: 20;
+    z-index: 30;
     background: transparent;
     color: var(--text-color);
     border: none;
@@ -682,22 +715,22 @@ a:hover {
 }
 
 .carousel-control.prev {
-    left: 10px;
+    left: calc(((100vw - 100%) / -4) + max(0.25rem, env(safe-area-inset-left)));
 }
 
 .carousel-control.next {
-    right: 10px;
+    right: calc(((100vw - 100%) / -4) + max(0.25rem, env(safe-area-inset-right)));
 }
 
 /* Fades the edges of the carousel container so the zoetrope fades into blackness */
 .carousel-container::after {
     content: '';
     position: absolute;
-    inset: 0;
+    inset: 0 var(--carousel-control-gutter);
     pointer-events: none;
-    background: linear-gradient(90deg, var(--bg-color) 0%, transparent 15%, transparent 85%, var(--bg-color) 100%);
-    z-index: 20;
-    transform: translateZ(500px); /* Push gradient forward so it covers 3D cards */
+    background: none;
+    z-index: 12;
+    transform: none;
 }
 
 .carousel-track {
@@ -736,6 +769,10 @@ a:hover {
     color: var(--text-color);
     margin: 0;
     letter-spacing: 1.3px;
+}
+
+:root.light-theme .carousel-title {
+    color: #f0f0f0;
 }
 
 .work-image {
@@ -1245,7 +1282,7 @@ footer {
 
     #work.section {
         top: 2vh;
-        margin-bottom: 18vh;
+        --work-handoff-space: 0px;
     }
 
     .carousel-container {
@@ -1291,10 +1328,11 @@ footer {
     :root {
         --type-h1: 4rem;
         --type-h2: 3rem;
-        --type-h3: 1.5rem;
-        --type-h4: 1.25rem;
-        --type-copy: 1rem;
-        --type-copy-sm: 1rem;
+        --type-h3: 1.25rem;
+        --type-h4: 1rem;
+        --type-h5: 0.9rem;
+        --type-copy: 0.9rem;
+        --type-copy-sm: 0.9rem;
         --type-menu: 1.15rem;
         --type-control: 1.85rem;
     }
@@ -1371,6 +1409,7 @@ footer {
 
     #work.section {
         position: relative;
+        --work-handoff-space: 0px;
         top: 0;
         min-height: 100svh;
         margin-bottom: 0;
@@ -1388,10 +1427,11 @@ footer {
 
     .carousel-container {
         --mobile-card-width: calc(min(90vw, calc(100vw - 80px)) * 0.8);
+        --carousel-control-gutter: max(20px, env(safe-area-inset-left), env(safe-area-inset-right), 1.5rem);
         height: calc(var(--mobile-card-width) * 2 + 10rem);
         overflow: hidden;
         perspective: 1200px;
-        padding: 80px 20px;
+        padding: 80px calc(var(--carousel-control-gutter) + 1.5rem);
         touch-action: pan-y;
         box-sizing: border-box;
     }
@@ -1565,10 +1605,11 @@ footer {
     :root {
         --type-h1: 4rem;
         --type-h2: 3rem;
-        --type-h3: 1.5rem;
-        --type-h4: 1.25rem;
-        --type-copy: 1rem;
-        --type-copy-sm: 1rem;
+        --type-h3: 1.25rem;
+        --type-h4: 1rem;
+        --type-h5: 0.9rem;
+        --type-copy: 0.9rem;
+        --type-copy-sm: 0.9rem;
         --type-menu: 1.15rem;
         --type-control: 1.55rem;
     }
@@ -1621,8 +1662,9 @@ footer {
 
     .carousel-container {
         --mobile-card-width: calc(min(90vw, calc(100vw - 72px)) * 0.8);
+        --carousel-control-gutter: max(18px, env(safe-area-inset-left), env(safe-area-inset-right), 1.15rem);
         height: calc(var(--mobile-card-width) * 2 + 10rem);
-        padding: 80px 20px;
+        padding: 80px calc(var(--carousel-control-gutter) + 1.25rem);
     }
 
     .carousel-track,
