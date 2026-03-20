@@ -1,0 +1,155 @@
+{
+  "slug": "managed-asset-search",
+  "title": "Managed Asset Search",
+  "theme": "editorial",
+  "colorMode": "light",
+  "seo": {
+    "title": "Managed Asset Search | Neel",
+    "description": "An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.",
+    "socialImage": "Assets/DAM-TE.gif"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero",
+      "navLabel": null,
+      "desktopVariant": "split",
+      "mobileVariant": "summary-first",
+      "tags": [
+        "IA",
+        "2021"
+      ],
+      "title": "Managed Asset Search",
+      "summary": [
+        "This project focuses on making complex asset libraries easier to search, understand, and retrieve.",
+        "The work centers on metadata structure, taxonomy decisions, and a clearer information architecture for discovery."
+      ],
+      "meta": [
+        {
+          "label": "Scope",
+          "value": "IA + Taxonomy"
+        },
+        {
+          "label": "Focus",
+          "value": "Asset discovery"
+        }
+      ],
+      "media": {
+        "src": "Assets/DAM-TE.gif",
+        "alt": "Animated interface preview for Managed Asset Search."
+      }
+    },
+    {
+      "type": "overview",
+      "id": "overview",
+      "navLabel": "Overview",
+      "desktopVariant": "notes-aside",
+      "mobileVariant": "notes-inline",
+      "label": "Overview",
+      "heading": "Quick read",
+      "items": [
+        {
+          "label": "Problem",
+          "value": "Large asset libraries become hard to navigate when metadata is inconsistent and category structures are unclear."
+        },
+        {
+          "label": "Approach",
+          "value": "Used information architecture and taxonomy design to make search paths more legible and retrieval more predictable."
+        },
+        {
+          "label": "Outcome",
+          "value": "The concept improves findability by making structure, labels, and content relationships easier to understand."
+        }
+      ],
+      "notes": [
+        {
+          "title": "Discovery gap",
+          "tone": "gold",
+          "text": "Search quality often breaks long before the search bar itself, at the level of naming and structure."
+        },
+        {
+          "title": "Metadata first",
+          "tone": "lilac",
+          "text": "Better taxonomy decisions made the interface feel clearer without adding more visual complexity."
+        },
+        {
+          "title": "System payoff",
+          "tone": "peach",
+          "text": "The real value came from making retrieval more dependable across teams and content types."
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "id": "context",
+      "navLabel": "Context",
+      "label": "Context",
+      "heading": "Search gets easier when the structure behind it carries more of the cognitive load",
+      "aside": "The challenge was not just improving an interface, but clarifying the system underneath it. Metadata patterns, labels, and hierarchy had to work together so users could find assets with less guesswork."
+    },
+    {
+      "type": "process",
+      "id": "process",
+      "navLabel": "Artifacts",
+      "desktopVariant": "preview-cards",
+      "mobileVariant": "stacked-cards",
+      "eyebrow": "Artifacts",
+      "hint": "Click to expand",
+      "cards": [
+        {
+          "index": "01",
+          "origin": "left",
+          "title": "Audit\nContent Patterns",
+          "description": "The work started by identifying repeated labeling issues, metadata gaps, and retrieval blockers across the system.",
+          "mediaPreset": "layers"
+        },
+        {
+          "index": "02",
+          "origin": "center",
+          "title": "Reshape\nTaxonomy",
+          "description": "Categories and terms were restructured to create a more stable mental model for how assets are organized.",
+          "mediaPreset": "panels"
+        },
+        {
+          "index": "03",
+          "origin": "right",
+          "title": "Improve\nFindability",
+          "description": "The interface then surfaced that structure more clearly so search felt faster, calmer, and more dependable.",
+          "mediaPreset": "decision"
+        }
+      ]
+    },
+    {
+      "type": "outcomes",
+      "id": "outcomes",
+      "navLabel": "Outcomes",
+      "label": "Outcomes",
+      "image": {
+        "src": "Assets/DAM-TE.gif",
+        "alt": "Interface preview for Managed Asset Search."
+      },
+      "metrics": [
+        {
+          "label": "Structure",
+          "value": "Clearer",
+          "text": "Taxonomy decisions create a more stable discovery model."
+        },
+        {
+          "label": "Search",
+          "value": "Faster",
+          "text": "Users get to relevant assets with less ambiguity."
+        },
+        {
+          "label": "Metadata",
+          "value": "Stronger",
+          "text": "Classification becomes more consistent across the system."
+        },
+        {
+          "label": "Retrieval",
+          "value": "Easier",
+          "text": "Asset discovery feels more predictable across teams."
+        }
+      ]
+    }
+  ]
+}

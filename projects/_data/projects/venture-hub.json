@@ -1,0 +1,155 @@
+{
+  "slug": "venture-hub",
+  "title": "Venture Hub",
+  "theme": "design",
+  "colorMode": "light",
+  "seo": {
+    "title": "Venture Hub | Neel",
+    "description": "A system design case study on centralizing venture visibility, progress tracking, and stakeholder coordination in one platform.",
+    "socialImage": "Assets/accelerator-dashboard.png"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero",
+      "navLabel": null,
+      "desktopVariant": "split",
+      "mobileVariant": "summary-first",
+      "tags": [
+        "System Design",
+        "2026"
+      ],
+      "title": "Venture Hub",
+      "summary": [
+        "This platform concept brings venture tracking, progress visibility, and program oversight into one shared system.",
+        "It is designed to reduce fragmentation across stakeholders while making venture progress easier to monitor and act on."
+      ],
+      "meta": [
+        {
+          "label": "Scope",
+          "value": "Platform + Workflow"
+        },
+        {
+          "label": "Users",
+          "value": "Venture programs"
+        }
+      ],
+      "media": {
+        "src": "Assets/accelerator-dashboard.png",
+        "alt": "Dashboard preview for Venture Hub."
+      }
+    },
+    {
+      "type": "overview",
+      "id": "overview",
+      "navLabel": "Overview",
+      "desktopVariant": "notes-aside",
+      "mobileVariant": "notes-inline",
+      "label": "Overview",
+      "heading": "Quick read",
+      "items": [
+        {
+          "label": "Problem",
+          "value": "Venture programs often rely on fragmented updates, which makes progress hard to track and coordination harder to sustain."
+        },
+        {
+          "label": "Approach",
+          "value": "Explored a centralized platform that organizes venture signals, workflows, and visibility for multiple stakeholders."
+        },
+        {
+          "label": "Outcome",
+          "value": "The result is a clearer system for reviewing progress, guiding teams, and keeping oversight aligned."
+        }
+      ],
+      "notes": [
+        {
+          "title": "Shared visibility",
+          "tone": "gold",
+          "text": "The platform needed to support both day-to-day guidance and higher-level oversight."
+        },
+        {
+          "title": "Workflow clarity",
+          "tone": "lilac",
+          "text": "Progress only becomes useful when it is legible across people, time, and milestones."
+        },
+        {
+          "title": "System view",
+          "tone": "peach",
+          "text": "The interface was treated as a coordination layer, not just a dashboard."
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "id": "context",
+      "navLabel": "Context",
+      "label": "Context",
+      "heading": "Programs need a shared operating view, not scattered updates and one-off status checks",
+      "aside": "The core challenge was to give mentors, administrators, and venture teams one place to see momentum, blockers, and next steps. That meant designing for alignment as much as for information display."
+    },
+    {
+      "type": "process",
+      "id": "process",
+      "navLabel": "Artifacts",
+      "desktopVariant": "preview-cards",
+      "mobileVariant": "stacked-cards",
+      "eyebrow": "Artifacts",
+      "hint": "Click to expand",
+      "cards": [
+        {
+          "index": "01",
+          "origin": "left",
+          "title": "Map\nStakeholder Views",
+          "description": "Different users needed different levels of detail, so the system began with role-specific visibility needs.",
+          "mediaPreset": "layers"
+        },
+        {
+          "index": "02",
+          "origin": "center",
+          "title": "Organize\nVenture Signals",
+          "description": "Progress indicators, milestones, and updates were structured so teams and reviewers could read momentum quickly.",
+          "mediaPreset": "panels"
+        },
+        {
+          "index": "03",
+          "origin": "right",
+          "title": "Design\nProgress Workflows",
+          "description": "The experience was shaped around actionable views that support review, guidance, and ongoing program management.",
+          "mediaPreset": "decision"
+        }
+      ]
+    },
+    {
+      "type": "outcomes",
+      "id": "outcomes",
+      "navLabel": "Outcomes",
+      "label": "Outcomes",
+      "image": {
+        "src": "Assets/accelerator-dashboard.png",
+        "alt": "Platform preview for Venture Hub."
+      },
+      "metrics": [
+        {
+          "label": "Visibility",
+          "value": "Higher",
+          "text": "Stakeholders get a clearer shared view of venture progress."
+        },
+        {
+          "label": "Coordination",
+          "value": "Easier",
+          "text": "Updates and guidance can happen from the same system layer."
+        },
+        {
+          "label": "Progress",
+          "value": "Clear",
+          "text": "Milestones and momentum are easier to interpret over time."
+        },
+        {
+          "label": "Oversight",
+          "value": "Stronger",
+          "text": "Program-level monitoring becomes more structured and dependable."
+        }
+      ]
+    }
+  ]
+}

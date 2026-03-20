@@ -1,0 +1,536 @@
+/* Generated from design-project-template-desktop.html */
+:root.light-theme {
+            --canvas: 247 242 232;
+            --surface: 255 253 248;
+            --ink: 24 23 22;
+            --subtext: 107 101 93;
+            --rule: 216 208 195;
+            --accent: 240 74 58;
+            --note-gold: 237 215 140;
+            --note-lilac: 222 177 242;
+            --note-peach: 240 196 176;
+            --stage: 236 231 222;
+            --grain-a: rgba(237, 215, 140, 0.16);
+            --grain-b: rgba(240, 74, 58, 0.06);
+            --nav-surface: rgba(247, 242, 232, 0.86);
+            --nav-border: rgba(216, 208, 195, 0.8);
+            --toggle-surface: rgba(24, 23, 22, 0.04);
+            --toggle-surface-hover: rgba(24, 23, 22, 0.08);
+            --project-space-sheen: rgba(255, 255, 255, 0.12);
+            --project-space-top: rgba(242, 104, 44, 0.16);
+            --project-space-accent: rgba(77, 109, 255, 0.14);
+            --project-space-overlay-top: transparent;
+            --project-space-overlay-bottom: transparent;
+            --project-space-eyebrow: 153 98 55;
+            --project-space-canvas-opacity: 0.96;
+        }
+
+        :root.dark-theme {
+            --canvas: 5 5 5;
+            --surface: 14 14 14;
+            --ink: 240 240 240;
+            --subtext: 136 136 136;
+            --rule: 56 56 56;
+            --accent: 255 255 255;
+            --note-gold: 88 78 42;
+            --note-lilac: 75 60 88;
+            --note-peach: 88 62 52;
+            --stage: 5 5 5;
+            --grain-a: rgba(0, 0, 0, 0);
+            --grain-b: rgba(0, 0, 0, 0);
+            --nav-surface: rgba(5, 5, 5, 0.9);
+            --nav-border: rgba(255, 255, 255, 0.08);
+            --toggle-surface: rgba(255, 255, 255, 0.03);
+            --toggle-surface-hover: rgba(255, 255, 255, 0.08);
+            --project-space-sheen: rgba(255, 255, 255, 0.08);
+            --project-space-top: rgba(242, 104, 44, 0.14);
+            --project-space-accent: rgba(255, 255, 255, 0.08);
+            --project-space-overlay-top: rgba(255, 255, 255, 0.03);
+            --project-space-overlay-bottom: rgba(5, 5, 5, 0.92);
+            --project-space-eyebrow: 200 184 167;
+            --project-space-canvas-opacity: 0.9;
+        }
+
+        html {
+            background: rgb(var(--canvas));
+        }
+
+        .brand-logo {
+            display: block;
+            position: relative;
+            width: 90px;
+            height: 56px;
+            overflow: visible;
+            flex: 0 0 auto;
+        }
+
+        .brand-logo img {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            transform: translateY(-50%);
+            transition: opacity 0.25s ease;
+        }
+
+        .brand-logo .logo-hover {
+            opacity: 0;
+        }
+
+        .brand-logo:hover .logo-default,
+        .brand-logo:focus-visible .logo-default {
+            opacity: 0;
+        }
+
+        .brand-logo:hover .logo-hover,
+        .brand-logo:focus-visible .logo-hover {
+            opacity: 1;
+        }
+
+        .theme-icon-sun {
+            display: none;
+        }
+
+        .dark-theme .theme-icon-sun {
+            display: block;
+        }
+
+        .dark-theme .theme-icon-moon {
+            display: none;
+        }
+
+        .process-stack {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .process-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .process-card:focus {
+            outline: none;
+        }
+
+        .process-card:focus-visible {
+            border-color: rgb(var(--accent) / 0.42);
+            box-shadow: 0 0 0 1px rgb(var(--accent) / 0.24), 0 26px 58px rgba(10, 10, 10, 0.16);
+        }
+
+        .process-card__inner {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+        }
+
+        .process-card__media {
+            height: 18rem;
+            min-height: 18rem;
+            overflow: hidden;
+            transition: background-color 240ms ease;
+        }
+
+        .process-card__media > div,
+        .process-card__media > svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .process-card__body {
+            display: flex;
+            min-height: 12rem;
+            flex: 1;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 1.25rem;
+        }
+
+        .process-card__content {
+            display: grid;
+            gap: 1rem;
+            width: min(100%, 20rem);
+        }
+
+        .process-card__eyebrow,
+        .process-card__title-block,
+        .process-card__description,
+        .process-card__hint {
+            width: 100%;
+        }
+
+        .process-card__description {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .process-card__hint {
+            transition: opacity 220ms ease, transform 220ms ease, color 220ms ease;
+        }
+
+        @media (max-width: 1023px) {
+            .process-card {
+                cursor: default;
+                min-height: 31rem;
+            }
+        }
+
+        .project-carousel-section {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .project-carousel-space {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid rgb(var(--rule) / 0.8);
+            background:
+                radial-gradient(circle at 18% 18%, var(--project-space-top), transparent 28%),
+                radial-gradient(circle at 82% 22%, var(--project-space-accent), transparent 22%),
+                linear-gradient(180deg, var(--project-space-sheen), transparent 24%),
+                rgb(var(--stage));
+        }
+
+        .project-carousel-space canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            opacity: var(--project-space-canvas-opacity);
+        }
+
+        .project-carousel-space::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, var(--project-space-overlay-top), transparent 24%),
+                linear-gradient(180deg, transparent 62%, var(--project-space-overlay-bottom) 100%);
+            pointer-events: none;
+        }
+
+        .project-carousel-shell {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 0.75rem;
+            padding: 1rem 0;
+        }
+
+        .project-carousel-heading {
+            display: grid;
+            gap: 0.35rem;
+            padding-inline: 0.75rem 0;
+        }
+
+        .project-carousel-copy {
+            max-width: 28rem;
+        }
+
+        .project-carousel-eyebrow {
+            color: rgb(var(--project-space-eyebrow));
+        }
+
+        :root.light-theme .project-carousel-copy {
+            color: rgb(var(--ink) / 0.84);
+        }
+
+        .project-carousel {
+            --project-carousel-card-width: clamp(144px, 36.8vw, 200px);
+            --project-carousel-card-height: calc(var(--project-carousel-card-width) * 1.18);
+            position: relative;
+            width: 100%;
+            height: calc(var(--project-carousel-card-height) + 7.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 3200px;
+            cursor: grab;
+            touch-action: pan-y;
+        }
+
+        .project-carousel:active {
+            cursor: grabbing;
+        }
+
+        .project-carousel:focus {
+            outline: none;
+        }
+
+        .project-carousel:focus-visible {
+            outline: 1px solid rgb(var(--rule) / 0.9);
+            outline-offset: 10px;
+            border-radius: 4px;
+        }
+
+        .project-carousel-track {
+            position: relative;
+            width: var(--project-carousel-card-width);
+            height: var(--project-carousel-card-height);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .project-carousel-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--project-carousel-card-width);
+            height: var(--project-carousel-card-height);
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            opacity: calc(0.22 + var(--card-focus, 0) * 0.78);
+            filter: saturate(calc(0.55 + var(--card-focus, 0) * 0.7));
+            transition: opacity 0.18s ease, filter 0.18s ease;
+        }
+
+        .project-carousel-card__link {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid rgb(var(--rule) / 0.65);
+            background:
+                linear-gradient(165deg, rgba(255, 255, 255, 0.08), transparent 38%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 32%),
+                rgb(var(--surface) / 0.78);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+            transform: translateY(calc((1 - var(--card-focus, 0)) * 20px)) scale(calc(0.88 + var(--card-focus, 0) * 0.12));
+            transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, color 0.24s ease;
+        }
+
+        .project-carousel-card.is-active .project-carousel-card__link,
+        .project-carousel-card__link[aria-current="page"] {
+            border-color: rgb(var(--accent) / 0.5);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
+        }
+
+        .project-carousel-card__image {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%),
+                rgba(255, 255, 255, 0.04);
+        }
+
+        .project-carousel-card__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-carousel-card__meta {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            gap: 0.35rem;
+            padding: 3.5rem 1.25rem 1rem;
+            background:
+                linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.14) 16%, rgba(0, 0, 0, 0.76) 76%, rgba(0, 0, 0, 0.92) 100%);
+        }
+
+        .project-carousel-card__type {
+            font-family: "Space Mono", monospace;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(240, 240, 240, 0.72);
+        }
+
+        .project-carousel-card__title {
+            font-family: "Instrument Sans", sans-serif;
+            font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+            line-height: 0.96;
+            letter-spacing: -0.04em;
+            color: #f3f0ea;
+        }
+
+        .project-carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            border: none;
+            background: transparent;
+            color: rgba(240, 240, 240, 0.62);
+            font-family: "Instrument Sans", sans-serif;
+            font-weight: 300;
+            font-size: clamp(2.4rem, 7vw, 4rem);
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .project-carousel-control:hover {
+            color: rgba(240, 240, 240, 1);
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        :root.light-theme .project-carousel-control {
+            color: rgba(24, 23, 22, 0.42);
+        }
+
+        :root.light-theme .project-carousel-control:hover {
+            color: rgba(24, 23, 22, 0.88);
+        }
+
+        .project-carousel-control.prev {
+            left: clamp(0rem, 0.8vw, 0.6rem);
+        }
+
+        .project-carousel-control.next {
+            right: clamp(0rem, 0.8vw, 0.6rem);
+        }
+
+        .project-carousel-card__link:hover .project-carousel-card__title {
+            color: rgb(var(--accent));
+        }
+
+        @media (min-width: 1024px) {
+            .process-stack {
+                position: relative;
+                min-height: 38.75rem;
+                gap: 0;
+                --process-motion-duration: 190ms;
+                --process-motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+                perspective: 1800px;
+            }
+
+            .process-stack[data-ready="true"] .process-card {
+                transition:
+                    left var(--process-motion-duration) var(--process-motion-ease),
+                    top var(--process-motion-duration) var(--process-motion-ease),
+                    scale var(--process-motion-duration) var(--process-motion-ease),
+                    rotate var(--process-motion-duration) var(--process-motion-ease),
+                    width var(--process-motion-duration) var(--process-motion-ease),
+                    height var(--process-motion-duration) var(--process-motion-ease),
+                    opacity 180ms linear,
+                    box-shadow 200ms linear,
+                    border-color 200ms linear,
+                    background-color 200ms linear,
+                    filter 180ms linear;
+            }
+
+            .process-card__inner {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .process-card {
+                position: absolute;
+                top: var(--process-card-y, 0px);
+                left: var(--process-card-x, 0px);
+                transform-origin: top left;
+                width: var(--process-card-width, 0px);
+                height: var(--process-card-height, 34rem);
+                opacity: var(--process-card-opacity, 1);
+                z-index: var(--process-card-z, 1);
+                filter: saturate(var(--process-card-saturation, 1));
+                scale: var(--process-card-scale, 1);
+                rotate: var(--process-card-rotate, 0deg);
+            }
+
+            .process-stack[data-active-card="none"] .process-card:hover,
+            .process-stack[data-active-card="none"] .process-card:focus-visible {
+                --process-card-saturation: 1.04;
+                z-index: 8;
+                box-shadow: 0 28px 62px rgba(10, 10, 10, 0.18);
+                border-color: rgb(var(--accent) / 0.34);
+                background-color: rgb(var(--surface));
+            }
+
+            .process-stack[data-active-card="none"] .process-card:hover .process-card__hint,
+            .process-stack[data-active-card="none"] .process-card:focus-visible .process-card__hint {
+                color: rgb(var(--accent));
+                transform: translateY(-2px);
+            }
+
+            .process-card[data-active="true"] {
+                border-color: rgb(var(--accent) / 0.36);
+                z-index: 9;
+                box-shadow: 0 34px 72px rgba(10, 10, 10, 0.2);
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__inner {
+                grid-template-columns: 1.5fr 1fr;
+                grid-template-rows: 1fr;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__media {
+                min-height: 100%;
+                height: 100%;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__body {
+                align-items: flex-start;
+                justify-content: center;
+                min-height: 100%;
+                padding-block: 2rem;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__content {
+                width: min(100%, 24rem);
+                gap: 1.25rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__media {
+                height: 22.5rem;
+                min-height: 22.5rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__body {
+                padding: 1.5rem;
+                min-height: 8.5rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__content {
+                gap: 0.75rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__description {
+                display: none;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__hint {
+                opacity: 0;
+                transform: translateY(8px);
+                pointer-events: none;
+            }
+        }
+
+        @media (min-width: 760px) {
+            .project-carousel {
+                --project-carousel-card-width: clamp(176px, 23.2vw, 224px);
+                height: calc(var(--project-carousel-card-height) + 8rem);
+            }
+        }
+
+        @media (min-width: 1080px) {
+            .project-carousel {
+                --project-carousel-card-width: clamp(192px, 15.2vw, 240px);
+                height: calc(var(--project-carousel-card-height) + 8.5rem);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            html {
+                overflow-x: hidden;
+            }
+
+            #page-scale {
+                width: 125%;
+                zoom: 0.8;
+                margin-left: -12.5%;
+            }
+        }

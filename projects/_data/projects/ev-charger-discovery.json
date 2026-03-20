@@ -1,0 +1,180 @@
+﻿{
+  "slug": "ev-charger-discovery",
+  "title": "EV Charger Discovery",
+  "theme": "design",
+  "colorMode": "light",
+  "seo": {
+    "title": "EV Charger Discovery | Neel",
+    "description": "A case study on designing a charger discovery experience around trust, availability, and faster decision-making for urban EV users.",
+    "socialImage": "Assets/grid-discovery.png"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero",
+      "navLabel": null,
+      "desktopVariant": "split",
+      "mobileVariant": "summary-first",
+      "tags": ["UX-UI", "2026"],
+      "title": "EV Charger Discovery",
+      "summary": [
+        "This concept reframes charger discovery for gig workers and urban EV users as a trust-and-timing problem.",
+        "Instead of only helping users find a station, it helps them judge whether that station is worth committing to in the first place."
+      ],
+      "meta": [
+        { "label": "Scope", "value": "Discovery + Interface" },
+        { "label": "Users", "value": "Urban EV drivers" }
+      ],
+      "media": {
+        "src": "Assets/grid-discovery.png",
+        "alt": "Preview of the EV Charger Discovery mobile interface showing charger cards and a map-driven layout."
+      }
+    },
+    {
+      "type": "overview",
+      "id": "overview",
+      "navLabel": "Overview",
+      "desktopVariant": "notes-aside",
+      "mobileVariant": "notes-inline",
+      "label": "Overview",
+      "heading": "Quick read",
+      "items": [
+        {
+          "label": "Problem",
+          "value": "Nearby chargers can still be the wrong choice when queues, reliability, and wait conditions are unclear."
+        },
+        {
+          "label": "Approach",
+          "value": "Explored a map-first interface that foregrounds queue status, station credibility, and decision confidence."
+        },
+        {
+          "label": "Outcome",
+          "value": "The result is a clearer discovery layer built around trust, scan speed, and lower decision friction."
+        }
+      ],
+      "notes": [
+        {
+          "title": "Field note",
+          "tone": "gold",
+          "text": "Had to spend an hour at a charging station because of the long queues."
+        },
+        {
+          "title": "Service friction",
+          "tone": "lilac",
+          "text": "The first charger was broken, so was the second. I had to drive around to find one that was working."
+        },
+        {
+          "title": "Breakdown moment",
+          "tone": "peach",
+          "text": "The battery swapping station was under maintenance, the next station was 2kms away."
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "id": "context",
+      "navLabel": "Context",
+      "label": "Context",
+      "heading": "Charging decisions break down when uncertainty stacks up",
+      "aside": "The challenge is not only locating a charger, but deciding whether it is reliable enough to justify the detour. That uncertainty hits hardest for time-sensitive users whose routines depend on predictable charging."
+    },
+    {
+      "type": "users",
+      "id": "users",
+      "navLabel": null,
+      "desktopVariant": "comparison-table",
+      "mobileVariant": "stacked-cards",
+      "heading": "Three user groups, three charging realities.",
+      "users": [
+        {
+          "icon": "rider",
+          "title": "Gig Riders",
+          "usage": "180-240",
+          "needs": "Reliable, predictable charging or swapping",
+          "pains": "Downtime is lost income",
+          "priorities": "Maximise earnings, minimise fuel cost"
+        },
+        {
+          "icon": "commuter",
+          "title": "Urban Commuter",
+          "usage": "40-60",
+          "needs": "Nearby charger status and viable alternatives",
+          "pains": "Battery replacement and resale anxiety",
+          "priorities": "Tech-forward lifestyle,\nlow upkeep cost"
+        },
+        {
+          "icon": "fleet",
+          "title": "Fleet Owner",
+          "usage": "180-240",
+          "needs": "Depot charging visibility\nand analytics",
+          "pains": "Fleet health visibility and scheduling complexity",
+          "priorities": "Lower per-delivery cost"
+        }
+      ]
+    },
+    {
+      "type": "process",
+      "id": "process",
+      "navLabel": "Artifacts",
+      "desktopVariant": "preview-cards",
+      "mobileVariant": "stacked-cards",
+      "eyebrow": "Artifacts",
+      "hint": "Click to expand",
+      "cards": [
+        {
+          "index": "01",
+          "origin": "left",
+          "title": "Prioritize\nTrust Signals",
+          "description": "Queue visibility, charger status, and reliability cues were treated as core UI, not secondary metadata.",
+          "mediaPreset": "layers"
+        },
+        {
+          "index": "02",
+          "origin": "center",
+          "title": "Reduce\nScan Time",
+          "description": "The hierarchy helped users compare stations fast, without having to drill into every option.",
+          "mediaPreset": "panels"
+        },
+        {
+          "index": "03",
+          "origin": "right",
+          "title": "Support Faster Commitment",
+          "description": "The interaction model was built to make route tradeoffs and queue risk legible before arrival.",
+          "mediaPreset": "decision"
+        }
+      ]
+    },
+    {
+      "type": "outcomes",
+      "id": "outcomes",
+      "navLabel": "Outcomes",
+      "label": "Outcomes",
+      "image": {
+        "src": "Assets/grid-discovery.png",
+        "alt": "Rendered interface of the EV Charger Discovery concept."
+      },
+      "metrics": [
+        {
+          "label": "Trust",
+          "value": "High",
+          "text": "Reliability cues move earlier in the flow."
+        },
+        {
+          "label": "Scan time",
+          "value": "Low",
+          "text": "Nearby stations become faster to compare."
+        },
+        {
+          "label": "Queue",
+          "value": "Visible",
+          "text": "Wait conditions are easier to read before arrival."
+        },
+        {
+          "label": "Confidence",
+          "value": "High",
+          "text": "Users commit with less hesitation."
+        }
+      ]
+    }
+  ]
+}

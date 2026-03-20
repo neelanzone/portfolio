@@ -1,0 +1,2102 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="light-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charger Discovery | Desktop Page</title>
+    <meta
+        name="description"
+        content="Tailwind implementation of the EV Charger Discovery desktop case-study page, recreated section by section from the Figma design."
+    >
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Space+Mono:wght@400;700&display=swap"
+        rel="stylesheet"
+    >
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        body: ['"Instrument Sans"', 'sans-serif'],
+                        display: ['"Merriweather"', 'serif'],
+                        mono: ['"Space Mono"', 'monospace']
+                    },
+                    colors: {
+                        canvas: 'rgb(var(--canvas) / <alpha-value>)',
+                        surface: 'rgb(var(--surface) / <alpha-value>)',
+                        ink: 'rgb(var(--ink) / <alpha-value>)',
+                        subtext: 'rgb(var(--subtext) / <alpha-value>)',
+                        rule: 'rgb(var(--rule) / <alpha-value>)',
+                        accent: 'rgb(var(--accent) / <alpha-value>)',
+                        note: {
+                            gold: 'rgb(var(--note-gold) / <alpha-value>)',
+                            lilac: 'rgb(var(--note-lilac) / <alpha-value>)',
+                            peach: 'rgb(var(--note-peach) / <alpha-value>)'
+                        },
+                        stage: 'rgb(var(--stage) / <alpha-value>)'
+                    },
+                    fontSize: {
+                        tag: ['0.75rem', { lineHeight: '1rem', letterSpacing: '0.2em' }],
+                        eyebrow: ['1rem', { lineHeight: '1.2rem', letterSpacing: '0.14em' }],
+                        body: ['1.25rem', { lineHeight: '1.6' }],
+                        lead: ['1.25rem', { lineHeight: '1.6' }],
+                        icon: ['1.25rem', { lineHeight: '1' }],
+                        title: ['1.5rem', { lineHeight: '1.2', letterSpacing: '-0.015em' }],
+                        cardtitle: ['1.75rem', { lineHeight: '1.15', letterSpacing: '-0.02em' }],
+                        stat: ['2rem', { lineHeight: '1.08', letterSpacing: '-0.025em' }],
+                        displaysubhead: ['clamp(2rem, 3vw, 2.5rem)', { lineHeight: '1.1', letterSpacing: '-0.025em' }],
+                        displaysection: ['clamp(3rem, 5vw, 3.5rem)', { lineHeight: '1.05', letterSpacing: '-0.03em' }],
+                        displayhero: ['clamp(4rem, 7vw, 4.5rem)', { lineHeight: '1.12', letterSpacing: '-0.035em' }]
+                    },
+                    boxShadow: {
+                        soft: '0 18px 60px -38px rgba(24, 23, 22, 0.22)',
+                        note: '0 18px 40px -24px rgba(24, 23, 22, 0.28)'
+                    },
+                    backgroundImage: {
+                        grain: 'radial-gradient(circle at top left, var(--grain-a), transparent 28%), radial-gradient(circle at bottom right, var(--grain-b), transparent 22%)'
+                    }
+                }
+            }
+        };
+    </script>
+    <style>
+        :root.light-theme {
+            --canvas: 247 242 232;
+            --surface: 255 253 248;
+            --ink: 24 23 22;
+            --subtext: 107 101 93;
+            --rule: 216 208 195;
+            --accent: 240 74 58;
+            --note-gold: 237 215 140;
+            --note-lilac: 222 177 242;
+            --note-peach: 240 196 176;
+            --stage: 236 231 222;
+            --grain-a: rgba(237, 215, 140, 0.16);
+            --grain-b: rgba(240, 74, 58, 0.06);
+            --nav-surface: rgba(247, 242, 232, 0.86);
+            --nav-border: rgba(216, 208, 195, 0.8);
+            --toggle-surface: rgba(24, 23, 22, 0.04);
+            --toggle-surface-hover: rgba(24, 23, 22, 0.08);
+            --project-space-sheen: rgba(255, 255, 255, 0.12);
+            --project-space-top: rgba(242, 104, 44, 0.16);
+            --project-space-accent: rgba(77, 109, 255, 0.14);
+            --project-space-overlay-top: transparent;
+            --project-space-overlay-bottom: transparent;
+            --project-space-eyebrow: 153 98 55;
+            --project-space-canvas-opacity: 0.96;
+        }
+
+        :root.dark-theme {
+            --canvas: 5 5 5;
+            --surface: 14 14 14;
+            --ink: 240 240 240;
+            --subtext: 136 136 136;
+            --rule: 56 56 56;
+            --accent: 255 255 255;
+            --note-gold: 88 78 42;
+            --note-lilac: 75 60 88;
+            --note-peach: 88 62 52;
+            --stage: 5 5 5;
+            --grain-a: rgba(0, 0, 0, 0);
+            --grain-b: rgba(0, 0, 0, 0);
+            --nav-surface: rgba(5, 5, 5, 0.9);
+            --nav-border: rgba(255, 255, 255, 0.08);
+            --toggle-surface: rgba(255, 255, 255, 0.03);
+            --toggle-surface-hover: rgba(255, 255, 255, 0.08);
+            --project-space-sheen: rgba(255, 255, 255, 0.08);
+            --project-space-top: rgba(242, 104, 44, 0.14);
+            --project-space-accent: rgba(255, 255, 255, 0.08);
+            --project-space-overlay-top: rgba(255, 255, 255, 0.03);
+            --project-space-overlay-bottom: rgba(5, 5, 5, 0.92);
+            --project-space-eyebrow: 200 184 167;
+            --project-space-canvas-opacity: 0.9;
+        }
+
+        html {
+            background: rgb(var(--canvas));
+        }
+
+        .brand-logo {
+            display: block;
+            position: relative;
+            width: 90px;
+            height: 56px;
+            overflow: visible;
+            flex: 0 0 auto;
+        }
+
+        .brand-logo img {
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 90px;
+            height: 90px;
+            object-fit: contain;
+            transform: translateY(-50%);
+            transition: opacity 0.25s ease;
+        }
+
+        .brand-logo .logo-hover {
+            opacity: 0;
+        }
+
+        .brand-logo:hover .logo-default,
+        .brand-logo:focus-visible .logo-default {
+            opacity: 0;
+        }
+
+        .brand-logo:hover .logo-hover,
+        .brand-logo:focus-visible .logo-hover {
+            opacity: 1;
+        }
+
+        .theme-icon-sun {
+            display: none;
+        }
+
+        .dark-theme .theme-icon-sun {
+            display: block;
+        }
+
+        .dark-theme .theme-icon-moon {
+            display: none;
+        }
+
+        .process-stack {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .process-card {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .process-card:focus {
+            outline: none;
+        }
+
+        .process-card:focus-visible {
+            border-color: rgb(var(--accent) / 0.42);
+            box-shadow: 0 0 0 1px rgb(var(--accent) / 0.24), 0 26px 58px rgba(10, 10, 10, 0.16);
+        }
+
+        .process-card__inner {
+            display: flex;
+            min-height: 100%;
+            flex-direction: column;
+        }
+
+        .process-card__media {
+            height: 18rem;
+            min-height: 18rem;
+            overflow: hidden;
+            transition: background-color 240ms ease;
+        }
+
+        .process-card__media > div,
+        .process-card__media > svg {
+            display: block;
+            width: 100%;
+            height: 100%;
+        }
+
+        .process-card__body {
+            display: flex;
+            min-height: 12rem;
+            flex: 1;
+            flex-direction: column;
+            justify-content: flex-end;
+            gap: 1.25rem;
+        }
+
+        .process-card__content {
+            display: grid;
+            gap: 1rem;
+            width: min(100%, 20rem);
+        }
+
+        .process-card__eyebrow,
+        .process-card__title-block,
+        .process-card__description,
+        .process-card__hint {
+            width: 100%;
+        }
+
+        .process-card__description {
+            font-size: 1rem;
+            line-height: 1.6;
+        }
+
+        .process-card__hint {
+            transition: opacity 220ms ease, transform 220ms ease, color 220ms ease;
+        }
+
+        @media (max-width: 1023px) {
+            .process-card {
+                cursor: default;
+                min-height: 31rem;
+            }
+        }
+
+        .project-carousel-section {
+            position: relative;
+            overflow: hidden;
+            isolation: isolate;
+        }
+
+        .project-carousel-space {
+            position: absolute;
+            inset: 0;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid rgb(var(--rule) / 0.8);
+            background:
+                radial-gradient(circle at 18% 18%, var(--project-space-top), transparent 28%),
+                radial-gradient(circle at 82% 22%, var(--project-space-accent), transparent 22%),
+                linear-gradient(180deg, var(--project-space-sheen), transparent 24%),
+                rgb(var(--stage));
+        }
+
+        .project-carousel-space canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            opacity: var(--project-space-canvas-opacity);
+        }
+
+        .project-carousel-space::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, var(--project-space-overlay-top), transparent 24%),
+                linear-gradient(180deg, transparent 62%, var(--project-space-overlay-bottom) 100%);
+            pointer-events: none;
+        }
+
+        .project-carousel-shell {
+            position: relative;
+            z-index: 1;
+            display: grid;
+            gap: 0.75rem;
+            padding: 1rem 0;
+        }
+
+        .project-carousel-heading {
+            display: grid;
+            gap: 0.35rem;
+            padding-inline: 0.75rem 0;
+        }
+
+        .project-carousel-copy {
+            max-width: 28rem;
+        }
+
+        .project-carousel-eyebrow {
+            color: rgb(var(--project-space-eyebrow));
+        }
+
+        :root.light-theme .project-carousel-copy {
+            color: rgb(var(--ink) / 0.84);
+        }
+
+        .project-carousel {
+            --project-carousel-card-width: clamp(144px, 36.8vw, 200px);
+            --project-carousel-card-height: calc(var(--project-carousel-card-width) * 1.18);
+            position: relative;
+            width: 100%;
+            height: calc(var(--project-carousel-card-height) + 7.5rem);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 3200px;
+            cursor: grab;
+            touch-action: pan-y;
+        }
+
+        .project-carousel:active {
+            cursor: grabbing;
+        }
+
+        .project-carousel:focus {
+            outline: none;
+        }
+
+        .project-carousel:focus-visible {
+            outline: 1px solid rgb(var(--rule) / 0.9);
+            outline-offset: 10px;
+            border-radius: 4px;
+        }
+
+        .project-carousel-track {
+            position: relative;
+            width: var(--project-carousel-card-width);
+            height: var(--project-carousel-card-height);
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        .project-carousel-card {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: var(--project-carousel-card-width);
+            height: var(--project-carousel-card-height);
+            transform-style: preserve-3d;
+            backface-visibility: visible;
+            opacity: calc(0.22 + var(--card-focus, 0) * 0.78);
+            filter: saturate(calc(0.55 + var(--card-focus, 0) * 0.7));
+            transition: opacity 0.18s ease, filter 0.18s ease;
+        }
+
+        .project-carousel-card__link {
+            position: relative;
+            display: block;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            border-radius: 4px;
+            border: 1px solid rgb(var(--rule) / 0.65);
+            background:
+                linear-gradient(165deg, rgba(255, 255, 255, 0.08), transparent 38%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.04), transparent 32%),
+                rgb(var(--surface) / 0.78);
+            box-shadow: 0 18px 46px rgba(0, 0, 0, 0.28);
+            transform: translateY(calc((1 - var(--card-focus, 0)) * 20px)) scale(calc(0.88 + var(--card-focus, 0) * 0.12));
+            transition: transform 0.24s ease, border-color 0.24s ease, box-shadow 0.24s ease, color 0.24s ease;
+        }
+
+        .project-carousel-card.is-active .project-carousel-card__link,
+        .project-carousel-card__link[aria-current="page"] {
+            border-color: rgb(var(--accent) / 0.5);
+            box-shadow: 0 28px 70px rgba(0, 0, 0, 0.34);
+        }
+
+        .project-carousel-card__image {
+            position: absolute;
+            inset: 0;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.08), transparent 28%),
+                rgba(255, 255, 255, 0.04);
+        }
+
+        .project-carousel-card__image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .project-carousel-card__meta {
+            position: absolute;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            display: grid;
+            gap: 0.35rem;
+            padding: 3.5rem 1.25rem 1rem;
+            background:
+                linear-gradient(180deg, transparent 0%, rgba(0, 0, 0, 0.14) 16%, rgba(0, 0, 0, 0.76) 76%, rgba(0, 0, 0, 0.92) 100%);
+        }
+
+        .project-carousel-card__type {
+            font-family: "Space Mono", monospace;
+            font-size: 0.75rem;
+            line-height: 1.3;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: rgba(240, 240, 240, 0.72);
+        }
+
+        .project-carousel-card__title {
+            font-family: "Instrument Sans", sans-serif;
+            font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+            line-height: 0.96;
+            letter-spacing: -0.04em;
+            color: #f3f0ea;
+        }
+
+        .project-carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 3;
+            border: none;
+            background: transparent;
+            color: rgba(240, 240, 240, 0.62);
+            font-family: "Instrument Sans", sans-serif;
+            font-weight: 300;
+            font-size: clamp(2.4rem, 7vw, 4rem);
+            line-height: 1;
+            cursor: pointer;
+            transition: transform 0.2s ease, color 0.2s ease;
+        }
+
+        .project-carousel-control:hover {
+            color: rgba(240, 240, 240, 1);
+            transform: translateY(-50%) scale(1.08);
+        }
+
+        :root.light-theme .project-carousel-control {
+            color: rgba(24, 23, 22, 0.42);
+        }
+
+        :root.light-theme .project-carousel-control:hover {
+            color: rgba(24, 23, 22, 0.88);
+        }
+
+        .project-carousel-control.prev {
+            left: clamp(0rem, 0.8vw, 0.6rem);
+        }
+
+        .project-carousel-control.next {
+            right: clamp(0rem, 0.8vw, 0.6rem);
+        }
+
+        .project-carousel-card__link:hover .project-carousel-card__title {
+            color: rgb(var(--accent));
+        }
+
+        @media (min-width: 1024px) {
+            .process-stack {
+                position: relative;
+                min-height: 38.75rem;
+                gap: 0;
+                --process-motion-duration: 190ms;
+                --process-motion-ease: cubic-bezier(0.32, 0.72, 0, 1);
+                perspective: 1800px;
+            }
+
+            .process-stack[data-ready="true"] .process-card {
+                transition:
+                    left var(--process-motion-duration) var(--process-motion-ease),
+                    top var(--process-motion-duration) var(--process-motion-ease),
+                    scale var(--process-motion-duration) var(--process-motion-ease),
+                    rotate var(--process-motion-duration) var(--process-motion-ease),
+                    width var(--process-motion-duration) var(--process-motion-ease),
+                    height var(--process-motion-duration) var(--process-motion-ease),
+                    opacity 180ms linear,
+                    box-shadow 200ms linear,
+                    border-color 200ms linear,
+                    background-color 200ms linear,
+                    filter 180ms linear;
+            }
+
+            .process-card__inner {
+                display: grid;
+                grid-template-columns: 1fr;
+                grid-template-rows: auto 1fr;
+            }
+
+            .process-card {
+                position: absolute;
+                top: var(--process-card-y, 0px);
+                left: var(--process-card-x, 0px);
+                transform-origin: top left;
+                width: var(--process-card-width, 0px);
+                height: var(--process-card-height, 34rem);
+                opacity: var(--process-card-opacity, 1);
+                z-index: var(--process-card-z, 1);
+                filter: saturate(var(--process-card-saturation, 1));
+                scale: var(--process-card-scale, 1);
+                rotate: var(--process-card-rotate, 0deg);
+            }
+
+            .process-stack[data-active-card="none"] .process-card:hover,
+            .process-stack[data-active-card="none"] .process-card:focus-visible {
+                --process-card-saturation: 1.04;
+                z-index: 8;
+                box-shadow: 0 28px 62px rgba(10, 10, 10, 0.18);
+                border-color: rgb(var(--accent) / 0.34);
+                background-color: rgb(var(--surface));
+            }
+
+            .process-stack[data-active-card="none"] .process-card:hover .process-card__hint,
+            .process-stack[data-active-card="none"] .process-card:focus-visible .process-card__hint {
+                color: rgb(var(--accent));
+                transform: translateY(-2px);
+            }
+
+            .process-card[data-active="true"] {
+                border-color: rgb(var(--accent) / 0.36);
+                z-index: 9;
+                box-shadow: 0 34px 72px rgba(10, 10, 10, 0.2);
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__inner {
+                grid-template-columns: 1.5fr 1fr;
+                grid-template-rows: 1fr;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__media {
+                min-height: 100%;
+                height: 100%;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__body {
+                align-items: flex-start;
+                justify-content: center;
+                min-height: 100%;
+                padding-block: 2rem;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__content {
+                width: min(100%, 24rem);
+                gap: 1.25rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__media {
+                height: 22.5rem;
+                min-height: 22.5rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__body {
+                padding: 1.5rem;
+                min-height: 8.5rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__content {
+                gap: 0.75rem;
+            }
+
+            .process-card[data-expanded-content="false"] .process-card__description {
+                display: none;
+            }
+
+            .process-card[data-expanded-content="true"] .process-card__hint {
+                opacity: 0;
+                transform: translateY(8px);
+                pointer-events: none;
+            }
+        }
+
+        @media (min-width: 760px) {
+            .project-carousel {
+                --project-carousel-card-width: clamp(176px, 23.2vw, 224px);
+                height: calc(var(--project-carousel-card-height) + 8rem);
+            }
+        }
+
+        @media (min-width: 1080px) {
+            .project-carousel {
+                --project-carousel-card-width: clamp(192px, 15.2vw, 240px);
+                height: calc(var(--project-carousel-card-height) + 8.5rem);
+            }
+        }
+
+        @media (min-width: 1024px) {
+            html {
+                overflow-x: hidden;
+            }
+
+            #page-scale {
+                width: 125%;
+                zoom: 0.8;
+                margin-left: -12.5%;
+            }
+        }
+    </style>
+</head>
+<body class="overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
+    <div class="pointer-events-none fixed inset-x-0 top-0 z-40 h-24 bg-gradient-to-b from-canvas via-canvas/90 to-transparent"></div>
+
+    <header class="page-navbar fixed inset-x-0 top-0 z-50 border-b border-[color:var(--nav-border)] bg-[color:var(--nav-surface)] backdrop-blur-xl">
+        <div class="relative flex w-full items-center justify-between gap-5 px-5 py-1.5 sm:px-7 lg:px-12">
+            <a href="#hero" class="brand-logo rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40">
+                <img src="Assets/identity-motion-active.gif" alt="neel Logo" class="logo-default" width="90" height="90">
+                <img src="Assets/identity-motion-hover.gif" alt="" class="logo-hover" width="90" height="90" aria-hidden="true">
+            </a>
+
+            <nav class="hidden items-center gap-6 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2" aria-label="Section navigation">
+                <a href="#overview" class="nav-link font-mono text-eyebrow uppercase text-ink transition-colors hover:text-ink">Overview</a>
+                <a href="#context" class="nav-link font-mono text-eyebrow uppercase text-subtext transition-colors hover:text-ink">Context</a>
+                <a href="#process" class="nav-link font-mono text-eyebrow uppercase text-subtext transition-colors hover:text-ink">Artifacts</a>
+                <a href="#outcomes" class="nav-link font-mono text-eyebrow uppercase text-subtext transition-colors hover:text-ink">Outcomes</a>
+                <a href="#more-projects" class="nav-link font-mono text-eyebrow uppercase text-subtext transition-colors hover:text-ink">More Projects</a>
+            </nav>
+
+            <div class="hidden items-center gap-2 lg:flex">
+                <button
+                    type="button"
+                    data-theme-toggle
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--toggle-surface)] text-ink transition hover:bg-[color:var(--toggle-surface-hover)]"
+                    aria-label="Toggle Dark Mode"
+                >
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="flex items-center gap-2 lg:hidden">
+                <button
+                    type="button"
+                    data-theme-toggle
+                    class="inline-flex h-10 w-10 items-center justify-center rounded-full bg-[color:var(--toggle-surface)] text-ink transition hover:bg-[color:var(--toggle-surface-hover)]"
+                    aria-label="Toggle Dark Mode"
+                >
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+                <button
+                    id="mobile-menu-button"
+                    type="button"
+                    class="inline-flex items-center justify-center rounded-full bg-[color:var(--toggle-surface)] px-4 py-1.5 font-mono text-eyebrow uppercase text-ink transition hover:bg-[color:var(--toggle-surface-hover)]"
+                    aria-expanded="false"
+                    aria-controls="mobile-menu"
+                >
+                    Menu
+                </button>
+            </div>
+        </div>
+
+        <nav id="mobile-menu" class="hidden rounded-[4px] border-t border-[color:var(--nav-border)] bg-canvas px-5 py-4 sm:px-7 lg:hidden" aria-label="Mobile section navigation">
+            <div class="flex flex-col gap-3">
+                <a href="#overview" class="font-mono text-eyebrow uppercase text-ink">Overview</a>
+                <a href="#context" class="font-mono text-eyebrow uppercase text-subtext">Context</a>
+                <a href="#process" class="font-mono text-eyebrow uppercase text-subtext">Artifacts</a>
+                <a href="#outcomes" class="font-mono text-eyebrow uppercase text-subtext">Outcomes</a>
+                <a href="#more-projects" class="font-mono text-eyebrow uppercase text-subtext">More Projects</a>
+            </div>
+        </nav>
+    </header>
+
+    <div id="page-scale">
+    <main class="pt-20 sm:pt-20 lg:pt-24">
+        <section id="hero" class="border-b border-rule/80">
+            <div class="mx-auto flex max-w-[70rem] flex-col gap-8 px-5 py-4 sm:px-7 lg:px-12 lg:py-6">
+                <div class="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+                    <div class="space-y-6">
+                        <div class="space-y-3">
+                            <div class="flex flex-wrap gap-2">
+                                <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">UX-UI</span>
+                                <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">2026</span>
+                            </div>
+                            <h1 class="max-w-xl font-display text-displayhero font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">
+                                EV Charger Discovery
+                            </h1>
+                        </div>
+
+                        <div class="grid max-w-2xl gap-4 sm:grid-cols-2">
+                            <div class="space-y-1">
+                                <p class="font-mono text-eyebrow uppercase text-subtext">Scope</p>
+                                <p class="text-body text-ink">Discovery + Interface</p>
+                            </div>
+                            <div class="space-y-1">
+                                <p class="font-mono text-eyebrow uppercase text-subtext">Users</p>
+                                <p class="text-body text-ink">Urban EV drivers</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="lg:flex lg:min-h-full lg:items-end">
+                        <p class="max-w-lg lg:border-l lg:border-rule lg:pl-6 text-lead text-subtext">
+                            This concept reframes charger discovery for gig workers and urban EV users as a trust-and-timing problem.
+                            Instead of only helping users find a station, it helps them judge whether that station is worth
+                            committing to in the first place.
+                        </p>
+                    </div>
+                </div>
+
+                <figure class="h-[40vh] w-full overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
+                    <img
+                        src="Assets/grid-discovery.png"
+                        alt="Preview of the EV Charger Discovery mobile interface showing charger cards and a map-driven layout."
+                        class="h-full w-full object-cover"
+                        loading="eager"
+                        decoding="async"
+                    >
+                </figure>
+            </div>
+        </section>
+
+        <section id="overview" class="border-b border-rule/80">
+            <div class="mx-auto grid max-w-[70rem] gap-10 px-5 py-12 sm:px-7 lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-16">
+                <div class="space-y-5">
+                    <div class="space-y-3">
+                        <p class="font-mono text-eyebrow uppercase text-subtext">Overview</p>
+                        <h2 class="font-display text-displaysubhead font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">
+                            Quick read
+                        </h2>
+                    </div>
+
+                    <div class="divide-y divide-rule">
+                        <article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6">
+                            <p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Problem</p>
+                            <p class="max-w-[44rem] text-body text-ink">
+                                Nearby chargers can still be the wrong choice when queues, reliability, and wait conditions are unclear.
+                            </p>
+                        </article>
+                        <article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6">
+                            <p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Approach</p>
+                            <p class="max-w-[44rem] text-body text-ink">
+                                Explored a map-first interface that foregrounds queue status, station credibility, and decision confidence.
+                            </p>
+                        </article>
+                        <article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6">
+                            <p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Outcome</p>
+                            <p class="max-w-[44rem] text-body text-ink">
+                                The result is a clearer discovery layer built around trust, scan speed, and lower decision friction.
+                            </p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="grid gap-4 self-start pt-1 lg:translate-x-12 xl:translate-x-16">
+                    <article class="rotate-[-2deg] rounded-[4px] border border-black/5 bg-note-gold px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:bg-[#f3e3a5] hover:shadow-soft">
+                        <p class="font-mono text-eyebrow uppercase text-ink/55">Field note</p>
+                        <p class="mt-2 text-body text-ink">
+                            Had to spend an hour at a charging station because of the long queues.
+                        </p>
+                    </article>
+                    <article class="rotate-[1.6deg] rounded-[4px] border border-black/5 bg-note-lilac px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:bg-[#e8c8f8] hover:shadow-soft">
+                        <p class="font-mono text-eyebrow uppercase text-ink/55">Service friction</p>
+                        <p class="mt-2 text-body text-ink">
+                            The first charger was broken, so was the second. I had to drive around to find one that was working.
+                        </p>
+                    </article>
+                    <article class="rotate-[-1deg] rounded-[4px] border border-black/5 bg-note-peach px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:bg-[#f6d4c7] hover:shadow-soft">
+                        <p class="font-mono text-eyebrow uppercase text-ink/55">Breakdown moment</p>
+                        <p class="mt-2 text-body text-ink">
+                            The battery swapping station was under maintenance, the next station was 2kms away.
+                        </p>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="context">
+            <div class="mx-auto max-w-[70rem] px-5 pt-12 pb-8 sm:px-7 lg:px-12 lg:pt-16 lg:pb-10">
+                <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+                    <div class="space-y-5">
+                        <p class="font-mono text-eyebrow uppercase text-subtext">Context</p>
+                        <h2 class="max-w-3xl font-display text-displaysection font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">
+                            Charging decisions break down when uncertainty stacks up
+                        </h2>
+                    </div>
+
+                    <div class="border-l border-rule pl-6 lg:translate-x-3 lg:translate-y-4">
+                        <p class="text-base leading-7 text-subtext">
+                            The challenge is not only locating a charger, but deciding whether it is reliable enough to justify the
+                            detour. That uncertainty hits hardest for time-sensitive users whose routines depend on predictable charging.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="users" class="border-b border-rule/80">
+            <div class="mx-auto max-w-[70rem] px-5 pt-7 pb-12 sm:px-7 lg:px-12 lg:pt-8 lg:pb-16">
+                <div class="mb-7 lg:mb-9">
+                    <h2 class="whitespace-nowrap font-sans text-displaysubhead font-bold text-ink">Three user groups, three charging realities.</h2>
+                </div>
+
+                <div>
+                    <div class="hidden gap-6 pb-4 lg:grid lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]">
+                        <div></div>
+                        <p class="font-mono text-eyebrow uppercase text-subtext">Daily Usage (in kms)</p>
+                        <p class="text-center font-mono text-eyebrow uppercase text-subtext">Needs</p>
+                        <p class="text-center font-mono text-eyebrow uppercase text-subtext">Pains</p>
+                        <p class="text-center font-mono text-eyebrow uppercase text-subtext">Priorities</p>
+                    </div>
+                    <article class="grid gap-6 border-b border-rule py-2 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]">
+                        <div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start">
+                            <div class="flex h-14 w-14 items-center justify-center text-accent">
+                                <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 16h13l4-4"></path>
+                                    <path d="M5 16l1-5h8l2 5"></path>
+                                    <circle cx="8" cy="18" r="2"></circle>
+                                    <circle cx="18" cy="18" r="2"></circle>
+                                    <path d="M12 7h4"></path>
+                                </svg>
+                            </div>
+                            <p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Gig Riders</p>
+                        </div>
+                        <div>
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">180-240</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Reliable, predictable charging or swapping</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Downtime is lost income</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Maximise earnings, minimise fuel cost</p>
+                        </div>
+                    </article>
+
+                    <article class="grid gap-6 border-b border-rule py-4 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]">
+                        <div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start">
+                            <div class="flex h-14 w-14 items-center justify-center text-accent">
+                                <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M6 18h11"></path>
+                                    <path d="M8 18V8l4-3 4 3v10"></path>
+                                    <path d="M10 11h4"></path>
+                                    <circle cx="17" cy="18" r="2"></circle>
+                                    <circle cx="7" cy="18" r="2"></circle>
+                                </svg>
+                            </div>
+                            <p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Urban Commuter</p>
+                        </div>
+                        <div>
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">40-60</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Nearby charger status and viable alternatives</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Battery replacement and resale anxiety</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Tech-forward lifestyle,<br>low upkeep cost</p>
+                        </div>
+                    </article>
+
+                    <article class="grid gap-6 py-2 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]">
+                        <div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start">
+                            <div class="flex h-14 w-14 items-center justify-center text-accent">
+                                <svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M4 20h16"></path>
+                                    <path d="M6 20V7h12v13"></path>
+                                    <path d="M9 10h1"></path>
+                                    <path d="M14 10h1"></path>
+                                    <path d="M9 14h1"></path>
+                                    <path d="M14 14h1"></path>
+                                </svg>
+                            </div>
+                            <p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Fleet Owner</p>
+                        </div>
+                        <div>
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">180-240</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Depot charging visibility<br>and analytics</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Fleet health visibility and scheduling complexity</p>
+                        </div>
+                        <div class="lg:text-left">
+                            <p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p>
+                            <p class="mt-3 text-base leading-7 text-ink lg:mt-0">Lower per-delivery cost</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="border-b border-rule/80">
+            <div class="mx-auto max-w-[70rem] px-5 py-12 sm:px-7 lg:px-12 lg:py-16">
+                <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                    <p class="font-mono text-eyebrow uppercase text-subtext">Artifacts</p>
+                    <p class="hidden font-mono text-tag uppercase tracking-[0.16em] text-subtext/75 lg:block">Click to expand</p>
+                </div>
+
+                <div class="mt-6 process-stack" id="process-stack" data-active-card="none" data-ready="false">
+                    <article
+                        data-process-card
+                        data-process-origin="left"
+                        class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft"
+                        tabindex="0"
+                        role="button"
+                        aria-expanded="false"
+                        aria-label="Expand process card: Prioritize Trust Signals"
+                    >
+                        <div class="process-card__inner">
+                            <div class="process-card__media flex items-center justify-center bg-rule/20">
+                                <svg viewBox="0 0 520 360" class="h-full w-full" aria-hidden="true">
+                                    <polygon points="260,20 410,70 380,320 260,290" fill="#d9d7d2"></polygon>
+                                    <polygon points="260,20 110,70 140,320 260,290" fill="#dfddd9"></polygon>
+                                    <polygon points="170,52 260,20 350,52 318,255 260,238 202,255" fill="#d3d1cd"></polygon>
+                                </svg>
+                            </div>
+                            <div class="process-card__body p-6 sm:p-8">
+                                <div class="process-card__content">
+                                    <div class="process-card__title-block">
+                                        <p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">01</p>
+                                        <h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Prioritize<br>Trust Signals</h3>
+                                    </div>
+                                    <p class="process-card__description text-subtext">
+                                        Queue visibility, charger status, and reliability cues were treated as core UI, not secondary metadata.
+                                    </p>
+                                </div>
+                                <p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article
+                        data-process-card
+                        data-process-origin="center"
+                        class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft"
+                        tabindex="0"
+                        role="button"
+                        aria-expanded="false"
+                        aria-label="Expand process card: Reduce Scan Time"
+                    >
+                        <div class="process-card__inner">
+                            <div class="process-card__media flex items-center justify-center bg-rule/30">
+                                <div class="grid h-full w-full content-center gap-3">
+                                    <div class="h-10 rounded-[4px] bg-surface"></div>
+                                    <div class="grid grid-cols-[1.15fr_0.85fr] gap-3">
+                                        <div class="rounded-[4px] bg-surface p-4">
+                                            <div class="h-3 w-3/4 rounded-full bg-rule/60"></div>
+                                            <div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div>
+                                        </div>
+                                        <div class="rounded-[4px] bg-surface p-4">
+                                            <div class="h-3 w-2/3 rounded-full bg-rule/60"></div>
+                                            <div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div>
+                                        </div>
+                                    </div>
+                                    <div class="h-24 rounded-[4px] bg-surface"></div>
+                                </div>
+                            </div>
+                            <div class="process-card__body p-6 sm:p-8">
+                                <div class="process-card__content">
+                                    <div class="process-card__title-block">
+                                        <p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">02</p>
+                                        <h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Reduce<br>Scan Time</h3>
+                                    </div>
+                                    <p class="process-card__description text-subtext">
+                                        The hierarchy helped users compare stations fast, without having to drill into every option.
+                                    </p>
+                                </div>
+                                <p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p>
+                            </div>
+                        </div>
+                    </article>
+
+                    <article
+                        data-process-card
+                        data-process-origin="right"
+                        class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft"
+                        tabindex="0"
+                        role="button"
+                        aria-expanded="false"
+                        aria-label="Expand process card: Support Faster Commitment"
+                    >
+                        <div class="process-card__inner">
+                            <div class="process-card__media flex items-center justify-center bg-rule/25">
+                                <div class="grid h-full w-full content-center gap-4">
+                                    <div class="rounded-[4px] bg-surface p-4">
+                                        <div class="flex items-center justify-between">
+                                            <div class="h-3 w-24 rounded-full bg-rule/60"></div>
+                                            <div class="h-8 w-20 rounded-full bg-note-gold/70"></div>
+                                        </div>
+                                        <div class="mt-5 grid grid-cols-3 gap-3">
+                                            <div class="h-20 rounded-[4px] bg-rule/30"></div>
+                                            <div class="h-20 rounded-[4px] bg-rule/40"></div>
+                                            <div class="h-20 rounded-[4px] bg-rule/30"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="process-card__body p-6 sm:p-8">
+                                <div class="process-card__content">
+                                    <div class="process-card__title-block">
+                                        <p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">03</p>
+                                        <h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Support Faster Commitment</h3>
+                                    </div>
+                                    <p class="process-card__description text-subtext">
+                                        The interaction model was built to make route tradeoffs and queue risk legible before arrival.
+                                    </p>
+                                </div>
+                                <p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p>
+                            </div>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </section>
+
+        <section id="outcomes" class="border-b border-rule/80">
+            <div class="mx-auto max-w-[70rem] px-5 py-12 sm:px-7 lg:px-12 lg:py-16">
+                <p class="mb-4 font-mono text-eyebrow uppercase text-subtext">Outcomes</p>
+
+                <div class="overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
+                    <div class="px-4 pb-4 sm:px-6 sm:pb-6">
+                        <div class="relative h-[60vh] overflow-hidden rounded-[4px] border border-rule bg-rule/30 lg:relative lg:left-1/2 lg:w-[108%] lg:-translate-x-1/2">
+                            <img
+                                src="Assets/grid-discovery.png"
+                                alt="Rendered interface of the EV Charger Discovery concept."
+                                class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center"
+                                loading="lazy"
+                                decoding="async"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="grid gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4">
+                        <article class="bg-surface px-5 py-4">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Trust</p>
+                            <p class="mt-3 font-sans text-stat font-bold text-ink">High</p>
+                            <p class="mt-2 text-base leading-7 text-subtext">Reliability cues move earlier in the flow.</p>
+                        </article>
+                        <article class="bg-surface px-5 py-4">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Scan time</p>
+                            <p class="mt-3 font-sans text-stat font-bold text-ink">Low</p>
+                            <p class="mt-2 text-base leading-7 text-subtext">Nearby stations become faster to compare.</p>
+                        </article>
+                        <article class="bg-surface px-5 py-4">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Queue</p>
+                            <p class="mt-3 font-sans text-stat font-bold text-ink">Visible</p>
+                            <p class="mt-2 text-base leading-7 text-subtext">Wait conditions are easier to read before arrival.</p>
+                        </article>
+                        <article class="bg-surface px-5 py-4">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Confidence</p>
+                            <p class="mt-3 font-sans text-stat font-bold text-ink">High</p>
+                            <p class="mt-2 text-base leading-7 text-subtext">Users commit with less hesitation.</p>
+                        </article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="more-projects">
+            <div class="mx-auto max-w-[70rem] px-5 pt-12 pb-4 sm:px-7 lg:px-12 lg:pt-16 lg:pb-2">
+                <div class="project-carousel-section">
+                    <div class="project-carousel-space" data-project-space aria-hidden="true"></div>
+                    <div class="project-carousel-shell">
+                        <div class="project-carousel-heading">
+                            <p class="project-carousel-eyebrow font-mono text-eyebrow uppercase">More Projects</p>
+                        </div>
+                        <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
+                            <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
+                            <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                            <div class="project-carousel-track">
+                                <article class="project-carousel-card" data-project-slug="ludo-reimagined">
+                                    <a class="project-carousel-card__link" href="index.html">
+                                        <div class="project-carousel-card__image">
+                                            <img src="Assets/ludo-cards.gif" alt="Animated gameplay preview for Ludo Reimagined" loading="lazy" decoding="async">
+                                        </div>
+                                        <div class="project-carousel-card__meta">
+                                            <span class="project-carousel-card__type">Game Design &amp; Development</span>
+                                            <h3 class="project-carousel-card__title">Ludo Reimagined</h3>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article class="project-carousel-card" data-project-slug="managed-asset-search">
+                                    <a class="project-carousel-card__link" href="index.html">
+                                        <div class="project-carousel-card__image">
+                                            <img src="Assets/DAM-TE.gif" alt="Animated interface preview for Managed Asset Search" loading="lazy" decoding="async">
+                                        </div>
+                                        <div class="project-carousel-card__meta">
+                                            <span class="project-carousel-card__type">Information Architecture</span>
+                                            <h3 class="project-carousel-card__title">Managed Asset Search</h3>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article class="project-carousel-card" data-project-slug="ev-charger-discovery">
+                                    <a class="project-carousel-card__link" href="desktop-page-tailwind.html" aria-current="page">
+                                        <div class="project-carousel-card__image">
+                                            <img src="Assets/grid-discovery.png" alt="Interface preview for EV Charger Discovery" loading="lazy" decoding="async">
+                                        </div>
+                                        <div class="project-carousel-card__meta">
+                                            <span class="project-carousel-card__type">UX/UI</span>
+                                            <h3 class="project-carousel-card__title">EV Charger Discovery</h3>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article class="project-carousel-card" data-project-slug="venture-hub">
+                                    <a class="project-carousel-card__link" href="index.html">
+                                        <div class="project-carousel-card__image">
+                                            <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async">
+                                        </div>
+                                        <div class="project-carousel-card__meta">
+                                            <span class="project-carousel-card__type">UX/UI &amp; System Design</span>
+                                            <h3 class="project-carousel-card__title">Venture Hub</h3>
+                                        </div>
+                                    </a>
+                                </article>
+                                <article class="project-carousel-card" data-project-slug="protopack">
+                                    <a class="project-carousel-card__link" href="index.html">
+                                        <div class="project-carousel-card__image">
+                                            <img src="Assets/10x-bag.gif" alt="Product preview for ProtoPack backpack concept" loading="lazy" decoding="async">
+                                        </div>
+                                        <div class="project-carousel-card__meta">
+                                            <span class="project-carousel-card__type">Product Design</span>
+                                            <h3 class="project-carousel-card__title">ProtoPack</h3>
+                                        </div>
+                                    </a>
+                                </article>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="border-t border-rule/80">
+        <div class="mx-auto flex max-w-[70rem] flex-col gap-4 px-5 py-6 text-subtext sm:px-7 lg:flex-row lg:items-center lg:justify-between lg:px-12">
+            <p class="font-mono text-tag uppercase">&copy; 2026 Creative Developer. All rights reserved.</p>
+            <div class="flex items-center gap-6 font-mono text-tag uppercase">
+                <a href="#" class="transition hover:text-ink">Twitter</a>
+                <a href="#" class="transition hover:text-ink">GitHub</a>
+                <a href="#" class="transition hover:text-ink">LinkedIn</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        class ProjectSpaceField {
+            constructor(container, isLightMode) {
+                if (!window.THREE || !container) {
+                    return;
+                }
+
+                this.container = container;
+                this.elapsed = 0;
+                this.swipeImpulse = 0;
+                this.positionX = 0;
+                this.rotationZ = 0;
+                this.vortexVelocity = 0;
+                this.vortexOffset = 0;
+                this.rafId = null;
+                this.isAnimating = false;
+                this.isVisible = true;
+                this.isDocumentVisible = !document.hidden;
+                this.handleResize = this.handleResize.bind(this);
+                this.animate = this.animate.bind(this);
+
+                this.scene = new THREE.Scene();
+                this.camera = new THREE.PerspectiveCamera(42, 1, 0.1, 120);
+                this.camera.position.set(0, 0, 26);
+
+                this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+                this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+                this.container.appendChild(this.renderer.domElement);
+
+                this.geometry = new THREE.BufferGeometry();
+                this.positions = new Float32Array(2200 * 3);
+                this.basePositions = new Float32Array(2200 * 3);
+                this.colors = new Float32Array(2200 * 3);
+                this.pointSeeds = new Float32Array(2200);
+
+                for (let i = 0; i < 2200; i += 1) {
+                    const offset = i * 3;
+                    const posX = (Math.random() - 0.5) * 92;
+                    const posY = (Math.random() - 0.5) * 34;
+                    const posZ = (Math.random() - 0.5) * 52;
+
+                    this.positions[offset] = posX;
+                    this.positions[offset + 1] = posY;
+                    this.positions[offset + 2] = posZ;
+                    this.basePositions[offset] = posX;
+                    this.basePositions[offset + 1] = posY;
+                    this.basePositions[offset + 2] = posZ;
+                    this.pointSeeds[i] = Math.random();
+                }
+
+                this.geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
+                this.geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
+
+                const particleCanvas = document.createElement('canvas');
+                particleCanvas.width = 24;
+                particleCanvas.height = 24;
+                const particleContext = particleCanvas.getContext('2d');
+                particleContext.clearRect(0, 0, 24, 24);
+                const particleGradient = particleContext.createRadialGradient(12, 12, 1.5, 12, 12, 9.2);
+                particleGradient.addColorStop(0, 'rgba(255,255,255,0.96)');
+                particleGradient.addColorStop(0.45, 'rgba(255,255,255,0.88)');
+                particleGradient.addColorStop(0.78, 'rgba(255,255,255,0.22)');
+                particleGradient.addColorStop(1, 'rgba(255,255,255,0)');
+                particleContext.fillStyle = particleGradient;
+                particleContext.beginPath();
+                particleContext.roundRect(3.5, 3.5, 17, 17, 4.5);
+                particleContext.fill();
+                this.particleTexture = new THREE.CanvasTexture(particleCanvas);
+
+                this.material = new THREE.PointsMaterial({
+                    size: 0.22,
+                    map: this.particleTexture,
+                    vertexColors: true,
+                    transparent: true,
+                    opacity: 0.9,
+                    alphaTest: 0.03,
+                    depthWrite: false,
+                    blending: THREE.AdditiveBlending
+                });
+
+                this.points = new THREE.Points(this.geometry, this.material);
+                this.scene.add(this.points);
+
+                this.handleResize();
+                this.applyTheme(isLightMode);
+
+                if (window.ResizeObserver) {
+                    this.resizeObserver = new ResizeObserver(this.handleResize);
+                    this.resizeObserver.observe(this.container);
+                } else {
+                    window.addEventListener('resize', this.handleResize);
+                }
+
+                this.visibilityObserver = new IntersectionObserver((entries) => {
+                    this.isVisible = entries[0]?.isIntersecting ?? true;
+                    this.updateAnimationState();
+                }, { threshold: 0.05 });
+                this.visibilityObserver.observe(this.container);
+
+                document.addEventListener('visibilitychange', () => {
+                    this.isDocumentVisible = !document.hidden;
+                    this.updateAnimationState();
+                });
+
+                this.updateAnimationState();
+            }
+
+            handleResize() {
+                const width = Math.max(1, this.container.clientWidth);
+                const height = Math.max(1, this.container.clientHeight);
+                this.camera.aspect = width / height;
+                this.camera.updateProjectionMatrix();
+                this.renderer.setSize(width, height);
+            }
+
+            applyTheme(isLightMode) {
+                const cool = new THREE.Color(isLightMode ? 0xaeb4bf : 0x6ab3ff);
+                const warm = new THREE.Color(isLightMode ? 0xe2e5ea : 0xffa34d);
+                const colorsAttr = this.geometry.getAttribute('color');
+
+                for (let i = 0; i < colorsAttr.count; i += 1) {
+                    const x = this.positions[i * 3];
+                    const y = this.positions[i * 3 + 1];
+                    const mix = Math.max(0, Math.min(1, (x + 46) / 92));
+                    const color = cool.clone().lerp(warm, mix);
+                    const brightness = isLightMode ? 0.58 + ((y + 17) / 110) : 0.55 + ((y + 17) / 70);
+
+                    colorsAttr.setXYZ(
+                        i,
+                        Math.min(1, color.r * brightness),
+                        Math.min(1, color.g * brightness),
+                        Math.min(1, color.b * brightness)
+                    );
+                }
+
+                colorsAttr.needsUpdate = true;
+                this.material.opacity = isLightMode ? 0.92 : 0.88;
+                this.material.blending = isLightMode ? THREE.NormalBlending : THREE.AdditiveBlending;
+                this.material.size = isLightMode ? 0.26 : 0.22;
+                this.material.needsUpdate = true;
+            }
+
+            updateAnimationState() {
+                const shouldAnimate = this.isVisible && this.isDocumentVisible;
+                if (shouldAnimate && !this.isAnimating) {
+                    this.isAnimating = true;
+                    this.rafId = requestAnimationFrame(this.animate);
+                } else if (!shouldAnimate && this.isAnimating) {
+                    this.isAnimating = false;
+                    if (this.rafId) {
+                        cancelAnimationFrame(this.rafId);
+                        this.rafId = null;
+                    }
+                }
+            }
+
+            nudge(amount) {
+                this.swipeImpulse = Math.max(-1.8, Math.min(1.8, this.swipeImpulse + amount));
+                this.vortexVelocity = Math.max(-2.6, Math.min(2.6, this.vortexVelocity + amount * 0.45));
+            }
+
+            animate() {
+                if (!this.isAnimating) {
+                    return;
+                }
+
+                this.elapsed += 0.008;
+                this.swipeImpulse *= 0.92;
+                this.vortexVelocity *= 0.94;
+                this.vortexOffset += this.vortexVelocity * 0.055;
+                this.positionX += (this.swipeImpulse * 5.5 - this.positionX) * 0.08;
+                this.rotationZ += (this.swipeImpulse * 0.12 - this.rotationZ) * 0.08;
+
+                const positionsAttr = this.geometry.getAttribute('position');
+                const vortexAmount = Math.min(1.4, Math.abs(this.vortexVelocity) + Math.abs(this.swipeImpulse) * 0.6);
+
+                for (let i = 0; i < positionsAttr.count; i += 1) {
+                    const offset = i * 3;
+                    const baseX = this.basePositions[offset];
+                    const baseY = this.basePositions[offset + 1];
+                    const baseZ = this.basePositions[offset + 2];
+                    const seed = this.pointSeeds[i];
+                    const radialDistance = Math.hypot(baseX, baseY);
+                    const radialNorm = Math.min(1, radialDistance / 46);
+                    const falloff = 1 - radialNorm * 0.72;
+                    const flutter = Math.sin(this.elapsed * 1.25 + seed * 12) * 0.42;
+                    const swirlAngle = this.vortexOffset * (0.24 + falloff * 1.18) + flutter * 0.025;
+                    const swirlCos = Math.cos(swirlAngle);
+                    const swirlSin = Math.sin(swirlAngle);
+                    const pinch = 1 - Math.min(0.2, vortexAmount * 0.06 * falloff);
+
+                    const rotatedX = (baseX * swirlCos - baseY * swirlSin) * pinch;
+                    const rotatedY = (baseX * swirlSin + baseY * swirlCos) * pinch;
+                    const driftX = this.positionX * (0.3 + falloff * 0.45);
+                    const waveY = Math.sin(this.elapsed * 1.4 + seed * 16) * (0.28 + falloff * 0.45);
+                    const depthLift = vortexAmount * 4.8 * falloff;
+
+                    this.positions[offset] = rotatedX + driftX;
+                    this.positions[offset + 1] = rotatedY + waveY;
+                    this.positions[offset + 2] = baseZ + depthLift + Math.cos(this.elapsed * 0.9 + seed * 9) * 0.55;
+                }
+
+                positionsAttr.needsUpdate = true;
+
+                this.points.rotation.y += 0.0009 + this.swipeImpulse * 0.01 + this.vortexVelocity * 0.008;
+                this.points.rotation.x = Math.sin(this.elapsed * 0.7) * 0.08;
+                this.points.rotation.z = this.rotationZ + this.vortexVelocity * 0.045;
+                this.points.position.x = this.positionX;
+                this.points.position.y = Math.sin(this.elapsed * 0.45) * 0.55;
+
+                this.renderer.render(this.scene, this.camera);
+                this.rafId = requestAnimationFrame(this.animate);
+            }
+        }
+
+        function initProjectCarousel(carousel) {
+            const track = carousel.querySelector('.project-carousel-track');
+            const cards = Array.from(carousel.querySelectorAll('.project-carousel-card'));
+            const prevButton = carousel.querySelector('.project-carousel-control.prev');
+            const nextButton = carousel.querySelector('.project-carousel-control.next');
+            const cardLinks = carousel.querySelectorAll('.project-carousel-card__link');
+
+            if (!track || !cards.length) {
+                return;
+            }
+
+            const section = carousel.closest('.project-carousel-section');
+            const currentProject = section?.dataset.currentProject || '';
+            const spaceField = section?.querySelector('[data-project-space]')?._projectSpaceField || null;
+            const theta = 360 / cards.length;
+            let radius = 0;
+            let currentRotation = 0;
+            let targetRotation = 0;
+            let dragStartX = 0;
+            let dragDistance = 0;
+            let lastDragX = 0;
+            let dragStartRotation = 0;
+            let activePointerId = null;
+            let isDragging = false;
+            let activeCarousel = false;
+            let touchIdentifier = null;
+            let touchStartY = 0;
+            let touchLock = null;
+            let suppressClickUntil = 0;
+            let rafId = null;
+            let isAnimating = false;
+            let isVisible = true;
+            let isDocumentVisible = !document.hidden;
+
+            const startIndex = cards.findIndex((card) => card.dataset.projectSlug === currentProject);
+            if (startIndex >= 0) {
+                currentRotation = -startIndex * theta;
+                targetRotation = currentRotation;
+            }
+
+            const normalizeAngle = (angle) => {
+                let normalized = angle % 360;
+                if (normalized > 180) normalized -= 360;
+                if (normalized < -180) normalized += 360;
+                return normalized;
+            };
+
+            const updateGeometry = () => {
+                const cardWidth = cards[0].getBoundingClientRect().width || 220;
+                const isMobile = window.innerWidth < 760;
+                const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length));
+                const wideBoost = isMobile ? cardWidth * 1.7 : cardWidth * 3.9;
+                radius = Math.max(baseRadius + wideBoost, isMobile ? 360 : 760);
+
+                cards.forEach((card, index) => {
+                    const angle = theta * index;
+                    card.dataset.angle = String(angle);
+                    card.style.transform = 'rotateY(' + angle + 'deg) translateZ(' + radius + 'px)';
+                });
+            };
+
+            const syncCards = () => {
+                let activeCard = null;
+                let shortestDistance = Infinity;
+
+                cards.forEach((card) => {
+                    const angle = parseFloat(card.dataset.angle) || 0;
+                    const distance = Math.abs(normalizeAngle(angle + currentRotation));
+                    const focus = Math.max(0, Math.min(1, 1 - distance / 120));
+                    card.style.setProperty('--card-focus', focus.toFixed(3));
+
+                    if (distance < shortestDistance) {
+                        shortestDistance = distance;
+                        activeCard = card;
+                    }
+                });
+
+                cards.forEach((card) => {
+                    card.classList.toggle('is-active', card === activeCard);
+                });
+            };
+
+            const animate = () => {
+                if (!isAnimating) {
+                    return;
+                }
+
+                currentRotation += (targetRotation - currentRotation) * 0.085;
+                if (Math.abs(targetRotation - currentRotation) < 0.05) {
+                    currentRotation = targetRotation;
+                }
+
+                track.style.transform = 'rotateY(' + currentRotation + 'deg)';
+                syncCards();
+                rafId = requestAnimationFrame(animate);
+            };
+
+            const updateAnimationState = () => {
+                const shouldAnimate = isVisible && isDocumentVisible;
+                if (shouldAnimate && !isAnimating) {
+                    isAnimating = true;
+                    rafId = requestAnimationFrame(animate);
+                } else if (!shouldAnimate && isAnimating) {
+                    isAnimating = false;
+                    if (rafId) {
+                        cancelAnimationFrame(rafId);
+                        rafId = null;
+                    }
+                }
+            };
+
+            const snapToNearest = () => {
+                targetRotation = Math.round(targetRotation / theta) * theta;
+            };
+
+            const moveBy = (direction) => {
+                targetRotation += direction * theta;
+                spaceField?.nudge?.(-direction * 0.55);
+            };
+
+            const setActiveCarousel = () => {
+                activeCarousel = true;
+            };
+
+            const clearActiveCarousel = () => {
+                activeCarousel = false;
+            };
+
+            const startDrag = (clientX, pointerId = null, clientY = 0) => {
+                isDragging = true;
+                activePointerId = pointerId;
+                dragStartX = clientX;
+                lastDragX = clientX;
+                touchStartY = clientY;
+                dragDistance = 0;
+                dragStartRotation = targetRotation;
+                touchLock = null;
+                setActiveCarousel();
+                carousel.focus({ preventScroll: true });
+            };
+
+            const moveDrag = (clientX) => {
+                const deltaX = clientX - dragStartX;
+                const deltaStep = clientX - lastDragX;
+                lastDragX = clientX;
+                dragDistance = Math.max(dragDistance, Math.abs(deltaX));
+                targetRotation = dragStartRotation + deltaX * 0.18;
+                spaceField?.nudge?.(deltaStep * 0.014);
+
+                if (dragDistance > 6) {
+                    suppressClickUntil = performance.now() + 320;
+                }
+            };
+
+            const finishDrag = () => {
+                if (!isDragging) {
+                    return;
+                }
+
+                isDragging = false;
+                activePointerId = null;
+                touchIdentifier = null;
+                touchLock = null;
+                snapToNearest();
+            };
+
+            prevButton?.addEventListener('click', () => moveBy(1));
+            nextButton?.addEventListener('click', () => moveBy(-1));
+
+            const handleArrowKey = (event) => {
+                if (event.key === 'ArrowLeft') {
+                    event.preventDefault();
+                    moveBy(1);
+                }
+
+                if (event.key === 'ArrowRight') {
+                    event.preventDefault();
+                    moveBy(-1);
+                }
+            };
+
+            carousel.addEventListener('keydown', handleArrowKey);
+            document.addEventListener('keydown', (event) => {
+                if (!activeCarousel) {
+                    return;
+                }
+
+                if (event.key === 'ArrowLeft' || event.key === 'ArrowRight') {
+                    handleArrowKey(event);
+                }
+            });
+
+            carousel.addEventListener('mouseenter', setActiveCarousel);
+            carousel.addEventListener('focusin', setActiveCarousel);
+            carousel.addEventListener('mouseleave', clearActiveCarousel);
+            carousel.addEventListener('focusout', (event) => {
+                if (!carousel.contains(event.relatedTarget)) {
+                    clearActiveCarousel();
+                }
+            });
+
+            carousel.addEventListener('pointerdown', (event) => {
+                if (event.target.closest('.project-carousel-control')) {
+                    return;
+                }
+
+                startDrag(event.clientX, event.pointerId, event.clientY);
+                carousel.setPointerCapture?.(event.pointerId);
+            });
+
+            carousel.addEventListener('pointermove', (event) => {
+                if (!isDragging || event.pointerId !== activePointerId) {
+                    return;
+                }
+
+                moveDrag(event.clientX);
+            });
+
+            const endDrag = (event) => {
+                if (!isDragging || event.pointerId !== activePointerId) {
+                    return;
+                }
+
+                carousel.releasePointerCapture?.(event.pointerId);
+                finishDrag();
+            };
+
+            carousel.addEventListener('pointerup', endDrag);
+            carousel.addEventListener('pointercancel', endDrag);
+
+            carousel.addEventListener('touchstart', (event) => {
+                if (event.touches.length !== 1 || event.target.closest('.project-carousel-control')) {
+                    return;
+                }
+
+                const touch = event.touches[0];
+                touchIdentifier = touch.identifier;
+                startDrag(touch.clientX, null, touch.clientY);
+            }, { passive: true });
+
+            carousel.addEventListener('touchmove', (event) => {
+                if (!isDragging || touchIdentifier === null) {
+                    return;
+                }
+
+                const touch = Array.from(event.touches).find((item) => item.identifier === touchIdentifier);
+                if (!touch) {
+                    return;
+                }
+
+                const deltaX = touch.clientX - dragStartX;
+                const deltaY = touch.clientY - touchStartY;
+
+                if (touchLock === null) {
+                    if (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8) {
+                        touchLock = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
+                    } else {
+                        return;
+                    }
+                }
+
+                if (touchLock === 'vertical') {
+                    finishDrag();
+                    return;
+                }
+
+                event.preventDefault();
+                moveDrag(touch.clientX);
+            }, { passive: false });
+
+            carousel.addEventListener('touchend', (event) => {
+                if (touchIdentifier === null) {
+                    return;
+                }
+
+                const ended = Array.from(event.changedTouches).some((item) => item.identifier === touchIdentifier);
+                if (ended) {
+                    finishDrag();
+                }
+            });
+
+            carousel.addEventListener('touchcancel', () => {
+                finishDrag();
+            });
+
+            cardLinks.forEach((link) => {
+                link.addEventListener('dragstart', (event) => {
+                    event.preventDefault();
+                });
+                link.addEventListener('click', (event) => {
+                    if (performance.now() < suppressClickUntil) {
+                        event.preventDefault();
+                        event.stopPropagation();
+                    }
+                });
+            });
+
+            const visibilityObserver = new IntersectionObserver((entries) => {
+                isVisible = entries[0]?.isIntersecting ?? true;
+                updateAnimationState();
+            }, { threshold: 0.08 });
+            visibilityObserver.observe(carousel);
+
+            document.addEventListener('visibilitychange', () => {
+                isDocumentVisible = !document.hidden;
+                updateAnimationState();
+            });
+
+            window.addEventListener('resize', updateGeometry);
+
+            updateGeometry();
+            syncCards();
+            updateAnimationState();
+        }
+    </script>
+        <script>
+        (function () {
+            const reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+            const root = document.documentElement;
+            const themeToggleButtons = Array.from(document.querySelectorAll('[data-theme-toggle]'));
+            const spaceFields = Array.from(document.querySelectorAll('[data-project-space]')).map(function (container) {
+                const field = new ProjectSpaceField(container, root.classList.contains('light-theme'));
+                container._projectSpaceField = field;
+                return field;
+            });
+
+            const applyTheme = function (theme) {
+                root.classList.remove('light-theme', 'dark-theme');
+                root.classList.add(theme === 'dark' ? 'dark-theme' : 'light-theme');
+                localStorage.setItem('theme', theme === 'dark' ? 'dark' : 'light');
+                spaceFields.forEach(function (field) {
+                    field?.applyTheme(theme !== 'dark');
+                });
+            };
+
+            const storedTheme = localStorage.getItem('theme');
+            applyTheme(storedTheme === 'dark' ? 'dark' : 'light');
+
+            themeToggleButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    const isDark = root.classList.contains('dark-theme');
+                    applyTheme(isDark ? 'light' : 'dark');
+                });
+            });
+
+            const mobileButton = document.getElementById('mobile-menu-button');
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (mobileButton && mobileMenu) {
+                mobileButton.addEventListener('click', function () {
+                    const expanded = mobileButton.getAttribute('aria-expanded') === 'true';
+                    mobileButton.setAttribute('aria-expanded', String(!expanded));
+                    mobileMenu.classList.toggle('hidden');
+                });
+
+                mobileMenu.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        mobileButton.setAttribute('aria-expanded', 'false');
+                        mobileMenu.classList.add('hidden');
+                    });
+                });
+            }
+
+            const navbarAnchorLinks = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
+            const scrollToNavbarAnchor = function (hash) {
+                if (!hash || hash === '#') {
+                    return;
+                }
+
+                const target = document.querySelector(hash);
+                if (!target) {
+                    return;
+                }
+
+                const viewportShift = window.innerHeight * 0.05;
+                const targetTop = target.getBoundingClientRect().top + window.scrollY - viewportShift;
+                const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+                const clampedTop = Math.max(0, Math.min(targetTop, maxScrollTop));
+
+                window.scrollTo({ top: clampedTop, behavior: 'auto' });
+                history.pushState(null, '', hash);
+            };
+
+            navbarAnchorLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    const hash = link.getAttribute('href');
+                    if (!hash || hash === '#') {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    scrollToNavbarAnchor(hash);
+                });
+            });
+
+            const navLinks = Array.from(document.querySelectorAll('.nav-link'));
+            const sections = navLinks
+                .map(function (link) {
+                    const id = link.getAttribute('href');
+                    return id ? document.querySelector(id) : null;
+                })
+                .filter(Boolean);
+
+            if (sections.length && navLinks.length) {
+                const activateLink = function (id) {
+                    const darkMode = root.classList.contains('dark-theme');
+                    navLinks.forEach(function (link) {
+                        const active = link.getAttribute('href') === '#' + id;
+                        link.classList.toggle('text-ink', active && !darkMode);
+                        link.classList.toggle('text-subtext', !active && !darkMode);
+                        link.classList.toggle('text-white', active && darkMode);
+                        link.classList.toggle('text-white/65', !active && darkMode);
+                        link.setAttribute('aria-current', active ? 'true' : 'false');
+                    });
+                };
+
+                const observer = new IntersectionObserver(
+                    function (entries) {
+                        const visible = entries
+                            .filter(function (entry) { return entry.isIntersecting; })
+                            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
+
+                        if (visible[0]) {
+                            activateLink(visible[0].target.id);
+                        }
+                    },
+                    {
+                        rootMargin: '-25% 0px -45% 0px',
+                        threshold: [0.2, 0.45, 0.7]
+                    }
+                );
+
+                sections.forEach(function (section) {
+                    observer.observe(section);
+                });
+
+                const themeObserver = new MutationObserver(function () {
+                    const current = navLinks.find(function (link) {
+                        return link.getAttribute('aria-current') === 'true';
+                    });
+                    if (current) {
+                        const id = current.getAttribute('href').slice(1);
+                        activateLink(id);
+                    }
+                });
+
+                themeObserver.observe(root, { attributes: true, attributeFilter: ['class'] });
+            }
+
+            const processStack = document.getElementById('process-stack');
+            const processCards = processStack ? Array.from(processStack.querySelectorAll('[data-process-card]')) : [];
+            const processDesktopQuery = window.matchMedia('(min-width: 1024px)');
+            let activeProcessIndex = -1;
+            let expandedProcessContentIndex = -1;
+            let lastProcessPointerDownAt = 0;
+            let processCardsReady = false;
+
+            const clearProcessCardStyles = function (card) {
+                [
+                    '--process-card-width',
+                    '--process-card-height',
+                    '--process-card-x',
+                    '--process-card-y',
+                    '--process-card-scale',
+                    '--process-card-rotate',
+                    '--process-card-opacity',
+                    '--process-card-z',
+                    '--process-card-saturation'
+                ].forEach(function (property) {
+                    card.style.removeProperty(property);
+                });
+            };
+
+            const applyProcessCardStyles = function (card, metrics) {
+                card.style.setProperty('--process-card-width', metrics.width + 'px');
+                card.style.setProperty('--process-card-height', metrics.height + 'px');
+                card.style.setProperty('--process-card-x', metrics.x + 'px');
+                card.style.setProperty('--process-card-y', metrics.y + 'px');
+                card.style.setProperty('--process-card-scale', String(metrics.scale));
+                card.style.setProperty('--process-card-rotate', metrics.rotate + 'deg');
+                card.style.setProperty('--process-card-opacity', String(metrics.opacity));
+                card.style.setProperty('--process-card-z', String(metrics.z));
+                card.style.setProperty('--process-card-saturation', String(metrics.saturation));
+            };
+
+            const setExpandedProcessContentIndex = function (index) {
+                expandedProcessContentIndex = index;
+                processCards.forEach(function (card, cardIndex) {
+                    card.dataset.expandedContent = cardIndex === index ? 'true' : 'false';
+                });
+            };
+
+            const activateProcessCard = function (index) {
+                const nextIndex = activeProcessIndex === index ? -1 : index;
+                setExpandedProcessContentIndex(nextIndex);
+                activeProcessIndex = nextIndex;
+                renderProcessCards();
+            };
+
+            const renderProcessCards = function () {
+                if (!processStack || !processCards.length) {
+                    return;
+                }
+
+                const desktop = processDesktopQuery.matches;
+                processStack.dataset.activeCard = desktop && activeProcessIndex !== -1
+                    ? (processCards[activeProcessIndex].dataset.processOrigin || 'active')
+                    : 'none';
+
+                if (!desktop) {
+                    processStack.style.removeProperty('height');
+                    processStack.dataset.ready = 'true';
+                    processCards.forEach(function (card) {
+                        clearProcessCardStyles(card);
+                        card.dataset.active = 'false';
+                        card.dataset.expandedContent = 'false';
+                        card.setAttribute('aria-expanded', 'false');
+                    });
+                    return;
+                }
+
+                const containerWidth = processStack.clientWidth;
+                if (!containerWidth) {
+                    return;
+                }
+
+                const gap = 20;
+                const collapsedHeight = 548;
+                const expandedHeight = 584;
+                const stackHeight = 620;
+                const columnWidth = (containerWidth - gap * 2) / 3;
+                const expandedWidth = Math.min(containerWidth, columnWidth * 2.5);
+                const expandedOverflow = expandedWidth - columnWidth;
+                const collapsedBaseY = (stackHeight - collapsedHeight) / 2;
+                const expandedBaseY = (stackHeight - expandedHeight) / 2;
+                const defaultPositions = {
+                    left: 0,
+                    center: columnWidth + gap,
+                    right: (columnWidth + gap) * 2
+                };
+                processStack.style.height = stackHeight + 'px';
+
+                processCards.forEach(function (card, index) {
+                    const isActive = index === activeProcessIndex;
+                    const origin = card.dataset.processOrigin || 'left';
+                    const metrics = {
+                        width: columnWidth,
+                        height: collapsedHeight,
+                        x: index * (columnWidth + gap),
+                        y: collapsedBaseY,
+                        scale: 1,
+                        rotate: 0,
+                        opacity: 1,
+                        z: processCards.length - index,
+                        saturation: 1
+                    };
+
+                    if (activeProcessIndex !== -1) {
+                        if (isActive) {
+                            metrics.width = expandedWidth;
+                            metrics.height = expandedHeight;
+                            metrics.x = origin === 'center'
+                                ? defaultPositions.center - expandedOverflow / 2
+                                : origin === 'right'
+                                    ? defaultPositions.right - expandedOverflow
+                                    : defaultPositions.left;
+                            metrics.y = expandedBaseY;
+                            metrics.z = 6;
+                        } else {
+                            const activeOrigin = processCards[activeProcessIndex].dataset.processOrigin || 'center';
+                            const centerOverlap = Math.min(112, columnWidth * 0.32);
+                            metrics.x = defaultPositions[origin];
+                            metrics.y = collapsedBaseY;
+                            metrics.scale = 0.965;
+                            metrics.rotate = 0;
+                            metrics.opacity = 0.68;
+                            metrics.z = 3;
+                            metrics.saturation = 0.88;
+
+                            if (activeOrigin === 'left') {
+                                if (origin === 'center') {
+                                    metrics.x = defaultPositions.right - centerOverlap;
+                                    metrics.scale = 0.985;
+                                    metrics.opacity = 0.82;
+                                    metrics.z = 4;
+                                    metrics.saturation = 0.94;
+                                } else if (origin === 'right') {
+                                    metrics.scale = 0.94;
+                                    metrics.opacity = 0.62;
+                                    metrics.z = 3;
+                                    metrics.saturation = 0.84;
+                                }
+                            } else if (activeOrigin === 'right') {
+                                if (origin === 'center') {
+                                    metrics.x = defaultPositions.left + centerOverlap;
+                                    metrics.scale = 0.985;
+                                    metrics.opacity = 0.82;
+                                    metrics.z = 4;
+                                    metrics.saturation = 0.94;
+                                } else if (origin === 'left') {
+                                    metrics.scale = 0.94;
+                                    metrics.opacity = 0.62;
+                                    metrics.z = 3;
+                                    metrics.saturation = 0.84;
+                                }
+                            } else {
+                                const depth = Math.abs(index - activeProcessIndex);
+                                metrics.scale = depth === 1 ? 0.985 : 0.965;
+                                metrics.opacity = depth === 1 ? 0.82 : 0.68;
+                                metrics.z = depth === 1 ? 4 : 3;
+                                metrics.saturation = depth === 1 ? 0.94 : 0.88;
+                            }
+
+                            metrics.y = collapsedBaseY + (collapsedHeight * (1 - metrics.scale)) / 2;
+                        }
+                    }
+
+                    card.dataset.active = isActive ? 'true' : 'false';
+                    card.setAttribute('aria-expanded', isActive ? 'true' : 'false');
+                    applyProcessCardStyles(card, metrics);
+                });
+            };
+
+            const finalizeProcessCardReadyState = function () {
+                if (processCardsReady || !processStack) {
+                    return;
+                }
+
+                requestAnimationFrame(function () {
+                    processStack.dataset.ready = 'true';
+                    processCardsReady = true;
+                });
+            };
+
+            if (processCards.length) {
+                setExpandedProcessContentIndex(-1);
+
+                processCards.forEach(function (card, index) {
+                    card.addEventListener('pointerdown', function (event) {
+                        if (!processDesktopQuery.matches || event.button !== 0) {
+                            return;
+                        }
+
+                        lastProcessPointerDownAt = performance.now();
+                        activateProcessCard(index);
+                    });
+
+                    card.addEventListener('click', function () {
+                        if (!processDesktopQuery.matches) {
+                            return;
+                        }
+
+                        if (performance.now() - lastProcessPointerDownAt < 400) {
+                            return;
+                        }
+
+                        activateProcessCard(index);
+                    });
+
+                    card.addEventListener('keydown', function (event) {
+                        if (!processDesktopQuery.matches) {
+                            return;
+                        }
+
+                        if (event.key === 'Enter' || event.key === ' ') {
+                            event.preventDefault();
+                            activateProcessCard(index);
+                        }
+                    });
+                });
+
+                document.addEventListener('keydown', function (event) {
+                    if (event.key === 'Escape' && activeProcessIndex !== -1) {
+                        setExpandedProcessContentIndex(-1);
+                        activeProcessIndex = -1;
+                        renderProcessCards();
+                    }
+                });
+
+                processDesktopQuery.addEventListener('change', function () {
+                    setExpandedProcessContentIndex(-1);
+                    processCardsReady = false;
+                    processStack.dataset.ready = 'false';
+                    renderProcessCards();
+                    finalizeProcessCardReadyState();
+                });
+                window.addEventListener('resize', renderProcessCards);
+                renderProcessCards();
+                finalizeProcessCardReadyState();
+            }
+
+            document.querySelectorAll('[data-project-carousel]').forEach(function (carousel) {
+                initProjectCarousel(carousel);
+            });
+
+        }());
+    </script>
+</div>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+

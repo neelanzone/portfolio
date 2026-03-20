@@ -1,0 +1,93 @@
+{
+    "owner": "Neel",
+    "copyrightOwner": "Creative Developer",
+    "year": "2026",
+    "siteUrl": "",
+    "homeHref": "index.html",
+    "socialLinks": [
+        {
+            "label": "Twitter",
+            "href": "#"
+        },
+        {
+            "label": "GitHub",
+            "href": "#"
+        },
+        {
+            "label": "LinkedIn",
+            "href": "#"
+        }
+    ],
+    "moreProjects": [
+        {
+            "slug": "ludo-reimagined",
+            "title": "Ludo Reimagined",
+            "type": "Game Design & Development, 2026",
+            "image": {
+                "src": "Assets/ludo-cards.gif",
+                "alt": "Animated gameplay preview for Ludo Reimagined"
+            },
+            "link": {
+                "type": "project",
+                "slug": "ludo-reimagined"
+            },
+            "description": "A strategic twist on Ludo that gives players more control, agency, and tactical depth."
+        },
+        {
+            "slug": "managed-asset-search",
+            "title": "Managed Asset Search",
+            "type": "Information Architecture, 2021",
+            "image": {
+                "src": "Assets/DAM-TE.gif",
+                "alt": "Animated interface preview for Managed Asset Search"
+            },
+            "link": {
+                "type": "project",
+                "slug": "managed-asset-search"
+            },
+            "description": "A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery."
+        },
+        {
+            "slug": "ev-charger-discovery",
+            "title": "EV Charger Discovery",
+            "type": "UX/UI, 2026",
+            "image": {
+                "src": "Assets/grid-discovery.png",
+                "alt": "Interface preview for EV Charger Discovery"
+            },
+            "link": {
+                "type": "project",
+                "slug": "ev-charger-discovery"
+            },
+            "description": "A charger discovery experience designed for gig workers and urban EV users, centered on queue transparency, station availability, and trust scores."
+        },
+        {
+            "slug": "venture-hub",
+            "title": "Venture Hub",
+            "type": "UX/UI & System Design, 2026",
+            "image": {
+                "src": "Assets/accelerator-dashboard.png",
+                "alt": "Dashboard preview for Venture Hub"
+            },
+            "link": {
+                "type": "project",
+                "slug": "venture-hub"
+            },
+            "description": "A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders."
+        },
+        {
+            "slug": "protopack",
+            "title": "ProtoPack",
+            "type": "Product Design, 2022",
+            "image": {
+                "src": "Assets/10x-bag.gif",
+                "alt": "Product preview for ProtoPack backpack concept"
+            },
+            "link": {
+                "type": "project",
+                "slug": "protopack"
+            },
+            "description": "A backpack designed to transform learning into a more hands-on, exploratory, and creative experience."
+        }
+    ]
+}

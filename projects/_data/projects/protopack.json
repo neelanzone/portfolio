@@ -1,0 +1,155 @@
+{
+  "slug": "protopack",
+  "title": "ProtoPack",
+  "theme": "art",
+  "colorMode": "light",
+  "seo": {
+    "title": "ProtoPack | Neel",
+    "description": "A product design case study on creating a backpack that supports hands-on learning, curiosity, and creative exploration.",
+    "socialImage": "Assets/10x-bag.gif"
+  },
+  "sections": [
+    {
+      "type": "hero",
+      "id": "hero",
+      "navLabel": null,
+      "desktopVariant": "split",
+      "mobileVariant": "summary-first",
+      "tags": [
+        "Product Design",
+        "2022"
+      ],
+      "title": "ProtoPack",
+      "summary": [
+        "ProtoPack imagines a backpack as an invitation to learn through making, exploring, and carrying ideas into the real world.",
+        "The concept focuses on turning an everyday object into something more tactile, curious, and creatively enabling."
+      ],
+      "meta": [
+        {
+          "label": "Scope",
+          "value": "Physical product"
+        },
+        {
+          "label": "Focus",
+          "value": "Hands-on learning"
+        }
+      ],
+      "media": {
+        "src": "Assets/10x-bag.gif",
+        "alt": "Product preview for ProtoPack backpack concept."
+      }
+    },
+    {
+      "type": "overview",
+      "id": "overview",
+      "navLabel": "Overview",
+      "desktopVariant": "notes-aside",
+      "mobileVariant": "notes-inline",
+      "label": "Overview",
+      "heading": "Quick read",
+      "items": [
+        {
+          "label": "Problem",
+          "value": "Many learning products feel instructional first and inspiring second, leaving little room for curiosity or self-directed exploration."
+        },
+        {
+          "label": "Approach",
+          "value": "Explored a backpack concept that supports making, carrying, and interacting with tools in a more playful way."
+        },
+        {
+          "label": "Outcome",
+          "value": "The result is a product direction that connects mobility, creativity, and hands-on learning more deliberately."
+        }
+      ],
+      "notes": [
+        {
+          "title": "Learning object",
+          "tone": "gold",
+          "text": "The backpack was treated as more than storage; it became part of the learning experience itself."
+        },
+        {
+          "title": "Curiosity first",
+          "tone": "lilac",
+          "text": "The concept aims to make exploration feel inviting instead of overly instructional."
+        },
+        {
+          "title": "Tactile value",
+          "tone": "peach",
+          "text": "Physical interaction and form were central to how the idea communicates itself."
+        }
+      ]
+    },
+    {
+      "type": "context",
+      "id": "context",
+      "navLabel": "Context",
+      "label": "Context",
+      "heading": "A learning product becomes more memorable when it invites exploration before explanation",
+      "aside": "ProtoPack was shaped around the idea that tools can encourage curiosity through form, access, and interaction. The design direction focuses on making the product feel useful, distinctive, and creatively charged."
+    },
+    {
+      "type": "process",
+      "id": "process",
+      "navLabel": "Artifacts",
+      "desktopVariant": "preview-cards",
+      "mobileVariant": "stacked-cards",
+      "eyebrow": "Artifacts",
+      "hint": "Click to expand",
+      "cards": [
+        {
+          "index": "01",
+          "origin": "left",
+          "title": "Define\nCarry System",
+          "description": "The product needed to feel practical in motion while still signaling a more playful purpose.",
+          "mediaPreset": "layers"
+        },
+        {
+          "index": "02",
+          "origin": "center",
+          "title": "Support\nQuick Access",
+          "description": "Access patterns were considered so the bag feels interactive, usable, and ready for active making.",
+          "mediaPreset": "panels"
+        },
+        {
+          "index": "03",
+          "origin": "right",
+          "title": "Design for\nMaking",
+          "description": "The final direction emphasizes a more exploratory relationship between the user, the object, and the act of learning.",
+          "mediaPreset": "decision"
+        }
+      ]
+    },
+    {
+      "type": "outcomes",
+      "id": "outcomes",
+      "navLabel": "Outcomes",
+      "label": "Outcomes",
+      "image": {
+        "src": "Assets/10x-bag.gif",
+        "alt": "Product concept preview for ProtoPack."
+      },
+      "metrics": [
+        {
+          "label": "Utility",
+          "value": "Practical",
+          "text": "The concept still works as a carry object with clear everyday function."
+        },
+        {
+          "label": "Access",
+          "value": "Faster",
+          "text": "The product encourages easier interaction with tools and contents."
+        },
+        {
+          "label": "Curiosity",
+          "value": "Higher",
+          "text": "The form invites exploration and creative engagement."
+        },
+        {
+          "label": "Identity",
+          "value": "Distinct",
+          "text": "The object communicates a stronger point of view than a standard backpack."
+        }
+      ]
+    }
+  ]
+}

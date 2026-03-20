@@ -1,4 +1,4 @@
-function hidePageLoader() {
+﻿function hidePageLoader() {
     const body = document.body;
     if (!body || body.classList.contains('is-ready')) {
         return;
@@ -255,7 +255,7 @@ class WebGLGrid {
             vertexColors: true,
             map: texture,
             transparent: true,
-            opacity: 0.6, // 60% visibility for dark mode
+            opacity: 0.72, // Stronger default visibility for dark mode
             alphaTest: 0.05,
             blending: THREE.AdditiveBlending, // Makes overlapping particles glow beautifully
             depthWrite: false
@@ -275,7 +275,7 @@ class WebGLGrid {
 
         if (this.points?.material) {
             this.points.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-            this.points.material.opacity = isLight ? 0.3 : 0.6;
+            this.points.material.opacity = isLight ? 0.42 : 0.72;
             this.points.material.needsUpdate = true;
         }
     }
@@ -813,10 +813,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const workCards = Array.from(document.querySelectorAll('.work-card'));
 
     const applyWorkCardTilt = (card, clientX, clientY, scale = 1.02) => {
-        const imgContainer = card?.querySelector('.work-image');
-        if (!imgContainer) return;
+        const shell = card?.querySelector('.work-card-shell');
+        if (!shell) return;
 
-        const rect = card.getBoundingClientRect();
+        const rect = shell.getBoundingClientRect();
         const x = clientX - rect.left;
         const y = clientY - rect.top;
         const centerX = rect.width / 2;
@@ -831,22 +831,22 @@ document.addEventListener('DOMContentLoaded', () => {
         const mouseX = (x / rect.width) * 100;
         const mouseY = (y / rect.height) * 100;
 
-        imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
-        imgContainer.style.willChange = 'transform';
-        imgContainer.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
-        imgContainer.style.setProperty('--mouse-x', `${mouseX}%`);
-        imgContainer.style.setProperty('--mouse-y', `${mouseY}%`);
+        shell.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
+        shell.style.willChange = 'transform';
+        shell.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg) scale3d(${scale}, ${scale}, ${scale})`;
+        shell.style.setProperty('--mouse-x', `${mouseX}%`);
+        shell.style.setProperty('--mouse-y', `${mouseY}%`);
     };
 
     const resetWorkCardTilt = (card) => {
-        const imgContainer = card?.querySelector('.work-image');
-        if (!imgContainer) return;
+        const shell = card?.querySelector('.work-card-shell');
+        if (!shell) return;
 
-        imgContainer.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
-        imgContainer.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
+        shell.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
+        shell.style.transform = 'rotateX(0deg) rotateY(0deg) scale3d(1, 1, 1)';
 
         setTimeout(() => {
-            imgContainer.style.willChange = 'auto';
+            shell.style.willChange = 'auto';
         }, 600);
     };
 
@@ -855,13 +855,13 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     workCards.forEach(card => {
-        const imgContainer = card.querySelector('.work-image');
+        const shell = card.querySelector('.work-card-shell');
         const bgImg = card.querySelector('.work-bg-image');
-        if (!imgContainer) return;
+        if (!shell) return;
 
         card.addEventListener('mouseenter', () => {
-            imgContainer.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
-            imgContainer.style.willChange = 'transform';
+            shell.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
+            shell.style.willChange = 'transform';
             if (bgImg) bgImg.style.transition = 'transform 0.6s cubic-bezier(0.19, 1, 0.22, 1)';
         });
 
@@ -885,7 +885,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Scroll effects — runs unconditionally so parallax works even if WebGL fails
+    // Scroll effects â€” runs unconditionally so parallax works even if WebGL fails
     {
         const navbar = document.querySelector('.navbar');
         const heroSection = document.getElementById('hero');
@@ -1046,13 +1046,25 @@ document.addEventListener('DOMContentLoaded', () => {
             card.dataset.angle = angle;
 
             // Native click listener to rigidly snap to this specific card
-            card.addEventListener('click', () => {
+            card.addEventListener('click', (event) => {
+                if (event.target.closest('.work-card-link')) {
+                    return;
+                }
                 if (window.innerWidth <= 768) return;
                 // Ignore clicks if the user was actually dragging across the card
                 if (Math.abs(currentXCarousel - startXCarousel) > 5) return;
 
                 targetRotation = -angle;
                 // No clamping, allow free rotation
+            });
+        });
+
+        carouselTrack.querySelectorAll('.work-card-link').forEach((link) => {
+            link.addEventListener('pointerdown', (event) => {
+                event.stopPropagation();
+            });
+            link.addEventListener('click', (event) => {
+                event.stopPropagation();
             });
         });
 
@@ -1070,6 +1082,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let dragStartRotation = targetRotation;
         let dragPointerType = 'mouse';
         let activeFrontCard = null;
+        let pendingFrontCard = null;
+        let pendingFrontCardTimeout = null;
         let carouselFrameId = null;
         let isCarouselAnimating = false;
         let isCarouselVisible = true;
@@ -1082,8 +1096,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return normalized;
         };
 
-        const getFrontCard = () => cards.reduce((closestCard, card) => {
-            if (!card.querySelector('.work-image')) return closestCard;
+        const getCenteredCard = () => cards.reduce((closestCard, card) => {
             if (!closestCard) return card;
 
             const cardAngle = parseFloat(card.dataset.angle) || 0;
@@ -1094,22 +1107,45 @@ document.addEventListener('DOMContentLoaded', () => {
         }, null);
 
         const syncActiveFrontCard = () => {
-            if (window.innerWidth > 768) {
-                if (activeFrontCard) {
-                    activeFrontCard.classList.remove('is-active');
-                    activeFrontCard = null;
-                }
+            const centeredCard = getCenteredCard();
+            const nextActiveCard = centeredCard && !centeredCard.classList.contains('title-card')
+                ? centeredCard
+                : null;
+
+            if (pendingFrontCardTimeout && pendingFrontCard !== nextActiveCard) {
+                clearTimeout(pendingFrontCardTimeout);
+                pendingFrontCardTimeout = null;
+                pendingFrontCard = null;
+            }
+
+            if (activeFrontCard && activeFrontCard !== nextActiveCard) {
+                activeFrontCard.classList.remove('is-active');
+                activeFrontCard = null;
+            }
+
+            if (!nextActiveCard) {
                 return;
             }
 
-            const nextActiveCard = getFrontCard();
-            if (activeFrontCard && activeFrontCard !== nextActiveCard) {
-                activeFrontCard.classList.remove('is-active');
+            if (activeFrontCard === nextActiveCard || pendingFrontCard === nextActiveCard) {
+                return;
             }
-            if (nextActiveCard) {
-                nextActiveCard.classList.add('is-active');
-            }
-            activeFrontCard = nextActiveCard;
+
+            pendingFrontCard = nextActiveCard;
+            pendingFrontCardTimeout = setTimeout(() => {
+                const centeredCandidate = getCenteredCard();
+                const stabilizedCard = centeredCandidate && !centeredCandidate.classList.contains('title-card')
+                    ? centeredCandidate
+                    : null;
+
+                if (stabilizedCard === nextActiveCard) {
+                    nextActiveCard.classList.add('is-active');
+                    activeFrontCard = nextActiveCard;
+                }
+
+                pendingFrontCard = null;
+                pendingFrontCardTimeout = null;
+            }, 100);
         };
         
         // Animation loop for smooth easing
@@ -1190,7 +1226,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Keyboard navigation — fires globally, only acts when carousel is in view
+        // Keyboard navigation â€” fires globally, only acts when carousel is in view
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
             if (!isCarouselVisible) return;
@@ -1266,11 +1302,92 @@ document.addEventListener('DOMContentLoaded', () => {
         }, { passive: false });
     }
 
+    let themeToggleAudioContext;
+    let themeToggleNoiseBuffer;
+    const playThemeToggleClick = () => {
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        themeToggleAudioContext ??= new AudioContextClass();
+        const ctx = themeToggleAudioContext;
+        const triggerClick = () => {
+            const now = ctx.currentTime + 0.004;
+            const output = ctx.createGain();
+            output.gain.setValueAtTime(0.0001, now);
+            output.gain.exponentialRampToValueAtTime(0.12, now + 0.004);
+            output.gain.exponentialRampToValueAtTime(0.0001, now + 0.13);
+            output.connect(ctx.destination);
+            const snap = ctx.createOscillator();
+            snap.type = 'triangle';
+            snap.frequency.setValueAtTime(760, now);
+            snap.frequency.exponentialRampToValueAtTime(380, now + 0.028);
+            const snapGain = ctx.createGain();
+            snapGain.gain.setValueAtTime(0.0001, now);
+            snapGain.gain.exponentialRampToValueAtTime(0.08, now + 0.002);
+            snapGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.03);
+            snap.connect(snapGain);
+            snapGain.connect(output);
+            snap.start(now);
+            snap.stop(now + 0.04);
+            const body = ctx.createOscillator();
+            body.type = 'triangle';
+            body.frequency.setValueAtTime(235, now);
+            body.frequency.exponentialRampToValueAtTime(150, now + 0.1);
+            const bodyGain = ctx.createGain();
+            bodyGain.gain.setValueAtTime(0.0001, now);
+            bodyGain.gain.exponentialRampToValueAtTime(0.24, now + 0.004);
+            bodyGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.1);
+            body.connect(bodyGain);
+            bodyGain.connect(output);
+            body.start(now);
+            body.stop(now + 0.11);
+            const thump = ctx.createOscillator();
+            thump.type = 'sine';
+            thump.frequency.setValueAtTime(108, now);
+            thump.frequency.exponentialRampToValueAtTime(72, now + 0.08);
+            const thumpGain = ctx.createGain();
+            thumpGain.gain.setValueAtTime(0.0001, now);
+            thumpGain.gain.exponentialRampToValueAtTime(0.11, now + 0.004);
+            thumpGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.075);
+            thump.connect(thumpGain);
+            thumpGain.connect(output);
+            thump.start(now);
+            thump.stop(now + 0.085);
+            if (!themeToggleNoiseBuffer) {
+                themeToggleNoiseBuffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * 0.03)), ctx.sampleRate);
+                const channel = themeToggleNoiseBuffer.getChannelData(0);
+                for (let index = 0; index < channel.length; index += 1) {
+                    channel[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / channel.length, 2.4);
+                }
+            }
+            const noise = ctx.createBufferSource();
+            noise.buffer = themeToggleNoiseBuffer;
+            const filter = ctx.createBiquadFilter();
+            filter.type = 'bandpass';
+            filter.frequency.setValueAtTime(1450, now);
+            filter.Q.value = 1.1;
+            const noiseGain = ctx.createGain();
+            noiseGain.gain.setValueAtTime(0.0001, now);
+            noiseGain.gain.exponentialRampToValueAtTime(0.032, now + 0.002);
+            noiseGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.022);
+            noise.connect(filter);
+            filter.connect(noiseGain);
+            noiseGain.connect(output);
+            noise.start(now);
+            noise.stop(now + 0.028);
+        };
+        if (ctx.state === 'suspended') {
+            ctx.resume().then(triggerClick).catch(() => {});
+            return;
+        }
+        triggerClick();
+    };
     // Theme Toggle Logic
     const themeToggleButtons = document.querySelectorAll('[data-theme-toggle]');
     const menuToggleButton = document.getElementById('menu-toggle');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
+    const mobileWorkToggle = document.getElementById('mobile-work-toggle');
+    const mobileWorkProjects = document.getElementById('mobile-work-projects');
 
     const closeMobileMenu = () => {
         if (!menuToggleButton || !mobileMenu) return;
@@ -1279,6 +1396,11 @@ document.addEventListener('DOMContentLoaded', () => {
         menuToggleButton.setAttribute('aria-label', 'Open navigation menu');
         mobileMenu.classList.remove('is-open');
         mobileMenu.setAttribute('aria-hidden', 'true');
+        if (mobileWorkToggle && mobileWorkProjects) {
+            mobileWorkToggle.setAttribute('aria-expanded', 'false');
+            mobileWorkProjects.classList.remove('is-open');
+            mobileWorkProjects.setAttribute('aria-hidden', 'true');
+        }
     };
     const refreshNavbarState = () => {
         window.dispatchEvent(new Event('scroll'));
@@ -1301,6 +1423,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {
+            playThemeToggleClick();
             const isLight = document.documentElement.classList.toggle('light-theme');
             localStorage.setItem('theme', isLight ? 'light' : 'dark');
             webgl?.applyTheme(isLight);
@@ -1310,6 +1433,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (menuToggleButton) {
         menuToggleButton.addEventListener('click', toggleMobileMenu);
+    }
+
+    if (mobileWorkToggle && mobileWorkProjects) {
+        mobileWorkToggle.addEventListener('click', () => {
+            const isOpen = mobileWorkToggle.getAttribute('aria-expanded') === 'true';
+            mobileWorkToggle.setAttribute('aria-expanded', String(!isOpen));
+            mobileWorkProjects.classList.toggle('is-open', !isOpen);
+            mobileWorkProjects.setAttribute('aria-hidden', String(isOpen));
+        });
     }
 
     mobileMenuLinks.forEach((link) => {
@@ -1609,3 +1741,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
+
+
+
+
+
+
+
+
