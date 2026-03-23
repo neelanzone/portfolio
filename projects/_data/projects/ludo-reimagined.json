@@ -35,7 +35,7 @@
         }
       ],
       "media": {
-        "src": "Assets/ludo-cards.gif",
+        "src": "Assets/ludo-cards.mp4",
         "alt": "Animated gameplay preview for Ludo Reimagined."
       }
     },
@@ -125,7 +125,7 @@
       "navLabel": "Outcomes",
       "label": "Outcomes",
       "image": {
-        "src": "Assets/ludo-cards.gif",
+        "src": "Assets/ludo-cards.mp4",
         "alt": "Gameplay preview for Ludo Reimagined."
       },
       "metrics": [

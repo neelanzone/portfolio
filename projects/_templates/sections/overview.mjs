@@ -23,7 +23,7 @@ export function renderOverview(section, context) {
                     </div>
 
                     <div class="project-overview-notes grid gap-4 self-start pt-1 lg:translate-x-12 xl:translate-x-16">
-                        ${section.notes.map((note) => `<article class="${toneClasses[note.tone] ?? toneClasses.gold} rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="font-mono text-eyebrow uppercase text-ink/55">${escapeHtml(note.title)}</p><p class="mt-2 text-body text-ink">${escapeHtml(note.text)}</p></article>`).join('')}
+                        ${section.notes.map((note) => `<article class="${toneClasses[note.tone] ?? toneClasses.gold} rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">${escapeHtml(note.title)}</p><p class="project-note-card__body mt-2 text-body">${escapeHtml(note.text)}</p></article>`).join('')}
                     </div>
                 </div>
             </div>

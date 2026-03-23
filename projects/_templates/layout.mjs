@@ -137,7 +137,11 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
                                     .map((label) => `<span class="project-carousel-card__pill project-carousel-card__pill--type">${escapeHtml(label)}</span>`)
                                     .join('');
                                 const pills = `<div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group">${typePills}</div>${dateLabel ? `<span class="project-carousel-card__pill project-carousel-card__pill--date">${escapeHtml(dateLabel)}</span>` : ''}</div>`;
-                                return `<article class="project-carousel-card" data-project-slug="${escapeHtml(entry.slug)}"><a class="project-carousel-card__link" href="${escapeHtml(href)}"${current ? ' aria-current="page"' : ''}><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front">${pills}<div class="project-carousel-card__image"><img src="${escapeHtml(resolveAssetPath(entry.image.src, toRoot))}" alt="${escapeHtml(entry.image.alt)}" loading="lazy" decoding="async"></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">${escapeHtml(entry.title)}</h3>${description}</div></div></div></a></article>`;
+                                const isVideo = entry.image.src.endsWith('.mp4') || entry.image.src.endsWith('.webm');
+                                const cardMedia = isVideo
+                                    ? `<video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="${escapeHtml(resolveAssetPath(entry.image.src, toRoot))}" type="video/mp4"></video>`
+                                    : `<img src="${escapeHtml(resolveAssetPath(entry.image.src, toRoot))}" alt="${escapeHtml(entry.image.alt)}" loading="lazy" decoding="async">`;
+                                return `<article class="project-carousel-card" data-project-slug="${escapeHtml(entry.slug)}"><a class="project-carousel-card__link" href="${escapeHtml(href)}"${current ? ' aria-current="page"' : ''}><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front">${pills}<div class="project-carousel-card__image">${cardMedia}</div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">${escapeHtml(entry.title)}</h3>${description}</div></div></div></a></article>`;
                             }).join('')}
                         </div>
                     </div>
@@ -146,19 +150,17 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
         </div>`;
 }
 
-export function renderFooterBlock(site) {
+export function renderFooterBlock(site, toRoot) {
     return `
         <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="flex max-w-[70rem] flex-col gap-4 text-subtext lg:flex-row lg:items-center lg:justify-between">
-                <p class="font-mono text-tag uppercase">&copy; ${escapeHtml(site.year)} ${escapeHtml(site.copyrightOwner)}. All rights reserved.</p>
-                <div class="flex items-center gap-6 font-mono text-tag uppercase">
-                    ${site.socialLinks.map((link) => `<a href="${escapeHtml(link.href)}" class="transition hover:text-ink">${escapeHtml(link.label)}</a>`).join('\n                    ')}
+            <div class="flex max-w-[70rem] justify-center text-subtext">
+                <div class="flex items-center gap-[1.15rem]">
+                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="${escapeHtml(resolveAssetPath('Assets/social/x.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="${escapeHtml(resolveAssetPath('Assets/social/github.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="${escapeHtml(resolveAssetPath('Assets/social/linkedin.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                 </div>
             </div>
         </footer>`;
 }
 
 export { renderMetaTags };
-
-
-

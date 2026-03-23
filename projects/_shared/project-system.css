@@ -231,7 +231,16 @@
 }
 
 .project-tail-footer {
+    position: relative;
+    z-index: 30;
+    pointer-events: auto;
     padding-bottom: clamp(0.75rem, 1.2vw, 1.25rem);
+}
+
+.project-tail-footer a {
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
 }
 
 .project-scroll-stage > .project-stack-card:last-child {
@@ -737,4 +746,110 @@
 
 
 
+
+
+/* Quick read note card overrides */
+.project-overview-notes > article[class*='bg-note-gold'] {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.28), rgba(255, 255, 255, 0.08)),
+        rgb(var(--note-gold)) !important;
+}
+
+.project-overview-notes > article[class*='bg-note-lilac'] {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.24), rgba(255, 255, 255, 0.07)),
+        rgb(var(--note-lilac)) !important;
+}
+
+.project-overview-notes > article[class*='bg-note-peach'] {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.26), rgba(255, 255, 255, 0.08)),
+        rgb(var(--note-peach)) !important;
+}
+
+.project-overview-notes > article {
+    border-color: rgba(0, 0, 0, 0.06);
+    transition:
+        transform 0.2s ease-out,
+        box-shadow 0.2s ease-out,
+        background 0.2s ease-out,
+        color 0.2s ease-out,
+        border-color 0.2s ease-out;
+}
+
+.project-overview-notes > article:hover,
+.project-overview-notes > article:focus-within {
+    border-color: rgba(0, 0, 0, 0.1);
+}
+
+.project-overview-notes > article[class*='bg-note-gold']:hover,
+.project-overview-notes > article[class*='bg-note-gold']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.34), rgba(255, 255, 255, 0.1)),
+        rgb(var(--note-gold)) !important;
+}
+
+.project-overview-notes > article[class*='bg-note-lilac']:hover,
+.project-overview-notes > article[class*='bg-note-lilac']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0.09)),
+        rgb(var(--note-lilac)) !important;
+}
+
+.project-overview-notes > article[class*='bg-note-peach']:hover,
+.project-overview-notes > article[class*='bg-note-peach']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(255, 255, 255, 0.32), rgba(255, 255, 255, 0.1)),
+        rgb(var(--note-peach)) !important;
+}
+
+.project-note-card__eyebrow {
+    color: rgba(24, 23, 22, 0.58);
+    transition: color 0.2s ease-out;
+}
+
+.project-note-card__body {
+    color: rgb(24 23 22);
+    transition: color 0.2s ease-out;
+}
+
+:root.dark-theme .project-overview-notes > article {
+    border-color: rgba(255, 255, 255, 0.08);
+}
+
+:root.dark-theme .project-overview-notes > article:hover,
+:root.dark-theme .project-overview-notes > article:focus-within {
+    border-color: rgba(255, 255, 255, 0.12);
+}
+
+:root.dark-theme .project-overview-notes > article[class*='bg-note-gold']:hover,
+:root.dark-theme .project-overview-notes > article[class*='bg-note-gold']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.26), rgba(0, 0, 0, 0.44)),
+        rgb(var(--note-gold)) !important;
+}
+
+:root.dark-theme .project-overview-notes > article[class*='bg-note-lilac']:hover,
+:root.dark-theme .project-overview-notes > article[class*='bg-note-lilac']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.42)),
+        rgb(var(--note-lilac)) !important;
+}
+
+:root.dark-theme .project-overview-notes > article[class*='bg-note-peach']:hover,
+:root.dark-theme .project-overview-notes > article[class*='bg-note-peach']:focus-within {
+    background:
+        linear-gradient(180deg, rgba(0, 0, 0, 0.24), rgba(0, 0, 0, 0.42)),
+        rgb(var(--note-peach)) !important;
+}
+
+:root.dark-theme .project-overview-notes > article:hover .project-note-card__eyebrow,
+:root.dark-theme .project-overview-notes > article:focus-within .project-note-card__eyebrow {
+    color: rgba(255, 255, 255, 0.78);
+}
+
+:root.dark-theme .project-overview-notes > article:hover .project-note-card__body,
+:root.dark-theme .project-overview-notes > article:focus-within .project-note-card__body {
+    color: rgb(255 255 255);
+}
 

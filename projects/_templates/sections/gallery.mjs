@@ -14,7 +14,13 @@ export function renderGallery(section, context) {
                     </div>
 
                     <div class="project-gallery mt-8">
-                        ${section.items.map((item) => `<figure class="project-gallery__item" data-span="${escapeHtml(item.span ?? 'default')}"><div class="project-gallery__frame"><img src="${escapeHtml(resolveAssetPath(item.src, context.toRoot))}" alt="${escapeHtml(item.alt)}" loading="lazy" decoding="async"></div>${item.caption ? `<figcaption class="project-gallery__caption">${escapeHtml(item.caption)}</figcaption>` : ''}</figure>`).join('')}
+                        ${section.items.map((item) => {
+                            const isVideo = item.src.endsWith('.mp4') || item.src.endsWith('.webm');
+                            const media = isVideo
+                                ? `<video autoplay loop muted playsinline class="w-full h-full object-cover" preload="none" aria-hidden="true"><source src="${escapeHtml(resolveAssetPath(item.src, context.toRoot))}" type="video/mp4"></video>`
+                                : `<img src="${escapeHtml(resolveAssetPath(item.src, context.toRoot))}" alt="${escapeHtml(item.alt)}" loading="lazy" decoding="async">`;
+                            return `<figure class="project-gallery__item" data-span="${escapeHtml(item.span ?? 'default')}"><div class="project-gallery__frame">${media}</div>${item.caption ? `<figcaption class="project-gallery__caption">${escapeHtml(item.caption)}</figcaption>` : ''}</figure>`;
+                        }).join('')}
                     </div>
                 </div>
             </div>

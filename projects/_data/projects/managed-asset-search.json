@@ -35,7 +35,7 @@
         }
       ],
       "media": {
-        "src": "Assets/DAM-TE.gif",
+        "src": "Assets/DAM-TE.mp4",
         "alt": "Animated interface preview for Managed Asset Search."
       }
     },
@@ -125,7 +125,7 @@
       "navLabel": "Outcomes",
       "label": "Outcomes",
       "image": {
-        "src": "Assets/DAM-TE.gif",
+        "src": "Assets/DAM-TE.mp4",
         "alt": "Interface preview for Managed Asset Search."
       },
       "metrics": [

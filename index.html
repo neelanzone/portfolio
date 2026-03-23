@@ -71,6 +71,7 @@
 
     <!-- Styles -->
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="mobile.css">
 </head>
 
 <body class="is-loading">
@@ -89,8 +90,8 @@
             </a>
         </div>
         <ul class="nav-links">
-            <li><a href="#about">About</a></li>
             <li><a href="#work-anchor">Work</a></li>
+            <li><a href="#about">About</a></li>
             <li><a href="#contact">Contact</a></li>
         </ul>
         <div class="nav-actions">
@@ -144,7 +145,6 @@
         </div>
     </nav>
     <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
-        <a href="#about">About</a>
         <div class="mobile-menu-group">
             <div class="mobile-menu-work-row">
                 <a href="#work-anchor" class="mobile-menu-work-link">Work</a>
@@ -162,7 +162,7 @@
             <div class="mobile-submenu" id="mobile-work-projects" aria-hidden="true">
                 <a href="projects/ludo-reimagined/index.html" class="mobile-submenu-link">
                     <span class="mobile-submenu-title">Ludo Reimagined</span>
-                    <span class="mobile-submenu-type">Game Design &amp; Development</span>
+                    <span class="mobile-submenu-type">Game Design</span>
                 </a>
                 <a href="projects/managed-asset-search/index.html" class="mobile-submenu-link">
                     <span class="mobile-submenu-title">Managed Asset Search</span>
@@ -182,6 +182,7 @@
                 </a>
             </div>
         </div>
+        <a href="#about">About</a>
         <a href="#contact">Contact</a>
     </div>
 
@@ -189,7 +190,7 @@
         <div id="three-container"></div>
         <div class="hero-content">
             <div class="hero-content-inner">
-                <h1>Endlessly<br><span class="highlight">Curious</span></h1>
+                <h1>Some ripples make waves,<br><span class="highlight">and some waves, ripples</span></h1>
                 <h3>Drawn to systems,<br class="mobile-break">obsessed with play.</h3>
             </div>
         </div>
@@ -206,9 +207,11 @@
     <a class="work-card-link" href="projects/ludo-reimagined/index.html" aria-label="Open Ludo Reimagined case study">
         <div class="work-card-shell">
             <div class="work-image placeholder-image">
-                <img src="Assets/ludo-cards.gif" alt="Animated gameplay preview for Ludo Reimagined" class="work-bg-image" loading="lazy" decoding="async">
+                <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
+                    <source src="Assets/ludo-cards.mp4" type="video/mp4">
+                </video>
                 <div class="work-card-pills">
-                    <span class="work-pill">Game Design &amp; Development</span>
+                    <span class="work-pill">Game Design</span>
                     <span class="work-pill work-pill-date">2026</span>
                 </div>
                 <div class="work-info">
@@ -224,7 +227,9 @@
     <a class="work-card-link" href="projects/managed-asset-search/index.html" aria-label="Open Managed Asset Search case study">
         <div class="work-card-shell">
             <div class="work-image placeholder-image">
-                <img src="Assets/DAM-TE.gif" alt="Animated interface preview for Managed Asset Search" class="work-bg-image" loading="lazy" decoding="async">
+                <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
+                    <source src="Assets/DAM-TE.mp4" type="video/mp4">
+                </video>
                 <div class="work-card-pills">
                     <span class="work-pill">Information Architecture</span>
                     <span class="work-pill work-pill-date">2021</span>
@@ -282,7 +287,9 @@
     <a class="work-card-link" href="projects/protopack/index.html" aria-label="Open ProtoPack case study">
         <div class="work-card-shell">
             <div class="work-image placeholder-image">
-                <img src="Assets/10x-bag.gif" alt="Product preview for ProtoPack backpack concept" class="work-bg-image" loading="lazy" decoding="async">
+                <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
+                    <source src="Assets/10x-bag.mp4" type="video/mp4">
+                </video>
                 <div class="work-card-pills">
                     <span class="work-pill">Product Design</span>
                     <span class="work-pill work-pill-date">2022</span>
@@ -306,7 +313,9 @@
     <main>
         <section id="about" class="section">
             <div class="container">
-                <h2 class="section-title">Hey! I'm Neel</h2>
+                <h2 class="section-title about-glitch-title">
+                    <span class="about-glitch-title__text" data-about-glitch-text data-text="Neelanzone"><span class="about-glitch-title__label">Neelanzone</span><span class="about-glitch-title__bottom" aria-hidden="true">Neelanzone</span><span class="about-glitch-title__block" aria-hidden="true"></span></span>
+                </h2>
                 <div class="about-grid">
                     <div class="collage-container">
                         <div class="photo-wrapper">
@@ -316,7 +325,7 @@
                                 <span class="tab-label-pull">PULL</span>
                             </div>
 
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -0.5); --base-y: calc(var(--about-orbit-radius) * -0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * -0.866); --rot: -12deg; --scale: 1;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -0.5); --base-y: calc(var(--about-orbit-radius) * -0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * -0.866); --rot: -12deg; --scale: 0.95;">
                                 <img src="Assets/About-me/denim-cap.png" class="accessory" id="acc-denim" alt="Denim Cap" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -325,7 +334,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * -0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * -0.866); --rot: 8deg; --scale: 1;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * -0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * -0.866); --rot: 8deg; --scale: 0.95;">
                                 <img src="Assets/About-me/sewn-hat.png" class="accessory" id="acc-sewn" alt="Sewn Hat" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -334,7 +343,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -1); --mobile-base-y: 0px; --rot: 7deg; --scale: 1;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -1); --mobile-base-y: 0px; --rot: 7deg; --scale: 0.95;">
                                 <img src="Assets/About-me/noir-hat.png" class="accessory" id="acc-noir" alt="Noir Hat" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -343,7 +352,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: -8deg; --scale: 1.5;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: -8deg; --scale: 1.425;">
                                 <img src="Assets/About-me/gandhi-glasses.png" class="accessory" id="acc-gandhi" alt="Round Glasses" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -352,7 +361,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: 7deg; --scale: 1.5;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: 7deg; --scale: 1.425;">
                                 <img src="Assets/About-me/swag-glasses.png" class="accessory" id="acc-swag" alt="Swag Glasses" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -361,7 +370,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
-                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 1); --mobile-base-y: 0px; --rot: -8deg; --scale: 1;">
+                            <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 1); --mobile-base-y: 0px; --rot: -8deg; --scale: 0.95;">
                                 <img src="Assets/About-me/venetian-mask.png" class="accessory" id="acc-venetian" alt="Venetian Mask" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
                                     <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
@@ -374,8 +383,15 @@
                     </div>
 
                     <div class="about-text">
-                        <p>I have worn many hats through my design journey. I design interfaces and product experiences that make information easier to understand,
-                            decisions easier to take, and systems easier to use.</p>
+                        <div class="about-summary" data-about-copy>
+                            <button type="button" class="about-tldr-toggle" data-about-tldr aria-pressed="false">
+                                <span class="about-tldr-switch" aria-hidden="true">
+                                    <span class="about-tldr-text">tldr</span>
+                                    <span class="about-tldr-knob"></span>
+                                </span>
+                            </button>
+                            <p><span class="about-strike">I have worn many hats in my journey so far. I've been a</span> <span class="about-keep">co-founder</span><span class="about-strike">, a</span> <span class="about-keep">marketer</span><span class="about-strike">, an</span> <span class="about-keep">educator</span><span class="about-strike">; but always a</span> <span class="about-keep">designer</span> <span class="about-strike">through it all. Nowadays, I design</span> <span class="about-keep">interfaces</span> <span class="about-strike">and</span> <span class="about-keep">product</span> <span class="about-keep">experiences</span> <span class="about-strike">that make systems easier to use, information easier to read and decisions easier to take.</span></p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -384,22 +400,159 @@
     
         <section id="contact" class="section">
             <div class="container contact-container">
-                <h2 class="section-title">Let's Connect</h2>
-                <p class="contact-text">Open for freelance opportunities and striking collaborations.</p>
-                <a href="mailto:hello@example.com" class="button">hello@example.com</a>
+                <h2 class="contact-heading">
+                    <span class="about-cta-line">
+                        <span class="about-cta-prefix">Let's ship something</span>
+                        <span class="about-rotating-word-wrap" data-rotating-word-wrap>
+                            <span class="about-rotating-word about-rotating-word--current" data-rotating-word-current>fun 🫧</span>
+                            <span class="about-rotating-word about-rotating-word--next" data-rotating-word-next aria-hidden="true">meaningful 🪞</span>
+                            <span class="about-rotating-word-sizer" data-rotating-word-sizer aria-hidden="true">fun 🫧</span>
+                        </span>
+                    </span>
+                </h2>
+                <div class="contact-scale-frame">
+                    <div class="contact-notebook-scene" aria-label="Interactive notebook collage">
+                        <button type="button" class="contact-business-card" data-contact-card aria-label="Pull out business card"></button>
+                        <img src="Assets/contact/blank-notebook.png" class="contact-notebook" alt="Open notebook with room for draggable stickers" width="1181" height="1181" draggable="false">
+                        <div class="contact-reset-track" aria-hidden="true"></div>
+                        <div class="contact-reset-tab" data-contact-reset-tab aria-label="Pull to reset stickers"></div>
 
+                        <div class="contact-sticker contact-sticker--cat" data-contact-sticker data-meow-sticker style="--x: -18%; --y: 22%; --w: 36%; --z: 5; --scale: 1.5; --drag-x: -200px; --drag-y: 100px;">
+                            <img src="Assets/contact/halftone-cat.png" alt="Halftone cat sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
 
+                        <div class="contact-sticker contact-sticker--flower" data-contact-sticker style="--x: 132%; --y: 28%; --w: 38%; --z: 7; --scale: 2; --drag-x: 150px; --drag-y: 100px;">
+                            <span class="contact-sticker-hitbox" aria-hidden="true"></span>
+                            <img src="Assets/contact/dried-flower.png" alt="Dried flower sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--tape contact-sticker--tape-top" data-contact-sticker style="--x: -10%; --y: 6%; --w: 13%; --z: 6; --drag-x: -180px; --drag-y: 105px;">
+                            <img src="Assets/contact/washi-tape.png" alt="Washi tape sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--tape contact-sticker--tape-bottom" data-contact-sticker style="--x: -20%; --y: 47%; --w: 13%; --z: 6; --drag-x: -240px; --drag-y: 40px; --rot: 30deg;">
+                            <img src="Assets/contact/washi-tape.png" alt="Washi tape sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--ladybug" data-contact-sticker style="--x: 126%; --y: 37%; --w: 9%; --z: 8; --scale: 2; --drag-x: 70px; --drag-y: 50px;">
+                            <img src="Assets/contact/ladybug.png" alt="Ladybug sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 66%; --y: 20%; --w: 22%; --z: 5; --drag-x: 70px; --drag-y: 50px;">
+                            <img src="Assets/logos/indus-international-school.png" alt="Indus International School sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 62%; --y: 34%; --w: 16%; --z: 5; --scale: 1.1; --drag-x: 4px; --drag-y: 10px;">
+                            <img src="Assets/logos/total-environment.png" alt="Total Environment sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 70%; --y: 48%; --w: 18%; --z: 5; --drag-x: 50px; --drag-y: -20px;">
+                            <img src="Assets/logos/reliance.png" alt="Reliance sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 63%; --y: 62%; --w: 16%; --z: 5; --drag-y: -40px;">
+                            <img src="Assets/logos/apeejay-group.png" alt="Apeejay sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+
+                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 69%; --y: 75%; --w: 14%; --z: 5; --drag-x: 60px; --drag-y: -110px;">
+                            <img src="Assets/logos/gyproc-saint-gobain.png" alt="Gyproc sticker" draggable="false">
+                            <div class="gui-container">
+                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
+                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
+                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
+                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
+                            </div>
+                        </div>
+                    </div>
+                    <a href="mailto:neelanzone@gmail.com" class="button">Mail Me</a>
+                </div>
+
+                <div class="contact-card-modal" data-contact-card-modal hidden aria-hidden="true">
+                    <div class="contact-card-modal__backdrop" data-contact-card-close></div>
+                    <div class="contact-card-modal__panel" role="dialog" aria-modal="true" aria-labelledby="contact-card-title">
+                        <button type="button" class="contact-card-modal__close" data-contact-card-close aria-label="Close business card">&times;</button>
+                        <p class="contact-card-modal__eyebrow">Business Card</p>
+                        <h3 id="contact-card-title">Nilanjan Banerjee</h3>
+                        <a class="contact-card-modal__whatsapp" href="https://wa.me/919845107326?text=Hi%20Nilanjan" target="_blank" rel="noreferrer">
+                            <span class="contact-card-modal__whatsapp-icon" aria-hidden="true">
+                                <svg viewBox="0 0 32 32" focusable="false">
+                                    <path fill="currentColor" d="M16 3C8.83 3 3 8.64 3 15.61c0 2.45.74 4.84 2.13 6.89L3.5 29l6.72-1.76A13.16 13.16 0 0 0 16 28.22c7.17 0 13-5.64 13-12.61S23.17 3 16 3Zm0 22.98a10.8 10.8 0 0 1-5.48-1.48l-.39-.23-3.99 1.05 1.07-3.87-.26-.4a10.28 10.28 0 0 1-1.6-5.44C5.35 10 10.06 5.5 16 5.5c5.94 0 10.65 4.5 10.65 10.11S21.94 25.98 16 25.98Zm5.86-7.8c-.32-.16-1.87-.92-2.16-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.01-.99 1.22-.18.21-.36.24-.68.08-.32-.16-1.34-.48-2.56-1.53-.95-.82-1.59-1.83-1.78-2.14-.18-.31-.02-.47.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.98-2.31-.26-.61-.52-.53-.71-.54h-.61c-.21 0-.55.08-.84.39s-1.1 1.07-1.1 2.61 1.13 3.03 1.29 3.24c.16.21 2.21 3.46 5.49 4.72.78.33 1.39.53 1.86.67.78.25 1.49.21 2.05.13.63-.09 1.87-.76 2.13-1.49.26-.73.26-1.36.18-1.49-.08-.13-.29-.21-.61-.37Z"/>
+                                </svg>
+                            </span>
+                            <span>Text on WhatsApp</span>
+                        </a>
+                    </div>
+                </div>
             </div>
         </section>
     </main>
 
     <footer>
         <div class="container footer-content">
-            <p>&copy; 2026 Creative Developer. All rights reserved.</p>
-            <div class="social-links">
-                <a href="#">Twitter</a>
-                <a href="#">GitHub</a>
-                <a href="#">LinkedIn</a>
+            <div class="footer-socials" aria-label="Social links">
+                <a href="https://x.com/Neelanzone" target="_blank" rel="noreferrer" aria-label="X">
+                    <img src="Assets/social/x.svg" alt="" width="28" height="28">
+                </a>
+                <a href="https://github.com/neelanzone" target="_blank" rel="noreferrer" aria-label="GitHub">
+                    <img src="Assets/social/github.svg" alt="" width="28" height="28">
+                </a>
+                <a href="https://www.linkedin.com/in/neelanzone/" target="_blank" rel="noreferrer" aria-label="LinkedIn">
+                    <img src="Assets/social/linkedin.svg" alt="" width="28" height="28">
+                </a>
             </div>
         </div>
     </footer>

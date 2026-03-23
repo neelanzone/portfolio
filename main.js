@@ -21,12 +21,68 @@ function initializePageLoader() {
         return;
     }
 
-    const trackedImages = Array.from(document.images).filter((img) => !img.classList.contains('logo-hover') && img.getAttribute('loading') !== 'lazy');
+    const assetUrls = new Set();
+
+    const normalizeAssetUrl = (url) => {
+        if (!url || url.startsWith('data:') || url.startsWith('blob:')) return null;
+
+        try {
+            return new URL(url, window.location.href).href;
+        } catch {
+            return null;
+        }
+    };
+
+    const registerAssetUrl = (url) => {
+        const normalized = normalizeAssetUrl(url);
+        if (normalized) {
+            assetUrls.add(normalized);
+        }
+    };
+
+    Array.from(document.images).forEach((img) => {
+        registerAssetUrl(img.currentSrc || img.getAttribute('src'));
+        registerAssetUrl(img.getAttribute('srcset')?.split(',')[0]?.trim().split(' ')[0]);
+    });
+
+    document.querySelectorAll('[style]').forEach((element) => {
+        const inlineStyle = element.getAttribute('style') || '';
+        const matches = inlineStyle.match(/url\((['"]?)(.*?)\1\)/g) || [];
+        matches.forEach((match) => {
+            const urlMatch = match.match(/url\((['"]?)(.*?)\1\)/);
+            registerAssetUrl(urlMatch?.[2]);
+        });
+    });
+
+    const collectUrlsFromRules = (rules) => {
+        Array.from(rules || []).forEach((rule) => {
+            if (rule.cssRules) {
+                collectUrlsFromRules(rule.cssRules);
+            }
+
+            const cssText = rule.cssText || '';
+            const matches = cssText.match(/url\((['"]?)(.*?)\1\)/g) || [];
+            matches.forEach((match) => {
+                const urlMatch = match.match(/url\((['"]?)(.*?)\1\)/);
+                registerAssetUrl(urlMatch?.[2]);
+            });
+        });
+    };
+
+    Array.from(document.styleSheets).forEach((styleSheet) => {
+        try {
+            collectUrlsFromRules(styleSheet.cssRules);
+        } catch {
+            // Ignore cross-origin stylesheets we cannot inspect.
+        }
+    });
+
+    const trackedAssets = Array.from(assetUrls);
     const progressState = {
         target: 0.08,
         current: 0.08,
         completed: 0,
-        total: trackedImages.length + 2,
+        total: trackedAssets.length + 2,
         isFinishing: false,
         hasHidden: false
     };
@@ -55,20 +111,23 @@ function initializePageLoader() {
         }
     };
 
-    trackedImages.forEach((img) => {
-        if (img.complete) {
-            markComplete();
-            return;
-        }
+    trackedAssets.forEach((url) => {
+        const assetImage = new Image();
 
         const onDone = () => {
             markComplete();
-            img.removeEventListener('load', onDone);
-            img.removeEventListener('error', onDone);
+            assetImage.removeEventListener('load', onDone);
+            assetImage.removeEventListener('error', onDone);
         };
 
-        img.addEventListener('load', onDone, { once: true });
-        img.addEventListener('error', onDone, { once: true });
+        assetImage.addEventListener('load', onDone, { once: true });
+        assetImage.addEventListener('error', onDone, { once: true });
+        assetImage.decoding = 'async';
+        assetImage.src = url;
+
+        if (assetImage.complete) {
+            onDone();
+        }
     });
 
     if (document.fonts && document.fonts.ready) {
@@ -421,6 +480,7 @@ class WebGLGrid {
                 touchState.isHorizontalDrag = false;
                 touchState.hasMoved = false;
                 touchState.hasClaimedTap = true;
+                updatePointerTarget(e.clientX, e.clientY, true);
             }, { passive: true });
 
             this.container.addEventListener('pointermove', (e) => {
@@ -444,6 +504,7 @@ class WebGLGrid {
                         clearPointerTarget();
                         return;
                     } else {
+                        updatePointerTarget(e.clientX, e.clientY, true);
                         return;
                     }
                 }
@@ -459,7 +520,6 @@ class WebGLGrid {
 
                 if (!touchState.isHorizontalDrag && !touchState.hasMoved && touchState.hasClaimedTap) {
                     e.preventDefault();
-                    updatePointerTarget(e.clientX, e.clientY, true);
                     triggerPulse();
                 }
 
@@ -802,12 +862,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const revealObserver = new IntersectionObserver(handleReveals, observerOptions);
 
     // Setup initial state for elements and observe
-    document.querySelectorAll('.section-title, .about-text, .contact-container').forEach(el => {
+    document.querySelectorAll('.section-title, .about-text').forEach(el => {
         el.style.opacity = '0';
         el.style.transform = 'translateY(20px)';
         el.style.transition = 'opacity 0.8s ease, transform 0.8s cubic-bezier(0.19, 1, 0.22, 1)';
         revealObserver.observe(el);
     });
+
+    const contactContainer = document.querySelector('.contact-container');
+    if (contactContainer) {
+        contactContainer.style.opacity = '1';
+        contactContainer.style.transform = 'translateY(0)';
+    }
 
     // 3D Tilt Effect for Work Cards (Applied to Inner Image Wrapper)
     const workCards = Array.from(document.querySelectorAll('.work-card'));
@@ -1015,29 +1081,50 @@ document.addEventListener('DOMContentLoaded', () => {
         let radius = 0;
         let lastViewportWidth = window.innerWidth;
         let lastMeasuredCardWidth = 0;
+        let isFlatMode = false;
+        let flatStride = 0;
+        let flatCurrentOffset = 0;
+        let flatTargetOffset = 0;
 
         const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
             const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
             const isMobileViewport = window.innerWidth <= 768;
 
-            if (!force && isMobileViewport && Math.abs(cardWidth - lastMeasuredCardWidth) < 1 && Math.abs(window.innerWidth - lastViewportWidth) < 1) {
+            if (!force && Math.abs(cardWidth - lastMeasuredCardWidth) < 1 && Math.abs(window.innerWidth - lastViewportWidth) < 1) {
                 return;
             }
 
             lastMeasuredCardWidth = cardWidth;
             lastViewportWidth = window.innerWidth;
 
-            const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
-            const depthPadding = isMobileViewport ? Math.max(96, cardWidth * 0.62) : Math.max(24, cardWidth * 0.16);
-            const minMobileRadius = Math.max(280, cardWidth * 1.35);
-            radius = isMobileViewport ? Math.max(baseRadius + depthPadding, minMobileRadius) : baseRadius + depthPadding;
+            if (isMobileViewport) {
+                const wasFlat = isFlatMode;
+                isFlatMode = true;
+                flatStride = cardWidth + 12;
 
-            cards.forEach((card, index) => {
-                const angle = theta * index;
-                card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                card.dataset.angle = angle;
-            });
+                if (!wasFlat || force) {
+                    flatCurrentOffset = 0;
+                    flatTargetOffset = 0;
+                }
+
+                cards.forEach((card, index) => {
+                    card.style.transform = `translateX(${index * flatStride}px)`;
+                    card.dataset.angle = theta * index;
+                });
+            } else {
+                isFlatMode = false;
+
+                const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
+                const depthPadding = Math.max(24, cardWidth * 0.16);
+                radius = baseRadius + depthPadding;
+
+                cards.forEach((card, index) => {
+                    const angle = theta * index;
+                    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+                    card.dataset.angle = angle;
+                });
+            }
         };
 
         // Initialize card positions and attach reliable click listeners
@@ -1061,7 +1148,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
         carouselTrack.querySelectorAll('.work-card-link').forEach((link) => {
             link.addEventListener('pointerdown', (event) => {
-                event.stopPropagation();
+                // On touch, let the event bubble to carouselContainer so swipe can start.
+                // On mouse, stop propagation to prevent drag from starting on a link click.
+                if (event.pointerType !== 'touch') {
+                    event.stopPropagation();
+                }
             });
             link.addEventListener('click', (event) => {
                 event.stopPropagation();
@@ -1069,6 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         updateCarouselGeometry(true);
+        requestAnimationFrame(() => updateCarouselGeometry(true)); // re-measure after first paint
         window.addEventListener('resize', () => updateCarouselGeometry(false));
 
         // Current rotation state
@@ -1096,15 +1188,25 @@ document.addEventListener('DOMContentLoaded', () => {
             return normalized;
         };
 
-        const getCenteredCard = () => cards.reduce((closestCard, card) => {
-            if (!closestCard) return card;
-
-            const cardAngle = parseFloat(card.dataset.angle) || 0;
-            const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
-            const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
-            const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
-            return currentDistance < closestDistance ? card : closestCard;
-        }, null);
+        const getCenteredCard = () => {
+            if (isFlatMode) {
+                let closest = null;
+                let closestDist = Infinity;
+                cards.forEach((card, index) => {
+                    const dist = Math.abs(index * flatStride - flatCurrentOffset);
+                    if (dist < closestDist) { closestDist = dist; closest = card; }
+                });
+                return closest;
+            }
+            return cards.reduce((closestCard, card) => {
+                if (!closestCard) return card;
+                const cardAngle = parseFloat(card.dataset.angle) || 0;
+                const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
+                const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
+                const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
+                return currentDistance < closestDistance ? card : closestCard;
+            }, null);
+        };
 
         const syncActiveFrontCard = () => {
             const centeredCard = getCenteredCard();
@@ -1154,8 +1256,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 return;
             }
 
-            currentRotation += (targetRotation - currentRotation) * 0.1;
-            carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
+            if (isFlatMode) {
+                flatCurrentOffset += (flatTargetOffset - flatCurrentOffset) * 0.1;
+                carouselTrack.style.transform = `translateX(${-flatCurrentOffset}px)`;
+            } else {
+                currentRotation += (targetRotation - currentRotation) * 0.1;
+                carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
+            }
             syncActiveFrontCard();
             carouselFrameId = requestAnimationFrame(animateCarousel);
         }
@@ -1226,17 +1333,24 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         }
 
-        // Keyboard navigation â€” fires globally, only acts when carousel is in view
+        // Keyboard navigation — fires globally, only acts when carousel is in view
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
             if (!isCarouselVisible) return;
             e.preventDefault();
-            if (e.key === 'ArrowLeft') {
-                targetRotation += theta;
+            if (isFlatMode) {
+                const direction = e.key === 'ArrowLeft' ? -1 : 1;
+                const currentIndex = Math.round(flatCurrentOffset / flatStride);
+                const newIndex = Math.max(0, Math.min(numCards - 1, currentIndex + direction));
+                flatTargetOffset = newIndex * flatStride;
             } else {
-                targetRotation -= theta;
+                if (e.key === 'ArrowLeft') {
+                    targetRotation += theta;
+                } else {
+                    targetRotation -= theta;
+                }
+                targetRotation = Math.round(targetRotation / theta) * theta;
             }
-            targetRotation = Math.round(targetRotation / theta) * theta;
         });
 
         // Pointer event dragging logic
@@ -1252,30 +1366,58 @@ document.addEventListener('DOMContentLoaded', () => {
 
         window.addEventListener('pointermove', (e) => {
             if (!isDraggingCarousel) return;
-            
+
             const dx = e.clientX - currentXCarousel;
             currentXCarousel = e.clientX;
-            
-            const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
-            targetRotation += dx * dragSensitivity;
+
+            if (isFlatMode) {
+                flatTargetOffset -= dx;
+                flatTargetOffset = Math.max(0, Math.min((numCards - 1) * flatStride, flatTargetOffset));
+            } else {
+                const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
+                targetRotation += dx * dragSensitivity;
+            }
+        });
+
+        window.addEventListener('pointercancel', () => {
+            if (!isDraggingCarousel) return;
+            isDraggingCarousel = false;
+            carouselContainer.style.cursor = 'grab';
+            if (isFlatMode) {
+                const snapIndex = Math.max(0, Math.min(numCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                flatTargetOffset = snapIndex * flatStride;
+            }
         });
 
         window.addEventListener('pointerup', (e) => {
             if (!isDraggingCarousel) return;
             isDraggingCarousel = false;
             carouselContainer.style.cursor = 'grab';
-            
+
             const totalDrag = e.clientX - startXCarousel;
-            const startSnapIndex = Math.round(dragStartRotation / theta);
-            const touchSwipeThreshold = Math.min(72, window.innerWidth * 0.09);
 
-
-            if (dragPointerType === 'touch' && Math.abs(totalDrag) > touchSwipeThreshold) {
-                const direction = totalDrag < 0 ? -1 : 1;
-                targetRotation = (startSnapIndex + direction) * theta;
+            if (isFlatMode) {
+                const swipeThreshold = Math.min(40, window.innerWidth * 0.07);
+                if (Math.abs(totalDrag) > swipeThreshold) {
+                    const direction = totalDrag < 0 ? 1 : -1;
+                    const currentIndex = Math.round(flatCurrentOffset / flatStride);
+                    const newIndex = Math.max(0, Math.min(numCards - 1, currentIndex + direction));
+                    flatTargetOffset = newIndex * flatStride;
+                } else {
+                    const snapIndex = Math.max(0, Math.min(numCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                    flatTargetOffset = snapIndex * flatStride;
+                }
             } else {
-                const snapIndex = Math.round(targetRotation / theta);
-                targetRotation = snapIndex * theta;
+                const startSnapIndex = Math.round(dragStartRotation / theta);
+                const touchSwipeThreshold = Math.min(72, window.innerWidth * 0.09);
+
+                if (dragPointerType === 'touch' && Math.abs(totalDrag) > touchSwipeThreshold) {
+                    const direction = totalDrag < 0 ? -1 : 1;
+                    targetRotation = (startSnapIndex + direction) * theta;
+                } else {
+                    const snapIndex = Math.round(targetRotation / theta);
+                    targetRotation = snapIndex * theta;
+                }
             }
         });
         
@@ -1304,6 +1446,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let themeToggleAudioContext;
     let themeToggleNoiseBuffer;
+    let glitchAudioContext;
+    let glitchNoiseBuffer;
     const playThemeToggleClick = () => {
         const AudioContextClass = window.AudioContext || window.webkitAudioContext;
         if (!AudioContextClass) return;
@@ -1380,6 +1524,92 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
         triggerClick();
+    };
+    let isAboutSectionVisible = true;
+
+    const stopGlitchTransition = () => {
+        if (!glitchAudioContext || glitchAudioContext.state !== 'running') return;
+        glitchAudioContext.suspend().catch(() => {});
+    };
+
+    const playGlitchTransition = () => {
+        if (!isAboutSectionVisible) {
+            stopGlitchTransition();
+            return;
+        }
+
+        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+        if (!AudioContextClass) return;
+        glitchAudioContext ??= new AudioContextClass();
+        const ctx = glitchAudioContext;
+        const triggerGlitch = () => {
+            try {
+                const now = ctx.currentTime + 0.002;
+                const output = ctx.createGain();
+                output.gain.setValueAtTime(0.0001, now);
+                output.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
+                output.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
+                output.connect(ctx.destination);
+
+                const carrier = ctx.createOscillator();
+                carrier.type = 'sawtooth';
+                carrier.frequency.setValueAtTime(210, now);
+                carrier.frequency.exponentialRampToValueAtTime(620, now + 0.045);
+                carrier.frequency.exponentialRampToValueAtTime(180, now + 0.16);
+                const carrierGain = ctx.createGain();
+                carrierGain.gain.setValueAtTime(0.0001, now);
+                carrierGain.gain.exponentialRampToValueAtTime(0.05, now + 0.006);
+                carrierGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
+                carrier.connect(carrierGain);
+                carrierGain.connect(output);
+                carrier.start(now);
+                carrier.stop(now + 0.14);
+
+                const sparkle = ctx.createOscillator();
+                sparkle.type = 'square';
+                sparkle.frequency.setValueAtTime(1400, now);
+                sparkle.frequency.exponentialRampToValueAtTime(780, now + 0.08);
+                const sparkleGain = ctx.createGain();
+                sparkleGain.gain.setValueAtTime(0.0001, now);
+                sparkleGain.gain.exponentialRampToValueAtTime(0.025, now + 0.004);
+                sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
+                sparkle.connect(sparkleGain);
+                sparkleGain.connect(output);
+                sparkle.start(now);
+                sparkle.stop(now + 0.08);
+
+                if (!glitchNoiseBuffer) {
+                    glitchNoiseBuffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * 0.14)), ctx.sampleRate);
+                    const channel = glitchNoiseBuffer.getChannelData(0);
+                    for (let index = 0; index < channel.length; index += 1) {
+                        channel[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / channel.length, 1.4);
+                    }
+                }
+
+                const noise = ctx.createBufferSource();
+                noise.buffer = glitchNoiseBuffer;
+                const noiseFilter = ctx.createBiquadFilter();
+                noiseFilter.type = 'bandpass';
+                noiseFilter.frequency.setValueAtTime(2200, now);
+                noiseFilter.Q.value = 1.6;
+                const noiseGain = ctx.createGain();
+                noiseGain.gain.setValueAtTime(0.0001, now);
+                noiseGain.exponentialRampToValueAtTime(0.04, now + 0.003);
+                noiseGain.exponentialRampToValueAtTime(0.0001, now + 0.09);
+                noise.connect(noiseFilter);
+                noiseFilter.connect(noiseGain);
+                noiseGain.connect(output);
+                noise.start(now);
+                noise.stop(now + 0.1);
+            } catch {
+                // Keep the visual title transition running even if Web Audio glitches.
+            }
+        };
+        if (ctx.state === 'suspended') {
+            ctx.resume().then(triggerGlitch).catch(() => {});
+            return;
+        }
+        triggerGlitch();
     };
     // Theme Toggle Logic
     const themeToggleButtons = document.querySelectorAll('[data-theme-toggle]');
@@ -1692,6 +1922,634 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTab.addEventListener('pointercancel', resetDragEnd);
     }
 
+    const contactScene = document.querySelector('.contact-notebook-scene');
+    const contactNotebook = contactScene?.querySelector('.contact-notebook');
+    const contactBusinessCard = contactScene?.querySelector('[data-contact-card]');
+    const contactResetTab = document.querySelector('[data-contact-reset-tab]');
+    const contactCardModal = document.querySelector('[data-contact-card-modal]');
+    const contactCardCloseButtons = document.querySelectorAll('[data-contact-card-close]');
+    const contactStickers = Array.from(document.querySelectorAll('[data-contact-sticker]'));
+    const contactLogoStickers = Array.from(document.querySelectorAll('[data-contact-logo]'));
+
+    if (contactScene && contactNotebook && contactStickers.length > 0) {
+        const clearSelectedContactStickers = () => {
+            contactStickers.forEach((item) => item.classList.remove('is-selected'));
+        };
+
+        const initialContactTopZ = contactStickers.reduce((max, sticker) => {
+            return Math.max(max, parseInt(sticker.style.getPropertyValue('--z'), 10) || 1);
+        }, 1) + 10;
+
+        let activeContactSticker = null;
+        let contactDragType = 'move';
+        let contactStartX = 0;
+        let contactStartY = 0;
+        let contactBaseX = 0;
+        let contactBaseY = 0;
+        let contactStartRot = 0;
+        let contactStartScale = 1;
+        let contactRectCenter = { x: 0, y: 0 };
+        let contactInitialAngle = 0;
+        let contactInitialDistance = 0;
+        let topStickerZ = initialContactTopZ;
+        let isPullingContactReset = false;
+        let contactResetStartX = 0;
+        let isPullingBusinessCard = false;
+        let contactCardStartY = 0;
+
+        const getContactBounds = () => {
+            const viewportPadding = 12;
+            return {
+                minX: viewportPadding,
+                maxX: window.innerWidth - viewportPadding,
+                minY: viewportPadding,
+                maxY: window.innerHeight - viewportPadding
+            };
+        };
+
+        const clampContactStickerToBounds = (sticker) => {
+            const bounds = getContactBounds();
+            const rect = sticker.getBoundingClientRect();
+            const halfWidth = rect.width / 2;
+            const halfHeight = rect.height / 2;
+            const centerX = rect.left + halfWidth;
+            const centerY = rect.top + halfHeight;
+            const nextCenterX = Math.min(Math.max(centerX, bounds.minX + halfWidth), bounds.maxX - halfWidth);
+            const nextCenterY = Math.min(Math.max(centerY, bounds.minY + halfHeight), bounds.maxY - halfHeight);
+            const deltaX = nextCenterX - centerX;
+            const deltaY = nextCenterY - centerY;
+
+            if (Math.abs(deltaX) > 0.1 || Math.abs(deltaY) > 0.1) {
+                const style = window.getComputedStyle(sticker);
+                const currentDragX = parseFloat(style.getPropertyValue('--drag-x')) || 0;
+                const currentDragY = parseFloat(style.getPropertyValue('--drag-y')) || 0;
+                sticker.style.setProperty('--drag-x', `${currentDragX + deltaX}px`);
+                sticker.style.setProperty('--drag-y', `${currentDragY + deltaY}px`);
+            }
+        };
+
+        const markContactStickerTouched = (sticker) => {
+            if (sticker) {
+                sticker.dataset.touched = 'true';
+            }
+        };
+
+        const applyContactLogoRotations = () => {
+            const fixedRotations = [10, -10, 5, -5, 3];
+            contactLogoStickers.forEach((sticker, index) => {
+                const rotation = fixedRotations[index] ?? 0;
+                sticker.style.setProperty('--rot', `${rotation}deg`);
+            });
+        };
+
+        const resetContactStickers = () => {
+            clearSelectedContactStickers();
+            topStickerZ = initialContactTopZ;
+            contactStickers.forEach((sticker) => {
+                sticker.classList.add('snap-back');
+                sticker.setAttribute('style', sticker.dataset.initialStyle);
+                window.setTimeout(() => {
+                    sticker.classList.remove('snap-back');
+                }, 600);
+            });
+            applyContactLogoRotations();
+        };
+
+        const openContactCardModal = () => {
+            if (!contactCardModal) return;
+            contactCardModal.hidden = false;
+            contactCardModal.setAttribute('aria-hidden', 'false');
+            document.body.style.overflow = 'hidden';
+        };
+
+        const closeContactCardModal = () => {
+            if (!contactCardModal) return;
+            contactCardModal.hidden = true;
+            contactCardModal.setAttribute('aria-hidden', 'true');
+            document.body.style.overflow = '';
+        };
+
+        const contactDragMove = (event) => {
+            if (!activeContactSticker) return;
+
+            if (contactDragType === 'move') {
+                const nextX = event.clientX - contactStartX + contactBaseX;
+                const nextY = event.clientY - contactStartY + contactBaseY;
+                activeContactSticker.style.setProperty('--drag-x', `${nextX}px`);
+                activeContactSticker.style.setProperty('--drag-y', `${nextY}px`);
+                markContactStickerTouched(activeContactSticker);
+                clampContactStickerToBounds(activeContactSticker);
+            } else if (contactDragType === 'rotate') {
+                const currentAngle = Math.atan2(event.clientY - contactRectCenter.y, event.clientX - contactRectCenter.x) * (180 / Math.PI);
+                const deltaAngle = currentAngle - contactInitialAngle;
+                activeContactSticker.style.setProperty('--rot', `${contactStartRot + deltaAngle}deg`);
+                markContactStickerTouched(activeContactSticker);
+                clampContactStickerToBounds(activeContactSticker);
+            } else if (contactDragType === 'scale') {
+                const currentDistance = Math.hypot(event.clientX - contactRectCenter.x, event.clientY - contactRectCenter.y);
+                const scaleFactor = contactInitialDistance > 0 ? (currentDistance / contactInitialDistance) : 1;
+                const nextScale = Math.max(0.45, Math.min(contactStartScale * scaleFactor, 4));
+                activeContactSticker.style.setProperty('--scale', nextScale);
+                markContactStickerTouched(activeContactSticker);
+                clampContactStickerToBounds(activeContactSticker);
+            }
+        };
+
+        const contactDragEnd = (event) => {
+            if (!activeContactSticker) return;
+
+            activeContactSticker.classList.remove('dragging');
+
+            try {
+                activeContactSticker.releasePointerCapture(event.pointerId);
+            } catch {
+                // Ignore release errors when pointer capture is already gone.
+            }
+
+            activeContactSticker.removeEventListener('pointermove', contactDragMove);
+            activeContactSticker.removeEventListener('pointerup', contactDragEnd);
+            activeContactSticker.removeEventListener('pointercancel', contactDragEnd);
+            clampContactStickerToBounds(activeContactSticker);
+            activeContactSticker = null;
+        };
+
+        applyContactLogoRotations();
+
+        contactStickers.forEach((sticker) => {
+            sticker.addEventListener('dragstart', (event) => event.preventDefault());
+            sticker.dataset.initialStyle = sticker.getAttribute('style') || '';
+
+            sticker.addEventListener('pointerdown', (event) => {
+                if (event.button !== undefined && event.button !== 0) return;
+
+                event.preventDefault();
+                event.stopPropagation();
+
+                clearSelectedContactStickers();
+                sticker.classList.add('is-selected');
+
+                if (event.target.closest('.gui-layer-up')) {
+                    topStickerZ += 1;
+                    sticker.style.zIndex = topStickerZ;
+                    return;
+                }
+
+                if (event.target.closest('.gui-layer-down')) {
+                    const currentZ = parseInt(window.getComputedStyle(sticker).zIndex, 10) || 3;
+                    sticker.style.zIndex = Math.max(0, currentZ - 1);
+                    return;
+                }
+
+                activeContactSticker = sticker;
+                contactDragType = event.target.closest('.gui-rotate') ? 'rotate' : event.target.closest('.gui-scale') ? 'scale' : 'move';
+                contactStartX = event.clientX;
+                contactStartY = event.clientY;
+
+                const style = window.getComputedStyle(sticker);
+                contactBaseX = parseFloat(style.getPropertyValue('--drag-x')) || 0;
+                contactBaseY = parseFloat(style.getPropertyValue('--drag-y')) || 0;
+                contactStartRot = parseFloat(style.getPropertyValue('--rot')) || 0;
+                contactStartScale = parseFloat(style.getPropertyValue('--scale')) || 1;
+
+                if (contactDragType === 'rotate' || contactDragType === 'scale') {
+                    const rect = sticker.getBoundingClientRect();
+                    contactRectCenter = { x: rect.left + (rect.width / 2), y: rect.top + (rect.height / 2) };
+                    if (contactDragType === 'rotate') {
+                        contactInitialAngle = Math.atan2(event.clientY - contactRectCenter.y, event.clientX - contactRectCenter.x) * (180 / Math.PI);
+                    } else {
+                        contactInitialDistance = Math.hypot(event.clientX - contactRectCenter.x, event.clientY - contactRectCenter.y);
+                    }
+                }
+
+                topStickerZ += 1;
+                sticker.style.zIndex = topStickerZ;
+                sticker.classList.add('dragging');
+                sticker.setPointerCapture(event.pointerId);
+                sticker.addEventListener('pointermove', contactDragMove);
+                sticker.addEventListener('pointerup', contactDragEnd);
+                sticker.addEventListener('pointercancel', contactDragEnd);
+            });
+        });
+
+        document.addEventListener('pointerdown', (event) => {
+            if (!event.target.closest('[data-contact-sticker]')) {
+                clearSelectedContactStickers();
+            }
+        });
+
+        if (contactResetTab) {
+            contactResetTab.addEventListener('pointerdown', (event) => {
+                isPullingContactReset = true;
+                contactResetStartX = event.clientX;
+                contactResetTab.style.transition = 'none';
+                contactResetTab.setPointerCapture(event.pointerId);
+                event.preventDefault();
+                event.stopPropagation();
+            });
+
+            contactResetTab.addEventListener('pointermove', (event) => {
+                if (!isPullingContactReset) return;
+                const dx = Math.max(0, event.clientX - contactResetStartX);
+                const pullDistance = Math.min(dx, 90);
+                contactResetTab.style.setProperty('--pull-x', `${pullDistance}px`);
+            });
+
+            const endContactResetPull = (event) => {
+                if (!isPullingContactReset) return;
+                isPullingContactReset = false;
+
+                try {
+                    contactResetTab.releasePointerCapture(event.pointerId);
+                } catch {
+                    // Ignore release errors when pointer capture is already gone.
+                }
+
+                const dx = Math.max(0, event.clientX - contactResetStartX);
+                contactResetTab.style.transition = 'width 0.28s cubic-bezier(0.22, 1, 0.36, 1)';
+                contactResetTab.style.setProperty('--pull-x', '0px');
+
+                if (dx > 62) {
+                    resetContactStickers();
+                }
+            };
+
+            contactResetTab.addEventListener('pointerup', endContactResetPull);
+            contactResetTab.addEventListener('pointercancel', endContactResetPull);
+        }
+
+        if (contactBusinessCard) {
+            contactBusinessCard.addEventListener('pointerdown', (event) => {
+                if (event.button !== undefined && event.button !== 0) return;
+                isPullingBusinessCard = true;
+                contactCardStartY = event.clientY;
+                contactBusinessCard.style.transition = 'none';
+                contactBusinessCard.setPointerCapture(event.pointerId);
+                event.preventDefault();
+                event.stopPropagation();
+            });
+
+            contactBusinessCard.addEventListener('pointermove', (event) => {
+                if (!isPullingBusinessCard) return;
+                const dy = Math.max(0, event.clientY - contactCardStartY);
+                const pullDistance = Math.min(dy, 140);
+                contactBusinessCard.style.setProperty('--card-pull-y', `${pullDistance}px`);
+            });
+
+            const endBusinessCardPull = (event) => {
+                if (!isPullingBusinessCard) return;
+                isPullingBusinessCard = false;
+
+                try {
+                    contactBusinessCard.releasePointerCapture(event.pointerId);
+                } catch {
+                    // Ignore release errors when pointer capture is already gone.
+                }
+
+                const dy = Math.max(0, event.clientY - contactCardStartY);
+                contactBusinessCard.style.transition = 'transform 0.26s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.22s ease, filter 0.22s ease';
+                contactBusinessCard.style.setProperty('--card-pull-y', '0px');
+
+                if (dy > 70) {
+                    openContactCardModal();
+                }
+            };
+
+            contactBusinessCard.addEventListener('pointerup', endBusinessCardPull);
+            contactBusinessCard.addEventListener('pointercancel', endBusinessCardPull);
+        }
+
+        contactCardCloseButtons.forEach((button) => {
+            button.addEventListener('click', closeContactCardModal);
+        });
+
+        document.addEventListener('keydown', (event) => {
+            if (event.key === 'Escape' && contactCardModal && !contactCardModal.hidden) {
+                closeContactCardModal();
+            }
+        });
+
+        const normalizeContactStickers = () => {
+            contactStickers.forEach((sticker) => {
+                if (sticker.dataset.touched === 'true') {
+                    clampContactStickerToBounds(sticker);
+                }
+            });
+        };
+
+        window.addEventListener('resize', normalizeContactStickers);
+
+        const meowSticker = document.querySelector('[data-meow-sticker]');
+        const flowerSticker = document.querySelector('.contact-sticker--flower');
+        const flowerStickerHitbox = flowerSticker?.querySelector('.contact-sticker-hitbox');
+        const ladybugSticker = document.querySelector('.contact-sticker--ladybug');
+
+        let contactAccentAudioContext = null;
+        let lastFlowerAt = 0;
+        let lastLadybugAt = 0;
+
+        const getContactAccentContext = async () => {
+            const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+            if (!AudioContextClass) {
+                return null;
+            }
+
+            if (!contactAccentAudioContext) {
+                contactAccentAudioContext = new AudioContextClass();
+            }
+
+            if (contactAccentAudioContext.state === 'suspended') {
+                try {
+                    await contactAccentAudioContext.resume();
+                } catch {
+                    return null;
+                }
+            }
+
+            return contactAccentAudioContext;
+        };
+
+        const playFlowerSynth = async () => {
+            const nowPerf = window.performance.now();
+            if (nowPerf - lastFlowerAt < 850) return;
+            lastFlowerAt = nowPerf;
+
+            const ctx = await getContactAccentContext();
+            if (!ctx) return;
+
+            const start = ctx.currentTime;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(0.05, start + 0.03);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.55);
+            gain.connect(ctx.destination);
+
+            const bloom = ctx.createOscillator();
+            bloom.type = 'triangle';
+            bloom.frequency.setValueAtTime(520, start);
+            bloom.frequency.exponentialRampToValueAtTime(780, start + 0.18);
+            bloom.frequency.exponentialRampToValueAtTime(620, start + 0.45);
+            bloom.connect(gain);
+
+            const shimmer = ctx.createOscillator();
+            shimmer.type = 'sine';
+            shimmer.frequency.setValueAtTime(1040, start + 0.04);
+            shimmer.frequency.exponentialRampToValueAtTime(1560, start + 0.22);
+            const shimmerGain = ctx.createGain();
+            shimmerGain.gain.setValueAtTime(0.0001, start);
+            shimmerGain.gain.exponentialRampToValueAtTime(0.018, start + 0.04);
+            shimmerGain.gain.exponentialRampToValueAtTime(0.0001, start + 0.34);
+            shimmer.connect(shimmerGain);
+            shimmerGain.connect(ctx.destination);
+
+            bloom.start(start);
+            shimmer.start(start + 0.02);
+            bloom.stop(start + 0.55);
+            shimmer.stop(start + 0.34);
+        };
+
+        const playLadybugSynth = async () => {
+            const nowPerf = window.performance.now();
+            if (nowPerf - lastLadybugAt < 700) return;
+            lastLadybugAt = nowPerf;
+
+            const ctx = await getContactAccentContext();
+            if (!ctx) return;
+
+            const start = ctx.currentTime;
+            const gain = ctx.createGain();
+            gain.gain.setValueAtTime(0.0001, start);
+            gain.gain.exponentialRampToValueAtTime(0.028, start + 0.01);
+            gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.18);
+            gain.connect(ctx.destination);
+
+            const blip = ctx.createOscillator();
+            blip.type = 'square';
+            blip.frequency.setValueAtTime(860, start);
+            blip.frequency.exponentialRampToValueAtTime(640, start + 0.08);
+            blip.frequency.exponentialRampToValueAtTime(720, start + 0.16);
+            blip.connect(gain);
+            blip.start(start);
+            blip.stop(start + 0.18);
+        };
+
+        if (meowSticker) {
+            let audioContext = null;
+            let lastMeowAt = 0;
+
+            const playMeow = async () => {
+                const now = window.performance.now();
+                if (now - lastMeowAt < 900) {
+                    return;
+                }
+                lastMeowAt = now;
+
+                const AudioContextClass = window.AudioContext || window.webkitAudioContext;
+                if (!AudioContextClass) {
+                    return;
+                }
+
+                if (!audioContext) {
+                    audioContext = new AudioContextClass();
+                }
+
+                if (audioContext.state === 'suspended') {
+                    try {
+                        await audioContext.resume();
+                    } catch {
+                        return;
+                    }
+                }
+
+                const start = audioContext.currentTime;
+                const gain = audioContext.createGain();
+                gain.gain.setValueAtTime(0.0001, start);
+                gain.gain.exponentialRampToValueAtTime(0.09, start + 0.02);
+                gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.42);
+                gain.connect(audioContext.destination);
+
+                const oscA = audioContext.createOscillator();
+                oscA.type = 'sawtooth';
+                oscA.frequency.setValueAtTime(620, start);
+                oscA.frequency.exponentialRampToValueAtTime(380, start + 0.14);
+                oscA.frequency.exponentialRampToValueAtTime(290, start + 0.32);
+                oscA.connect(gain);
+
+                const oscB = audioContext.createOscillator();
+                oscB.type = 'triangle';
+                oscB.frequency.setValueAtTime(820, start);
+                oscB.frequency.exponentialRampToValueAtTime(470, start + 0.12);
+                oscB.frequency.exponentialRampToValueAtTime(320, start + 0.3);
+                oscB.connect(gain);
+
+                oscA.start(start);
+                oscB.start(start);
+                oscA.stop(start + 0.42);
+                oscB.stop(start + 0.42);
+            };
+
+            meowSticker.addEventListener('pointerenter', () => {
+                void playMeow();
+            });
+            meowSticker.addEventListener('pointerdown', () => {
+                void playMeow();
+            });
+        }
+
+        if (flowerStickerHitbox) {
+            flowerStickerHitbox.addEventListener('pointerenter', () => {
+                void playFlowerSynth();
+            });
+            flowerStickerHitbox.addEventListener('pointerdown', () => {
+                void playFlowerSynth();
+            });
+        }
+
+        if (ladybugSticker) {
+            ladybugSticker.addEventListener('pointerenter', () => {
+                void playLadybugSynth();
+            });
+            ladybugSticker.addEventListener('pointerdown', () => {
+                void playLadybugSynth();
+            });
+        }
+    }
+
+    const rotatingWordWrap = document.querySelector('[data-rotating-word-wrap]');
+    const rotatingWordCurrent = document.querySelector('[data-rotating-word-current]');
+    const rotatingWordNext = document.querySelector('[data-rotating-word-next]');
+    const rotatingWordSizer = document.querySelector('[data-rotating-word-sizer]');
+
+    if (rotatingWordWrap && rotatingWordCurrent && rotatingWordNext && rotatingWordSizer) {
+        const wordPairs = [
+            { word: 'fun', iconType: 'emoji', iconValue: '🥳' },
+            { word: 'meaningful', iconType: 'image', iconValue: 'Assets/the thinker.png' },
+            { word: 'poetic', iconType: 'emoji', iconValue: '🌌' },
+            { word: 'exciting', iconType: 'emoji', iconValue: '🚀' },
+            { word: 'magical', iconType: 'emoji', iconValue: '🪄' }
+        ];
+        let wordIndex = 0;
+        const holdDuration = 2000;
+        const slideDuration = 640;
+
+        const renderWordPair = (element, { word, iconType, iconValue }) => {
+            const label = document.createElement('span');
+            label.className = 'about-rotating-word-label';
+            label.textContent = word;
+
+            let icon;
+            if (iconType === 'image') {
+                icon = document.createElement('img');
+                icon.className = 'about-rotating-word-icon about-rotating-word-icon--image';
+                icon.src = iconValue;
+                icon.alt = '';
+                icon.decoding = 'async';
+            } else {
+                icon = document.createElement('span');
+                icon.className = 'about-rotating-word-icon';
+                icon.textContent = iconValue;
+            }
+
+            element.replaceChildren(label, icon);
+        };
+
+        const lockSlotWidth = () => {
+            let widest = 0;
+            wordPairs.forEach((pair) => {
+                renderWordPair(rotatingWordSizer, pair);
+                widest = Math.max(widest, rotatingWordSizer.getBoundingClientRect().width);
+            });
+            rotatingWordWrap.style.width = `${Math.ceil(widest)}px`;
+            renderWordPair(rotatingWordSizer, wordPairs[wordIndex]);
+        };
+
+        const runWordCycle = () => {
+            const nextIndex = (wordIndex + 1) % wordPairs.length;
+            const nextWord = wordPairs[nextIndex];
+
+            renderWordPair(rotatingWordNext, nextWord);
+            rotatingWordWrap.classList.remove('is-sliding');
+            void rotatingWordWrap.offsetWidth;
+            rotatingWordWrap.classList.add('is-sliding');
+
+            window.setTimeout(() => {
+                wordIndex = nextIndex;
+                renderWordPair(rotatingWordCurrent, nextWord);
+                renderWordPair(rotatingWordNext, wordPairs[(wordIndex + 1) % wordPairs.length]);
+                rotatingWordWrap.classList.remove('is-sliding');
+                window.setTimeout(runWordCycle, holdDuration);
+            }, slideDuration);
+        };
+
+        renderWordPair(rotatingWordCurrent, wordPairs[wordIndex]);
+        renderWordPair(rotatingWordNext, wordPairs[(wordIndex + 1) % wordPairs.length]);
+        lockSlotWidth();
+        window.setTimeout(runWordCycle, holdDuration);
+    }
+
+    const aboutTldrButton = document.querySelector('[data-about-tldr]');
+    const aboutCopy = document.querySelector('[data-about-copy]');
+
+    if (aboutTldrButton && aboutCopy) {
+        aboutTldrButton.addEventListener('click', () => {
+            const isActive = aboutTldrButton.getAttribute('aria-pressed') === 'true';
+            aboutTldrButton.setAttribute('aria-pressed', String(!isActive));
+            aboutCopy.classList.toggle('is-tldr', !isActive);
+        });
+    }
+
+    const aboutSection = document.querySelector('#about');
+    const aboutGlitchTitle = document.querySelector('[data-about-glitch-text]');
+
+    if (aboutSection && 'IntersectionObserver' in window) {
+        const aboutSoundObserver = new IntersectionObserver((entries) => {
+            const [entry] = entries;
+            if (!entry) return;
+
+            isAboutSectionVisible = entry.isIntersecting && entry.intersectionRatio > 0.18;
+
+            if (!isAboutSectionVisible) {
+                stopGlitchTransition();
+            }
+        }, {
+            threshold: [0, 0.18, 0.35]
+        });
+
+        aboutSoundObserver.observe(aboutSection);
+    }
+
+    if (aboutGlitchTitle) {
+        const aboutGlitchTitleBottom = aboutGlitchTitle.querySelector('.about-glitch-title__bottom');
+        const aboutGlitchTitleLabel = aboutGlitchTitle.querySelector('.about-glitch-title__label');
+        const titleWords = ['Neelanzone', 'Neel', 'Nilanjan'];
+        let titleIndex = 0;
+
+        window.setInterval(() => {
+            aboutGlitchTitle.classList.remove('is-glitching');
+            void aboutGlitchTitle.offsetWidth;
+            aboutGlitchTitle.classList.add('is-glitching');
+
+            window.setTimeout(() => {
+                titleIndex = (titleIndex + 1) % titleWords.length;
+                const nextTitle = titleWords[titleIndex];
+                if (aboutGlitchTitleLabel) {
+                    aboutGlitchTitleLabel.textContent = nextTitle;
+                }
+                if (aboutGlitchTitleBottom) {
+                    aboutGlitchTitleBottom.textContent = nextTitle;
+                }
+                aboutGlitchTitle.setAttribute('data-text', nextTitle);
+            }, 190);
+
+            window.setTimeout(() => {
+                playGlitchTransition();
+            }, 0);
+
+            window.setTimeout(() => {
+                aboutGlitchTitle.classList.remove('is-glitching');
+            }, 430);
+        }, 2000);
+    }
+
     // Smooth Scroll Override for Sticky Nav Links
     document.querySelectorAll('a[href^="#"]').forEach(anchor => {
         anchor.addEventListener('click', function (e) {
@@ -1725,7 +2583,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     destinationTop = getStaticTop(workSection);
                     offset = parseFloat(window.getComputedStyle(workSection).top) || 0;
                 } else if (targetId === '#about') {
-                    offset -= window.innerHeight * 0.14;
+                    offset -= window.innerHeight * 0.12 - 12;
                 }
 
                 if (window.history?.replaceState) {

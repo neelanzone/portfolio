@@ -10,7 +10,9 @@ export function renderOutcomes(section, context) {
                     <div class="overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
                         <div class="px-4 pb-4 sm:px-6 sm:pb-6">
                             <div class="relative h-[60vh] overflow-hidden rounded-[4px] border border-rule bg-rule/30 lg:relative lg:left-1/2 lg:w-[108%] lg:-translate-x-1/2">
-                                <img src="${escapeHtml(resolveAssetPath(section.image.src, context.toRoot))}" alt="${escapeHtml(section.image.alt)}" class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center" loading="lazy" decoding="async">
+                                ${section.image.src.endsWith('.mp4') || section.image.src.endsWith('.webm')
+                                    ? `<video autoplay loop muted playsinline class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center" preload="none" aria-hidden="true"><source src="${escapeHtml(resolveAssetPath(section.image.src, context.toRoot))}" type="video/mp4"></video>`
+                                    : `<img src="${escapeHtml(resolveAssetPath(section.image.src, context.toRoot))}" alt="${escapeHtml(section.image.alt)}" class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center" loading="lazy" decoding="async">`}
                             </div>
                         </div>
 

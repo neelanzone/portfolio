@@ -27,7 +27,9 @@ export function renderHero(section, context) {
                     </div>
 
                     <figure class="project-hero-media h-[40vh] w-full overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
-                        <img src="${escapeHtml(resolveAssetPath(section.media.src, context.toRoot))}" alt="${escapeHtml(section.media.alt)}" class="h-full w-full object-cover" loading="eager" decoding="async">
+                        ${section.media.src.endsWith('.mp4') || section.media.src.endsWith('.webm')
+                            ? `<video autoplay loop muted playsinline class="h-full w-full object-cover" preload="auto" aria-hidden="true"><source src="${escapeHtml(resolveAssetPath(section.media.src, context.toRoot))}" type="video/mp4"></video>`
+                            : `<img src="${escapeHtml(resolveAssetPath(section.media.src, context.toRoot))}" alt="${escapeHtml(section.media.alt)}" class="h-full w-full object-cover" loading="eager" decoding="async">`}
                     </figure>
                 </div>
             </div>

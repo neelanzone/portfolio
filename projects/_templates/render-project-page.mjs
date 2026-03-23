@@ -34,7 +34,7 @@ export function renderProjectPage(project, site) {
     const themeClass = `theme-${project.theme}`;
     const metaTags = renderMetaTags(project, site);
     const stackSections = buildStackSections(project);
-    const tailMarkup = `${renderMoreProjectsBlock(project, site, toRoot)}\n${renderFooterBlock(site)}`;
+    const tailMarkup = `${renderMoreProjectsBlock(project, site, toRoot)}\n${renderFooterBlock(site, toRoot)}`;
     const sectionsMarkup = stackSections
         .map((section, index) => renderSection(section, {
             toRoot,

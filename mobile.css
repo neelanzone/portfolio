@@ -1,0 +1,124 @@
+/* ============================================================
+   mobile.css — intentional mobile layouts (max-width: 767px)
+   Loaded after style.css. Desktop styles live in style.css.
+   ============================================================ */
+
+@media (max-width: 767px) {
+
+    /* --------------------------------------------------------
+       Navbar
+    -------------------------------------------------------- */
+
+    /* Hide desktop nav, show mobile burger + theme toggle */
+    .nav-links,
+    .nav-actions {
+        display: none;
+    }
+
+    .mobile-nav-actions {
+        display: flex;
+    }
+
+    /* --------------------------------------------------------
+       Hero
+    -------------------------------------------------------- */
+
+    .hero-content {
+        text-align: left;
+        align-items: flex-start;
+        padding: 0 1.5rem;
+    }
+
+    .hero-content h1 {
+        font-size: 4rem;
+        margin-bottom: 1.65rem;
+    }
+
+    .hero-content h3 {
+        margin: 0;
+        white-space: nowrap;
+    }
+
+    /* --------------------------------------------------------
+       Work / Carousel (flat mode)
+    -------------------------------------------------------- */
+
+    #work.section {
+        overflow: hidden;
+    }
+
+    .carousel-container {
+        perspective: none;
+        transform-style: flat;
+        transform: none;
+        overflow: hidden;
+        height: calc(60vw * 2 + 1.5rem);
+        padding: 0;
+        touch-action: pan-y;
+    }
+
+    .carousel-track {
+        transform-style: flat;
+        width: 60vw;
+        height: calc(60vw * 2);
+    }
+
+    .work-card,
+    .work-image {
+        width: 60vw;
+        height: calc(60vw * 2);
+    }
+
+    .carousel-control {
+        display: none;
+    }
+
+    .carousel-title {
+        font-size: 2.5rem;
+    }
+
+    .work-pill {
+        font-size: 12px;
+    }
+
+    /* --------------------------------------------------------
+       About
+    -------------------------------------------------------- */
+
+    #about .section-title {
+        font-size: 3.5rem;
+    }
+
+    .photo-wrapper {
+        --about-mobile-orbit-radius: min(8rem, calc(34vw));
+    }
+
+    .pull-tab {
+        padding-top: 65px;
+    }
+
+    .accessory {
+        transform: scale(0.85);
+    }
+
+    /* --------------------------------------------------------
+       Contact
+    -------------------------------------------------------- */
+
+    .about-cta-line {
+        flex-direction: column;
+        white-space: normal;
+        align-items: center;
+    }
+
+    .about-rotating-word-wrap {
+        display: inline-grid;
+        align-self: center;
+        text-align: center;
+        justify-items: center;
+        justify-content: center;
+        box-sizing: content-box;
+        padding-inline: 0.5rem;
+    }
+
+}

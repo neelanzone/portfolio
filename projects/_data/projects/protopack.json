@@ -35,7 +35,7 @@
         }
       ],
       "media": {
-        "src": "Assets/10x-bag.gif",
+        "src": "Assets/10x-bag.mp4",
         "alt": "Product preview for ProtoPack backpack concept."
       }
     },
@@ -125,7 +125,7 @@
       "navLabel": "Outcomes",
       "label": "Outcomes",
       "image": {
-        "src": "Assets/10x-bag.gif",
+        "src": "Assets/10x-bag.mp4",
         "alt": "Product concept preview for ProtoPack."
       },
       "metrics": [

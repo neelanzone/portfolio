@@ -1,30 +1,30 @@
 {
     "owner": "Neel",
-    "copyrightOwner": "Creative Developer",
+    "copyrightOwner": "neelanzone",
     "year": "2026",
     "siteUrl": "",
     "homeHref": "index.html",
     "socialLinks": [
         {
-            "label": "Twitter",
-            "href": "#"
+            "label": "X",
+            "href": "https://x.com/Neelanzone"
         },
         {
             "label": "GitHub",
-            "href": "#"
+            "href": "https://github.com/neelanzone"
         },
         {
             "label": "LinkedIn",
-            "href": "#"
+            "href": "https://www.linkedin.com/in/neelanzone/"
         }
     ],
     "moreProjects": [
         {
             "slug": "ludo-reimagined",
             "title": "Ludo Reimagined",
-            "type": "Game Design & Development, 2026",
+            "type": "Game Design, 2026",
             "image": {
-                "src": "Assets/ludo-cards.gif",
+                "src": "Assets/ludo-cards.mp4",
                 "alt": "Animated gameplay preview for Ludo Reimagined"
             },
             "link": {
@@ -38,7 +38,7 @@
             "title": "Managed Asset Search",
             "type": "Information Architecture, 2021",
             "image": {
-                "src": "Assets/DAM-TE.gif",
+                "src": "Assets/DAM-TE.mp4",
                 "alt": "Animated interface preview for Managed Asset Search"
             },
             "link": {
@@ -80,7 +80,7 @@
             "title": "ProtoPack",
             "type": "Product Design, 2022",
             "image": {
-                "src": "Assets/10x-bag.gif",
+                "src": "Assets/10x-bag.mp4",
                 "alt": "Product preview for ProtoPack backpack concept"
             },
             "link": {
