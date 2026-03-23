@@ -19,10 +19,10 @@
         display: flex;
     }
 
-    /* +20% button size — use parent context for specificity */
+    /* +30% button base — cap stays the same; parent context beats max-width:480px rule */
     .mobile-nav-actions .menu-toggle {
-        width: 48px;
-        height: 48px;
+        width: 62px;
+        height: 62px;
     }
 
     .mobile-nav-actions .menu-toggle .menu-toggle__cap {
@@ -31,8 +31,8 @@
     }
 
     .mobile-nav-actions .theme-toggle.mobile-theme-toggle {
-        width: 48px;
-        height: 48px;
+        width: 62px;
+        height: 62px;
     }
 
     .mobile-nav-actions .theme-toggle.mobile-theme-toggle .theme-toggle__cap {
@@ -99,7 +99,7 @@
         transform-style: flat;
         width: 65vw;
         height: calc(65vw * 2);
-        margin-left: 17.5vw; /* centres each card: (100vw - 65vw) / 2 */
+        /* No margin needed — .carousel-container uses flex justify-content:center */
     }
 
     .work-card,
@@ -158,6 +158,33 @@
         justify-content: center;
         box-sizing: content-box;
         padding-inline: 0.5rem;
+    }
+
+    /* --------------------------------------------------------
+       Carousel dot counter
+    -------------------------------------------------------- */
+
+    .carousel-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 6px;
+        padding: 12px 0 4px;
+    }
+
+    .carousel-dot {
+        width: 6px;
+        height: 6px;
+        border-radius: 999px;
+        background: var(--text-color);
+        opacity: 0.25;
+        transition: width 0.25s ease, opacity 0.25s ease;
+        flex-shrink: 0;
+    }
+
+    .carousel-dot.is-active {
+        width: 20px;
+        opacity: 1;
     }
 
 }

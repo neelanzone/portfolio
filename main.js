@@ -1134,6 +1134,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let flatTargetOffset = 0;
         let flatNumCards = numCards;
 
+        const dotsContainer = document.getElementById('carousel-dots');
+        let lastDotIdx = -1;
+        const updateDots = (activeIdx) => {
+            if (!dotsContainer || lastDotIdx === activeIdx) return;
+            lastDotIdx = activeIdx;
+            dotsContainer.querySelectorAll('.carousel-dot').forEach((dot, i) => {
+                dot.classList.toggle('is-active', i === activeIdx);
+            });
+        };
+
         const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
             const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
@@ -1171,6 +1181,16 @@ document.addEventListener('DOMContentLoaded', () => {
                     const midIndex = Math.floor((flatNumCards - 1) / 2);
                     flatCurrentOffset = midIndex * flatStride;
                     flatTargetOffset = midIndex * flatStride;
+                    // Build dots
+                    if (dotsContainer) {
+                        dotsContainer.innerHTML = '';
+                        for (let i = 0; i < flatNumCards; i++) {
+                            const dot = document.createElement('span');
+                            dot.className = 'carousel-dot' + (i === midIndex ? ' is-active' : '');
+                            dotsContainer.appendChild(dot);
+                        }
+                        lastDotIdx = midIndex;
+                    }
                 }
             } else {
                 isFlatMode = false;
@@ -1323,6 +1343,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isFlatMode) {
                 flatCurrentOffset += (flatTargetOffset - flatCurrentOffset) * 0.1;
                 carouselTrack.style.transform = `translateX(${-flatCurrentOffset}px)`;
+                updateDots(Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride))));
             } else {
                 currentRotation += (targetRotation - currentRotation) * 0.1;
                 carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
@@ -1933,10 +1954,32 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     document.addEventListener('pointerdown', (event) => {
+        // When an accessory is selected, route a second touch from anywhere on screen
+        // into the active item so the user can pinch/rotate without precise placement
+        if (activeItem && event.pointerType === 'touch' && activePointers.size >= 1 && !activePointers.has(event.pointerId)) {
+            event.preventDefault();
+            activePointers.set(event.pointerId, { x: event.clientX, y: event.clientY });
+            try { activeItem.setPointerCapture(event.pointerId); } catch {}
+            if (activePointers.size >= 2) {
+                const pts = Array.from(activePointers.values()).slice(0, 2);
+                const dx = pts[1].x - pts[0].x;
+                const dy = pts[1].y - pts[0].y;
+                dragType = 'gesture';
+                gestureStart = {
+                    angle: Math.atan2(dy, dx) * (180 / Math.PI),
+                    distance: Math.hypot(dx, dy)
+                };
+                const st = window.getComputedStyle(activeItem);
+                startRot = parseFloat(st.getPropertyValue('--rot')) || 0;
+                startScale = parseFloat(st.getPropertyValue('--scale')) || 1;
+                activeItem.classList.add('dragging');
+            }
+            return;
+        }
         if (!event.target.closest('.draggable')) {
             clearSelectedDraggables();
         }
-    });
+    }, { passive: false });
 
     // Pull-to-Reset Logic
     const resetTab = document.getElementById('reset-tab');
@@ -1945,11 +1988,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     if (resetTab) {
         resetTab.addEventListener('pointerdown', (e) => {
+            e.preventDefault(); // Prevent iOS from claiming the touch as a scroll gesture
             isPulling = true;
             pullStartY = e.clientY;
             resetTab.style.transition = 'none'; // Disable transition for 1:1 drag
             resetTab.setPointerCapture(e.pointerId);
-        });
+        }, { passive: false });
 
         resetTab.addEventListener('pointermove', (e) => {
             if (!isPulling) return;
