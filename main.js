@@ -1987,47 +1987,62 @@ document.addEventListener('DOMContentLoaded', () => {
     let pullStartY = 0;
 
     if (resetTab) {
-        resetTab.addEventListener('pointerdown', (e) => {
-            e.preventDefault(); // Prevent iOS from claiming the touch as a scroll gesture
-            isPulling = true;
-            pullStartY = e.clientY;
-            resetTab.style.transition = 'none'; // Disable transition for 1:1 drag
-            resetTab.setPointerCapture(e.pointerId);
-        }, { passive: false });
-
-        resetTab.addEventListener('pointermove', (e) => {
-            if (!isPulling) return;
-            const dy = Math.max(0, pullStartY - e.clientY); // Only allow pulling up (into portrait)
-            // Limit max pull distance to create tension
-            const pullDist = Math.min(dy, 120);
-            resetTab.style.setProperty('--pull-y', `${pullDist}px`);
-        });
-
-        const resetDragEnd = (e) => {
+        const onPullEnd = (clientY) => {
             if (!isPulling) return;
             isPulling = false;
-            resetTab.releasePointerCapture(e.pointerId);
-            
-            const dy = Math.max(0, pullStartY - e.clientY);
-
-            // Animate snap back
+            const dy = Math.max(0, pullStartY - clientY);
             resetTab.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
-            resetTab.style.setProperty('--pull-y', `0px`);
-
-            // If pulled far enough, trigger reset
+            resetTab.style.setProperty('--pull-y', '0px');
             if (dy > 80) {
                 draggables.forEach(item => {
                     item.classList.add('snap-back');
                     item.setAttribute('style', item.dataset.initialStyle);
-                    setTimeout(() => {
-                        item.classList.remove('snap-back');
-                    }, 600);
+                    setTimeout(() => item.classList.remove('snap-back'), 600);
                 });
             }
         };
 
-        resetTab.addEventListener('pointerup', resetDragEnd);
-        resetTab.addEventListener('pointercancel', resetDragEnd);
+        // Touch events — more reliable than pointer events on iOS for pull gestures
+        resetTab.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            isPulling = true;
+            pullStartY = e.touches[0].clientY;
+            resetTab.style.transition = 'none';
+        }, { passive: false });
+
+        resetTab.addEventListener('touchmove', (e) => {
+            if (!isPulling) return;
+            e.preventDefault();
+            const dy = Math.max(0, pullStartY - e.touches[0].clientY);
+            resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
+        }, { passive: false });
+
+        resetTab.addEventListener('touchend', (e) => {
+            onPullEnd(e.changedTouches[0].clientY);
+        });
+        resetTab.addEventListener('touchcancel', () => {
+            isPulling = false;
+            resetTab.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
+            resetTab.style.setProperty('--pull-y', '0px');
+        });
+
+        // Mouse fallback for desktop testing
+        resetTab.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch') return; // handled above
+            isPulling = true;
+            pullStartY = e.clientY;
+            resetTab.style.transition = 'none';
+            resetTab.setPointerCapture(e.pointerId);
+        });
+        resetTab.addEventListener('pointermove', (e) => {
+            if (e.pointerType === 'touch' || !isPulling) return;
+            const dy = Math.max(0, pullStartY - e.clientY);
+            resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
+        });
+        resetTab.addEventListener('pointerup', (e) => {
+            if (e.pointerType === 'touch') return;
+            onPullEnd(e.clientY);
+        });
     }
 
     const contactScene = document.querySelector('.contact-notebook-scene');
