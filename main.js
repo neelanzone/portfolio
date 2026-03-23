@@ -285,13 +285,15 @@ class WebGLGrid {
                 this.colors[cIndex + 1] = g;
                 this.colors[cIndex + 2] = b;
 
-                // Do not alter the base starfield for light mode per user request
                 this.baseColors.push(new THREE.Color(r, g, b));
 
                 i += 3;
                 cIndex += 3;
             }
         }
+
+        // Snapshot original dark-mode colors so applyTheme can restore them
+        this.originalBaseColors = this.baseColors.map(c => c.clone());
 
         geometry.setAttribute('position', new THREE.BufferAttribute(this.positions, 3));
         geometry.setAttribute('color', new THREE.BufferAttribute(this.colors, 3));
@@ -334,8 +336,30 @@ class WebGLGrid {
 
         if (this.points?.material) {
             this.points.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-            this.points.material.opacity = isLight ? 0.42 : 0.72;
+            this.points.material.opacity = isLight ? 0.55 : 0.72;
             this.points.material.needsUpdate = true;
+        }
+
+        // Recolor base particles for the active theme
+        if (this.baseColors && this.originalBaseColors && this.colors && this.points) {
+            for (let i = 0; i < this.baseColors.length; i++) {
+                let r, g, b;
+                if (isLight) {
+                    // Vivid multi-hue palette using golden-angle spread
+                    const hue = (i * 137.508) % 360;
+                    const col = new THREE.Color().setHSL(hue / 360, 0.7, 0.42);
+                    r = col.r; g = col.g; b = col.b;
+                } else {
+                    r = this.originalBaseColors[i].r;
+                    g = this.originalBaseColors[i].g;
+                    b = this.originalBaseColors[i].b;
+                }
+                this.baseColors[i].setRGB(r, g, b);
+                this.colors[i * 3]     = r;
+                this.colors[i * 3 + 1] = g;
+                this.colors[i * 3 + 2] = b;
+            }
+            this.points.geometry.attributes.color.needsUpdate = true;
         }
     }
 
@@ -426,6 +450,7 @@ class WebGLGrid {
                 this.eruptionTime = 0;
                 this.pulseOrigin.copy(this.intersection);
                 this.clickCount = 0; // Reset counter after eruption
+                this.gravityStrength = 0.2; // Reset gravity after burst
 
                 // Add a massive bright shockwave flash
                 const flash = new THREE.PointLight(0xffffff, 8, 150); // White blinding initial color
@@ -444,6 +469,9 @@ class WebGLGrid {
                 this.pulseActive = true;
                 this.pulseTime = 0;
                 this.pulseOrigin.copy(this.intersection);
+                if (this.clickCount === 2) {
+                    this.gravityStrength = 0.45; // Tap/click 2: tighten the orb
+                }
             }
         };
 
@@ -480,7 +508,7 @@ class WebGLGrid {
                 touchState.isHorizontalDrag = false;
                 touchState.hasMoved = false;
                 touchState.hasClaimedTap = true;
-                updatePointerTarget(e.clientX, e.clientY, true);
+                // No immediate orb — tap confirms on pointerup
             }, { passive: true });
 
             this.container.addEventListener('pointermove', (e) => {
@@ -518,12 +546,26 @@ class WebGLGrid {
                     return;
                 }
 
-                if (!touchState.isHorizontalDrag && !touchState.hasMoved && touchState.hasClaimedTap) {
+                const isTap = !touchState.isHorizontalDrag && !touchState.hasMoved && touchState.hasClaimedTap;
+                let keepOrb = false;
+
+                if (isTap) {
                     e.preventDefault();
+                    // Set intersection at tap position, then trigger the stateful orb sequence
+                    updatePointerTarget(touchState.startX, touchState.startY, true);
                     triggerPulse();
+                    // Keep orb alive for tap 1 and 2; clear after tap 3 (eruption resets clickCount to 0)
+                    keepOrb = this.clickCount > 0;
+                } else {
+                    // Swipe or cancelled — reset tap sequence so next tap starts fresh
+                    this.clickCount = 0;
+                    this.gravityStrength = 0.2;
                 }
 
-                clearPointerTarget();
+                if (!keepOrb) {
+                    clearPointerTarget();
+                }
+
                 touchState.pointerId = null;
                 touchState.isHorizontalDrag = false;
                 touchState.hasMoved = false;
@@ -1085,6 +1127,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let flatStride = 0;
         let flatCurrentOffset = 0;
         let flatTargetOffset = 0;
+        let flatNumCards = numCards;
 
         const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
@@ -1108,18 +1151,30 @@ document.addEventListener('DOMContentLoaded', () => {
                     flatTargetOffset = 0;
                 }
 
+                let flatIdx = 0;
                 cards.forEach((card, index) => {
-                    card.style.transform = `translateX(${index * flatStride}px)`;
+                    if (card.classList.contains('title-card')) {
+                        card.style.display = 'none';
+                        card.dataset.flatIdx = '-1';
+                        return;
+                    }
+                    card.style.display = '';
+                    card.style.transform = `translateX(${flatIdx * flatStride}px)`;
                     card.dataset.angle = theta * index;
+                    card.dataset.flatIdx = String(flatIdx);
+                    flatIdx++;
                 });
+                flatNumCards = flatIdx;
             } else {
                 isFlatMode = false;
+                flatNumCards = numCards;
 
                 const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
                 const depthPadding = Math.max(24, cardWidth * 0.16);
                 radius = baseRadius + depthPadding;
 
                 cards.forEach((card, index) => {
+                    card.style.display = '';
                     const angle = theta * index;
                     card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
                     card.dataset.angle = angle;
@@ -1192,8 +1247,10 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isFlatMode) {
                 let closest = null;
                 let closestDist = Infinity;
-                cards.forEach((card, index) => {
-                    const dist = Math.abs(index * flatStride - flatCurrentOffset);
+                cards.forEach((card) => {
+                    const fIdx = parseInt(card.dataset.flatIdx ?? '-1');
+                    if (fIdx < 0) return;
+                    const dist = Math.abs(fIdx * flatStride - flatCurrentOffset);
                     if (dist < closestDist) { closestDist = dist; closest = card; }
                 });
                 return closest;
@@ -1341,7 +1398,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isFlatMode) {
                 const direction = e.key === 'ArrowLeft' ? -1 : 1;
                 const currentIndex = Math.round(flatCurrentOffset / flatStride);
-                const newIndex = Math.max(0, Math.min(numCards - 1, currentIndex + direction));
+                const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
                 flatTargetOffset = newIndex * flatStride;
             } else {
                 if (e.key === 'ArrowLeft') {
@@ -1372,7 +1429,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
             if (isFlatMode) {
                 flatTargetOffset -= dx;
-                flatTargetOffset = Math.max(0, Math.min((numCards - 1) * flatStride, flatTargetOffset));
+                flatTargetOffset = Math.max(0, Math.min((flatNumCards - 1) * flatStride, flatTargetOffset));
             } else {
                 const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
                 targetRotation += dx * dragSensitivity;
@@ -1384,7 +1441,7 @@ document.addEventListener('DOMContentLoaded', () => {
             isDraggingCarousel = false;
             carouselContainer.style.cursor = 'grab';
             if (isFlatMode) {
-                const snapIndex = Math.max(0, Math.min(numCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
                 flatTargetOffset = snapIndex * flatStride;
             }
         });
@@ -1401,10 +1458,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (Math.abs(totalDrag) > swipeThreshold) {
                     const direction = totalDrag < 0 ? 1 : -1;
                     const currentIndex = Math.round(flatCurrentOffset / flatStride);
-                    const newIndex = Math.max(0, Math.min(numCards - 1, currentIndex + direction));
+                    const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
                     flatTargetOffset = newIndex * flatStride;
                 } else {
-                    const snapIndex = Math.max(0, Math.min(numCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                    const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
                     flatTargetOffset = snapIndex * flatStride;
                 }
             } else {

@@ -30,13 +30,12 @@
     }
 
     .hero-content h1 {
-        font-size: 4rem;
+        font-size: 3rem;
         margin-bottom: 1.65rem;
     }
 
     .hero-content h3 {
         margin: 0;
-        white-space: nowrap;
     }
 
     /* --------------------------------------------------------
@@ -47,34 +46,44 @@
         overflow: hidden;
     }
 
+    #work.section > .container {
+        padding: 0;
+    }
+
+    .mobile-work-heading {
+        display: block;
+        font-size: 2.5rem;
+        font-weight: 700;
+        letter-spacing: 1.3px;
+        color: var(--text-color);
+        padding: 0 1.5rem 0.75rem;
+        margin: 0;
+    }
+
     .carousel-container {
         perspective: none;
         transform-style: flat;
         transform: none;
         overflow: hidden;
-        height: calc(60vw * 2 + 1.5rem);
+        height: calc(80vw * 2 + 1.5rem);
         padding: 0;
         touch-action: pan-y;
     }
 
     .carousel-track {
         transform-style: flat;
-        width: 60vw;
-        height: calc(60vw * 2);
+        width: 80vw;
+        height: calc(80vw * 2);
     }
 
     .work-card,
     .work-image {
-        width: 60vw;
-        height: calc(60vw * 2);
+        width: 80vw;
+        height: calc(80vw * 2);
     }
 
     .carousel-control {
         display: none;
-    }
-
-    .carousel-title {
-        font-size: 2.5rem;
     }
 
     .work-pill {
