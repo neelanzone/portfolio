@@ -414,6 +414,7 @@ class WebGLGrid {
             pointerId: null,
             startX: 0,
             startY: 0,
+            startTime: 0,
             isHorizontalDrag: false,
             hasMoved: false,
             hasClaimedTap: false
@@ -505,6 +506,7 @@ class WebGLGrid {
                 touchState.pointerId = e.pointerId;
                 touchState.startX = e.clientX;
                 touchState.startY = e.clientY;
+                touchState.startTime = Date.now();
                 touchState.isHorizontalDrag = false;
                 touchState.hasMoved = false;
                 touchState.hasClaimedTap = true;
@@ -519,7 +521,7 @@ class WebGLGrid {
                 const dx = e.clientX - touchState.startX;
                 const dy = e.clientY - touchState.startY;
 
-                if (!touchState.hasMoved && Math.hypot(dx, dy) > 6) {
+                if (!touchState.hasMoved && Math.hypot(dx, dy) > 15) {
                     touchState.hasMoved = true;
                 }
 
@@ -546,7 +548,10 @@ class WebGLGrid {
                     return;
                 }
 
-                const isTap = !touchState.isHorizontalDrag && !touchState.hasMoved && touchState.hasClaimedTap;
+                const elapsed = Date.now() - touchState.startTime;
+                const totalDrift = Math.hypot(e.clientX - touchState.startX, e.clientY - touchState.startY);
+                const isTap = !touchState.isHorizontalDrag && touchState.hasClaimedTap
+                    && (elapsed < 350 && totalDrift < 20);
                 let keepOrb = false;
 
                 if (isTap) {
@@ -1946,8 +1951,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
         resetTab.addEventListener('pointermove', (e) => {
             if (!isPulling) return;
-            const dy = Math.max(0, e.clientY - pullStartY); // Only allow pulling down
-            // Limit max pull distance to create tension - Increased for longer text
+            const dy = Math.max(0, pullStartY - e.clientY); // Only allow pulling up (into portrait)
+            // Limit max pull distance to create tension
             const pullDist = Math.min(dy, 120);
             resetTab.style.setProperty('--pull-y', `${pullDist}px`);
         });
@@ -1957,9 +1962,9 @@ document.addEventListener('DOMContentLoaded', () => {
             isPulling = false;
             resetTab.releasePointerCapture(e.pointerId);
             
-            const dy = Math.max(0, e.clientY - pullStartY);
-            
-            // Animate snap back up
+            const dy = Math.max(0, pullStartY - e.clientY);
+
+            // Animate snap back
             resetTab.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
             resetTab.style.setProperty('--pull-y', `0px`);
 

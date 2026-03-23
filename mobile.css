@@ -52,12 +52,17 @@
 
     .mobile-work-heading {
         display: block;
-        font-size: 2.5rem;
+        font-size: 2rem;
         font-weight: 700;
         letter-spacing: 1.3px;
         color: var(--text-color);
+        text-align: center;
         padding: 0 1.5rem 0.75rem;
         margin: 0;
+    }
+
+    .title-card {
+        display: none;
     }
 
     .carousel-container {
@@ -65,21 +70,22 @@
         transform-style: flat;
         transform: none;
         overflow: hidden;
-        height: calc(80vw * 2 + 1.5rem);
+        width: 100vw;
+        height: calc(65vw * 2 + 1.5rem);
         padding: 0;
         touch-action: pan-y;
     }
 
     .carousel-track {
         transform-style: flat;
-        width: 80vw;
-        height: calc(80vw * 2);
+        width: 65vw;
+        height: calc(65vw * 2);
     }
 
     .work-card,
     .work-image {
-        width: 80vw;
-        height: calc(80vw * 2);
+        width: 65vw;
+        height: calc(65vw * 2);
     }
 
     .carousel-control {
@@ -108,6 +114,10 @@
 
     .accessory {
         transform: scale(0.85);
+    }
+
+    .about-text p {
+        font-size: 1rem;
     }
 
     /* --------------------------------------------------------

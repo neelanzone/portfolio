@@ -1744,7 +1744,7 @@ a:hover {
     cursor: grab;
     z-index: 1; /* Hide strictly under the Z:2 photo */
     /* Push it down slightly by default to reveal PULL, plus dynamic drag */
-    transform: translateY(calc(42px + var(--pull-y, 0px)));
+    transform: translateY(calc(42px - var(--pull-y, 0px)));
     touch-action: none;
     box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
 }
