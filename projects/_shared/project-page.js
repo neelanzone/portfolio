@@ -227,6 +227,9 @@ class ProjectSpaceField {
             const section = carousel.closest('.project-carousel-section');
             const currentProject = section?.dataset.currentProject || '';
             const spaceField = section?.querySelector('[data-project-space]')?._projectSpaceField || null;
+            // Allow iOS Safari to pass horizontal swipes to JS instead of claiming them as scroll
+            carousel.style.touchAction = 'pan-y';
+
             const theta = 360 / cards.length;
             let radius = 0;
             let currentRotation = 0;

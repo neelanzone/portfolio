@@ -1150,11 +1150,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 const wasFlat = isFlatMode;
                 isFlatMode = true;
                 flatStride = cardWidth + 12;
-
-                if (!wasFlat || force) {
-                    flatCurrentOffset = 0;
-                    flatTargetOffset = 0;
-                }
+                const resetOffset = !wasFlat || force;
 
                 let flatIdx = 0;
                 cards.forEach((card, index) => {
@@ -1170,6 +1166,12 @@ document.addEventListener('DOMContentLoaded', () => {
                     flatIdx++;
                 });
                 flatNumCards = flatIdx;
+
+                if (resetOffset) {
+                    const midIndex = Math.floor((flatNumCards - 1) / 2);
+                    flatCurrentOffset = midIndex * flatStride;
+                    flatTargetOffset = midIndex * flatStride;
+                }
             } else {
                 isFlatMode = false;
                 flatNumCards = numCards;

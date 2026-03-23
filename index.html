@@ -77,7 +77,10 @@
 <body class="is-loading">
     <div class="page-loader" aria-live="polite" aria-label="Loading page">
         <div class="page-loader__inner">
-            <img src="Assets/identity-motion-active.gif" alt="" class="page-loader__logo" width="112" height="112">
+            <video autoplay loop muted playsinline class="page-loader__logo" width="112" height="112">
+                <source src="Assets/identity-motion-active.webm" type="video/webm">
+                <img src="Assets/identity-motion-active.gif" alt="">
+            </video>
             <p class="page-loader__text">Loading</p>
             <div class="page-loader__bar" aria-hidden="true"><div class="page-loader__bar-fill"></div></div>
         </div>
@@ -85,8 +88,14 @@
     <nav class="navbar">
         <div class="logo">
             <a href="#hero" style="display:block; position:relative; width:90px; height:90px; overflow:hidden;">
-                <img src="Assets/identity-motion-active.gif" alt="neel Logo" class="logo-default" width="90" height="90" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
-                <img src="Assets/identity-motion-hover.gif" alt="neel Logo" class="logo-hover" width="90" height="90" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
+                <video autoplay loop muted playsinline class="logo-default" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
+                    <source src="Assets/identity-motion-active.webm" type="video/webm">
+                    <img src="Assets/identity-motion-active.gif" alt="neel Logo">
+                </video>
+                <video autoplay loop muted playsinline class="logo-hover" style="position:absolute; inset:0; width:100%; height:100%; object-fit:contain;">
+                    <source src="Assets/identity-motion-hover.webm" type="video/webm">
+                    <img src="Assets/identity-motion-hover.gif" alt="neel Logo">
+                </video>
             </a>
         </div>
         <ul class="nav-links">
@@ -254,7 +263,10 @@
     <a class="work-card-link" href="projects/ev-charger-discovery/index.html" aria-label="Open EV Charger Discovery case study">
         <div class="work-card-shell">
             <div class="work-image placeholder-image">
-                <img src="Assets/grid-discovery.png" alt="Interface preview for EV Charger Discovery" class="work-bg-image" loading="lazy" decoding="async">
+                <picture>
+                    <source srcset="Assets/grid-discovery.avif" type="image/avif">
+                    <img src="Assets/grid-discovery.png" alt="Interface preview for EV Charger Discovery" class="work-bg-image" loading="lazy" decoding="async">
+                </picture>
                 <div class="work-card-pills">
                     <span class="work-pill">UX/UI</span>
                     <span class="work-pill work-pill-date">2026</span>
@@ -272,7 +284,10 @@
     <a class="work-card-link" href="projects/venture-hub/index.html" aria-label="Open Venture Hub case study">
         <div class="work-card-shell">
             <div class="work-image placeholder-image">
-                <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" class="work-bg-image" loading="lazy" decoding="async">
+                <picture>
+                    <source srcset="Assets/accelerator-dashboard.avif" type="image/avif">
+                    <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" class="work-bg-image" loading="lazy" decoding="async">
+                </picture>
                 <div class="work-card-pills">
                     <span class="work-pill">UX/UI &amp; System Design</span>
                     <span class="work-pill work-pill-date">2026</span>
