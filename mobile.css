@@ -19,6 +19,23 @@
         display: flex;
     }
 
+    /* +20% button size */
+    .menu-toggle,
+    .theme-toggle.mobile-theme-toggle {
+        width: 48px;
+        height: 48px;
+    }
+
+    .menu-toggle__cap {
+        width: 41px;
+        height: 41px;
+    }
+
+    .theme-toggle.mobile-theme-toggle .theme-toggle__cap {
+        width: 46px;
+        height: 46px;
+    }
+
     /* --------------------------------------------------------
        Hero
     -------------------------------------------------------- */
