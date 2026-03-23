@@ -462,6 +462,24 @@ a:hover {
         0 1px 2px rgba(0, 0, 0, 0.08);
 }
 
+/* Menu-toggle cap gets the same light treatment as theme-toggle cap */
+.navbar.navbar-light .menu-toggle__cap {
+    background: linear-gradient(180deg, rgba(243, 236, 226, 0.98), rgba(223, 214, 203, 0.98));
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.12),
+        0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+/* Restore mobile dropdown link colors — navbar-light has higher specificity than .mobile-menu a */
+.navbar.navbar-light .mobile-menu a {
+    color: #f4f4f5;
+}
+
+:root.light-theme .navbar.navbar-light .mobile-menu a {
+    color: #111111;
+}
+
 /* Light Mode specific contrast enhancements */
 :root.light-theme .navbar > * {
     mix-blend-mode: normal;
