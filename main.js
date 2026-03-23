@@ -1129,6 +1129,7 @@ document.addEventListener('DOMContentLoaded', () => {
         let lastViewportWidth = window.innerWidth;
         let lastMeasuredCardWidth = 0;
         let isFlatMode = false;
+        let isFilingCabinet = false;
         let flatStride = 0;
         let flatCurrentOffset = 0;
         let flatTargetOffset = 0;
@@ -1159,6 +1160,7 @@ document.addEventListener('DOMContentLoaded', () => {
             if (isMobileViewport) {
                 const wasFlat = isFlatMode;
                 isFlatMode = true;
+                isFilingCabinet = false;
                 flatStride = cardWidth + 12;
                 const resetOffset = !wasFlat || force;
 
@@ -1194,17 +1196,43 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             } else {
                 isFlatMode = false;
+                isFilingCabinet = true;
                 flatNumCards = numCards;
 
-                const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
-                const depthPadding = Math.max(24, cardWidth * 0.16);
-                radius = baseRadius + depthPadding;
+                // Filing cabinet layout: cards fanned horizontally, each slightly angled.
+                const containerWidth = carouselContainer.getBoundingClientRect().width || 1000;
+                const projCards = cards.filter(c => !c.classList.contains('title-card'));
+                const N = projCards.length;
+                const maxSpacing = N > 1 ? Math.round((containerWidth - cardWidth) / (N - 1)) : 0;
+                const spacing = Math.min(190, maxSpacing);
+                const groupWidth = (N - 1) * spacing + cardWidth;
+                const startX = Math.round((containerWidth - groupWidth) / 2);
+                const midIdx = (N - 1) / 2;
 
-                cards.forEach((card, index) => {
+                // Clear track rotation — CSS handles card transforms via variables
+                carouselTrack.style.transform = 'none';
+                carouselTrack.style.width = `${containerWidth}px`;
+
+                cards.forEach((card) => {
+                    if (card.classList.contains('title-card')) {
+                        card.style.display = 'none';
+                        return;
+                    }
+                });
+
+                projCards.forEach((card, i) => {
                     card.style.display = '';
-                    const angle = theta * index;
-                    card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
-                    card.dataset.angle = angle;
+                    const relIdx = i - midIdx;
+                    // Fan: positive angle tilts right face toward viewer (left cards), negative tilts left
+                    const angle = relIdx * 11;
+                    const depth = -Math.abs(relIdx) * 28;
+                    card.style.left = `${startX + i * spacing}px`;
+                    card.style.top = '0px';
+                    card.style.setProperty('--filing-angle', `${angle}deg`);
+                    card.style.setProperty('--filing-depth', `${depth}px`);
+                    card.style.transform = ''; // Let CSS handle resting state
+                    card.dataset.angle = String(theta * i);
+                    card.style.zIndex = String(Math.round(10 - Math.abs(relIdx)));
                 });
             }
         };
@@ -1293,6 +1321,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const syncActiveFrontCard = () => {
+            if (isFilingCabinet) return;
             const centeredCard = getCenteredCard();
             const nextActiveCard = centeredCard && !centeredCard.classList.contains('title-card')
                 ? centeredCard
@@ -1344,7 +1373,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 flatCurrentOffset += (flatTargetOffset - flatCurrentOffset) * 0.1;
                 carouselTrack.style.transform = `translateX(${-flatCurrentOffset}px)`;
                 updateDots(Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride))));
-            } else {
+            } else if (!isFilingCabinet) {
                 currentRotation += (targetRotation - currentRotation) * 0.1;
                 carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
             }
@@ -1440,6 +1469,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Pointer event dragging logic
         carouselContainer.addEventListener('pointerdown', (e) => {
+            if (isFilingCabinet) return;
             isDraggingCarousel = true;
             dragPointerType = e.pointerType || 'mouse';
             startXCarousel = e.clientX;
@@ -2026,21 +2056,20 @@ document.addEventListener('DOMContentLoaded', () => {
             resetTab.style.setProperty('--pull-y', '0px');
         });
 
-        // Mouse fallback for desktop testing
-        resetTab.addEventListener('pointerdown', (e) => {
-            if (e.pointerType === 'touch') return; // handled above
+        // Mouse fallback for desktop — use window-level move/up so drag continues outside element
+        resetTab.addEventListener('mousedown', (e) => {
+            e.preventDefault();
             isPulling = true;
             pullStartY = e.clientY;
             resetTab.style.transition = 'none';
-            resetTab.setPointerCapture(e.pointerId);
         });
-        resetTab.addEventListener('pointermove', (e) => {
-            if (e.pointerType === 'touch' || !isPulling) return;
+        window.addEventListener('mousemove', (e) => {
+            if (!isPulling) return;
             const dy = Math.max(0, pullStartY - e.clientY);
             resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
         });
-        resetTab.addEventListener('pointerup', (e) => {
-            if (e.pointerType === 'touch') return;
+        window.addEventListener('mouseup', (e) => {
+            if (!isPulling) return;
             onPullEnd(e.clientY);
         });
     }

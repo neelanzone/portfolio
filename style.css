@@ -1038,6 +1038,7 @@ a:hover {
     margin: 0 auto;
     color: var(--text-muted);
     font-weight: 400;
+    white-space: nowrap;
 }
 
 
@@ -2966,6 +2967,76 @@ footer {
     .button {
         padding: 1rem 2rem;
         font-size: var(--type-copy);
+    }
+}
+
+/* ============================================================
+   Desktop Filing Cabinet Carousel (min-width: 768px)
+   Replaces the 3D cylinder with a stacked-records layout.
+   Cards fan across the viewport; hover flips each card forward.
+   ============================================================ */
+@media (min-width: 768px) {
+
+    /* Show the work heading above the cabinet (title card is hidden) */
+    .mobile-work-heading {
+        display: block;
+        font-size: 3.5rem;
+        color: var(--text-color);
+        text-align: left;
+        padding: 0 0 1rem;
+        margin: 0;
+    }
+
+    /* Container: perspective origin stays center, no drag cursor */
+    .carousel-container {
+        height: 540px;
+        perspective: 1400px;
+        cursor: default;
+        overflow: visible;
+    }
+
+    .carousel-container:active {
+        cursor: default;
+    }
+
+    /* Hide arrow controls — not needed in cabinet mode */
+    .carousel-control {
+        display: none;
+    }
+
+    /* Track is static — JS sets width to match container */
+    .carousel-track {
+        transform-style: preserve-3d;
+    }
+
+    /* Resting state: per-card angle + depth driven by CSS variables set in JS */
+    .work-card {
+        --filing-angle: 0deg;
+        --filing-depth: 0px;
+        transform: rotateY(var(--filing-angle)) translateZ(var(--filing-depth));
+        transition:
+            transform 0.5s cubic-bezier(0.34, 1.1, 0.64, 1),
+            opacity 0.35s ease,
+            box-shadow 0.35s ease;
+        cursor: pointer;
+    }
+
+    /* On hover: card pops forward and faces the viewer */
+    .work-card:hover {
+        transform: translateY(-28px) translateZ(90px) rotateY(0deg);
+        z-index: 20 !important;
+        opacity: 1 !important;
+    }
+
+    /* Siblings dim and recede when a card is focused */
+    .carousel-track:has(.work-card:hover) .work-card:not(:hover) {
+        opacity: 0.38;
+        transform: rotateY(var(--filing-angle)) translateZ(calc(var(--filing-depth) - 18px));
+    }
+
+    /* Title card is replaced by .mobile-work-heading on desktop */
+    .title-card {
+        display: none !important;
     }
 }
 
