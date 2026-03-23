@@ -376,7 +376,15 @@ class ProjectSpaceField {
                 activePointerId = null;
                 touchIdentifier = null;
                 touchLock = null;
-                snapToNearest();
+
+                const totalDrag = lastDragX - dragStartX;
+                const swipeThreshold = 30;
+                if (Math.abs(totalDrag) > swipeThreshold) {
+                    targetRotation = dragStartRotation;
+                    moveBy(totalDrag < 0 ? -1 : 1);
+                } else {
+                    snapToNearest();
+                }
             };
 
             prevButton?.addEventListener('click', () => moveBy(1));
