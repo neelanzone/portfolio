@@ -853,3 +853,72 @@
     color: rgb(255 255 255);
 }
 
+/* ─── Section pill bar (mobile sticky nav) ───────────────────── */
+
+.section-pill-bar {
+    display: none;
+    overflow: hidden;
+    max-height: 0;
+    border-bottom: 1px solid var(--nav-border);
+    background: var(--nav-surface);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    transition: max-height 0.25s ease, opacity 0.25s ease;
+    opacity: 0;
+}
+
+.section-pill-bar.is-visible {
+    max-height: 2.75rem;
+    opacity: 1;
+}
+
+.section-pill-bar__inner {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    padding: 0.4rem 1.25rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.section-pill-bar__inner::-webkit-scrollbar {
+    display: none;
+}
+
+.section-pill {
+    flex-shrink: 0;
+    font-size: 0.6rem;
+    font-family: 'Space Mono', monospace;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    padding: 0.22rem 0.65rem;
+    border-radius: 999px;
+    border: 1px solid var(--nav-border);
+    color: var(--color-subtext);
+    background: transparent;
+    text-decoration: none;
+    transition: background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+    cursor: pointer;
+}
+
+.section-pill.is-active {
+    background: var(--color-ink);
+    color: var(--color-canvas);
+    border-color: transparent;
+}
+
+@media (max-width: 1023px) {
+    .section-pill-bar {
+        display: block;
+    }
+}
+
+/* ─── Social icons: invert in dark theme ─────────────────────── */
+
+html.dark-theme .project-tail-footer img {
+    filter: invert(1) opacity(0.75);
+}
+

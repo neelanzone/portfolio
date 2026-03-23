@@ -26,8 +26,14 @@
     <header class="page-navbar fixed inset-x-0 top-0 z-50 border-b border-[color:var(--nav-border)] bg-[color:var(--nav-surface)] backdrop-blur-xl">
         <div class="relative flex w-full items-center justify-between gap-5 px-5 py-1.5 sm:px-7 lg:px-12">
             <a href="../../index.html" class="brand-logo rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40" aria-label="Back to homepage">
-                <img src="../../Assets/identity-motion-active.gif" alt="Neel logo" class="logo-default" width="90" height="90">
-                <img src="../../Assets/identity-motion-hover.gif" alt="" class="logo-hover" width="90" height="90" aria-hidden="true">
+                <video autoplay loop muted playsinline class="logo-default" style="width:90px;height:90px;object-fit:contain;">
+                    <source src="../../Assets/identity-motion-active.webm" type="video/webm">
+                    <img src="../../Assets/identity-motion-active.gif" alt="Neel logo">
+                </video>
+                <video autoplay loop muted playsinline class="logo-hover" style="width:90px;height:90px;object-fit:contain;" aria-hidden="true">
+                    <source src="../../Assets/identity-motion-hover.webm" type="video/webm">
+                    <img src="../../Assets/identity-motion-hover.gif" alt="">
+                </video>
             </a>
 
             <nav class="hidden items-center gap-6 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2" aria-label="Section navigation">
@@ -48,15 +54,33 @@
             </div>
         </div>
 
-        <nav id="mobile-menu" class="hidden rounded-[4px] border-t border-[color:var(--nav-border)] bg-canvas px-5 py-4 sm:px-7 lg:hidden" aria-label="Mobile section navigation">
-            <div class="flex flex-col gap-3">
-                <a href="#overview" class="font-mono text-eyebrow uppercase text-ink">Overview</a>
-                <a href="#context" class="font-mono text-eyebrow uppercase text-subtext">Context</a>
-                <a href="#process" class="font-mono text-eyebrow uppercase text-subtext">Artifacts</a>
-                <a href="#outcomes" class="font-mono text-eyebrow uppercase text-subtext">Outcomes</a>
-                <a href="#more-projects" class="font-mono text-eyebrow uppercase text-subtext">More Projects</a>
+        <nav id="mobile-menu" class="hidden rounded-[4px] border-t border-[color:var(--nav-border)] bg-canvas px-5 py-4 sm:px-7 lg:hidden" aria-label="Mobile navigation">
+            <div class="flex flex-col gap-4">
+                <div class="flex flex-col gap-2">
+                    <p class="font-mono text-[0.6rem] uppercase tracking-widest" style="opacity:0.45">Portfolio</p>
+                    <a href="../../index.html#work-anchor" class="font-mono text-eyebrow uppercase text-ink">Work</a>
+                    <a href="../../index.html#about" class="font-mono text-eyebrow uppercase text-ink">About</a>
+                    <a href="../../index.html#contact" class="font-mono text-eyebrow uppercase text-ink">Contact</a>
+                </div>
+                <hr style="border-color:var(--nav-border)">
+                <div class="flex flex-col gap-2">
+                    <a href="#overview" class="nav-link font-mono text-eyebrow uppercase text-ink">Overview</a>
+                    <a href="#context" class="nav-link font-mono text-eyebrow uppercase text-subtext">Context</a>
+                    <a href="#process" class="nav-link font-mono text-eyebrow uppercase text-subtext">Artifacts</a>
+                    <a href="#outcomes" class="nav-link font-mono text-eyebrow uppercase text-subtext">Outcomes</a>
+                    <a href="#more-projects" class="nav-link font-mono text-eyebrow uppercase text-subtext">More Projects</a>
+                </div>
             </div>
         </nav>
+        <div id="section-pills" class="section-pill-bar" aria-hidden="true">
+            <div class="section-pill-bar__inner">
+                <a href="#overview" class="section-pill is-active" data-section="overview">Overview</a>
+                <a href="#context" class="section-pill" data-section="context">Context</a>
+                <a href="#process" class="section-pill" data-section="process">Artifacts</a>
+                <a href="#outcomes" class="section-pill" data-section="outcomes">Outcomes</a>
+                <a href="#more-projects" class="section-pill" data-section="more-projects">More</a>
+            </div>
+        </div>
     </header>
     <div id="project-stack-overlay" aria-hidden="true"></div>
     <div id="page-scale">

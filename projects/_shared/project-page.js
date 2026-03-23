@@ -625,6 +625,29 @@ class ProjectSpaceField {
                 })
                 .filter(Boolean);
 
+            // Section pill bar — show after scrolling past #overview
+            const pillsBar = document.getElementById('section-pills');
+            const overviewSection = document.getElementById('overview');
+            if (pillsBar && overviewSection) {
+                const pillsObserver = new IntersectionObserver(function (entries) {
+                    entries.forEach(function (entry) {
+                        const past = !entry.isIntersecting;
+                        pillsBar.classList.toggle('is-visible', past);
+                        pillsBar.setAttribute('aria-hidden', String(!past));
+                    });
+                }, { rootMargin: '-64px 0px 0px 0px', threshold: 0 });
+                pillsObserver.observe(overviewSection);
+
+                pillsBar.querySelectorAll('a[href^="#"]').forEach(function (pill) {
+                    pill.addEventListener('click', function (event) {
+                        const hash = pill.getAttribute('href');
+                        if (!hash || hash === '#') return;
+                        event.preventDefault();
+                        scrollToNavbarAnchor(hash);
+                    });
+                });
+            }
+
             if (sections.length && navLinks.length) {
                 const activateLink = function (id) {
                     const darkMode = root.classList.contains('dark-theme');
@@ -636,6 +659,12 @@ class ProjectSpaceField {
                         link.classList.toggle('text-white/65', !active && darkMode);
                         link.setAttribute('aria-current', active ? 'true' : 'false');
                     });
+                    // Sync active pill
+                    if (pillsBar) {
+                        pillsBar.querySelectorAll('.section-pill[data-section]').forEach(function (pill) {
+                            pill.classList.toggle('is-active', pill.getAttribute('data-section') === id);
+                        });
+                    }
                 };
 
                 const observer = new IntersectionObserver(
