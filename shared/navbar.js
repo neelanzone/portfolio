@@ -146,7 +146,7 @@ ${homeThemeToggle('mobile-theme-toggle')}
             </div>
         </div>
         <a href="${homeHref}#about">About</a>
-        <a href="${homeHref}#contact">Contact</a>
+        <a href="mailto:neelanzone@gmail.com">Contact</a>
     </div>`;
     };
 

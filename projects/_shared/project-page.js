@@ -231,6 +231,7 @@ class ProjectSpaceField {
             let radius = 0;
             let currentRotation = 0;
             let targetRotation = 0;
+            let dragRotationFactor = 0.42;
             let dragStartX = 0;
             let dragDistance = 0;
             let lastDragX = 0;
@@ -267,6 +268,7 @@ class ProjectSpaceField {
                 const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length));
                 const wideBoost = isMobile ? cardWidth * 1.7 : cardWidth * 3.9;
                 radius = Math.max(baseRadius + wideBoost, isMobile ? 360 : 760);
+                dragRotationFactor = Math.max(0.34, theta / Math.max(cardWidth * 1.3, 170));
 
                 cards.forEach((card, index) => {
                     const angle = theta * index;
@@ -360,8 +362,8 @@ class ProjectSpaceField {
                 const deltaStep = clientX - lastDragX;
                 lastDragX = clientX;
                 dragDistance = Math.max(dragDistance, Math.abs(deltaX));
-                targetRotation = dragStartRotation + deltaX * 0.18;
-                spaceField?.nudge?.(deltaStep * 0.014);
+                targetRotation = dragStartRotation + deltaX * dragRotationFactor;
+                spaceField?.nudge?.(deltaStep * 0.02);
 
                 if (dragDistance > 6) {
                     pressedLink = null;
@@ -489,7 +491,7 @@ class ProjectSpaceField {
                 const deltaY = touch.clientY - touchStartY;
 
                 if (touchLock === null) {
-                    if (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8) {
+                    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
                         touchLock = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
                     } else {
                         return;
