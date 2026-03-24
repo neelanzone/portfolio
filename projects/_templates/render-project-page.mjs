@@ -58,6 +58,7 @@ export function renderProjectPage(project, site) {
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
     <link rel="stylesheet" href="../_shared/project-system.css">
+    <link rel="stylesheet" href="${toRoot}shared/project-navbar.css">
 </head>
 <body class="project-page ${escapeHtml(themeClass)} overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
 ${renderHeader(project, site, toRoot)}
