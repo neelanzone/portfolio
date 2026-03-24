@@ -186,9 +186,17 @@ class WebGLGrid {
 
         // Define theme colors
         this.darkBgColor = 0x050505;
+        this.darkFogColor = 0x120f1d;
         this.lightBgColor = 0xf4f4f5; // Matches CSS --bg-color for light theme
+        this.lightFogColor = 0xe2d9cd;
         this.isLightMode = document.documentElement.classList.contains('light-theme');
+        this.additiveIntensity = 3;
         this.tempColor = new THREE.Color();
+        this.paletteColorA = new THREE.Color().setHSL(0.03, 0.82, 0.74);
+        this.paletteColorB = new THREE.Color().setHSL(0.12, 0.8, 0.76);
+        this.paletteColorC = new THREE.Color().setHSL(0.43, 0.72, 0.75);
+        this.paletteColorD = new THREE.Color().setHSL(0.58, 0.8, 0.77);
+        this.paletteColorE = new THREE.Color().setHSL(0.76, 0.76, 0.79);
         this.neonColor1 = new THREE.Color(0xff00ff);
         this.neonColor2 = new THREE.Color(0x00ffff);
         this.lightNeonColor1 = new THREE.Color(0x0088ff);
@@ -201,8 +209,8 @@ class WebGLGrid {
         this.isDocumentVisible = !document.hidden;
         this.animate = this.animate.bind(this);
 
-        // Initial fog uses dark color
-        this.scene.fog = new THREE.FogExp2(this.darkBgColor, 0.015);
+        // Use a slightly tinted fog so the field keeps its pastel chroma.
+        this.scene.fog = new THREE.FogExp2(this.darkFogColor, 0.009);
 
         this.camera = new THREE.PerspectiveCamera(45, window.innerWidth / window.innerHeight, 0.1, 100);
         // Position camera pointing mostly downwards for a uniform grid spread
@@ -212,7 +220,9 @@ class WebGLGrid {
         this.renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
         this.renderer.setSize(window.innerWidth, window.innerHeight);
         this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+        this.renderer.outputEncoding = THREE.sRGBEncoding;
         this.container.appendChild(this.renderer.domElement);
+        this.renderer.domElement.style.mixBlendMode = 'normal';
 
         // Interaction state
         this.mouse = new THREE.Vector2(-9999, -9999);
@@ -231,6 +241,23 @@ class WebGLGrid {
         this.updateAnimationState();
     }
 
+    getBaseParticleColor(nx, nz, variance, isLight) {
+        const blendA = 0.5 + 0.5 * Math.sin((nx * 5.8) + (nz * 4.3) + variance * Math.PI * 2);
+        const blendB = 0.5 + 0.5 * Math.cos((nx * 3.7) - (nz * 5.4) - variance * Math.PI);
+        const hueField = (
+            0.03
+            + nx * 0.14
+            + nz * 0.28
+            + variance * 0.18
+            + blendA * 0.08
+            + blendB * 0.06
+        ) % 1;
+        const saturation = isLight ? 0.68 : 0.8;
+        const lightness = isLight ? 0.58 : 0.74;
+
+        return new THREE.Color().setHSL(hueField, saturation, lightness);
+    }
+
     initGrid() {
         this.particleCount = this.gridSize * this.gridSize;
 
@@ -239,6 +266,7 @@ class WebGLGrid {
         this.basePositions = new Float32Array(this.particleCount * 3);
         this.colors = new Float32Array(this.particleCount * 3);
         this.baseColors = []; // Store default pixel shades
+        this.colorSeeds = new Float32Array(this.particleCount * 3);
         this.velocities = new Float32Array(this.particleCount * 3); // For spring physics
 
         const offset = (this.gridSize * this.spacing) / 2 - (this.spacing / 2);
@@ -269,23 +297,22 @@ class WebGLGrid {
                 this.velocities[i + 2] = 0;
 
                 // Create a subtle base gradient across the field
-                const shade = 0.15 + Math.random() * 0.4;
-
-                // Mix in slight warm/cool hints based on coordinates for a baseline gradient
                 const nx = x / this.gridSize; // 0 to 1
                 const nz = z / this.gridSize; // 0 to 1
-
-                // Mix of deep purple/blue to orange/red for a subtle space nebula feel
-                // Increased brightness by 2x from previous (1.2 * 2 = 2.4)
-                const r = Math.min(1.0, (shade + nx * 0.15) * 2.4);
-                const g = Math.min(1.0, (shade + (1 - nz) * 0.1) * 2.4);
-                const b = Math.min(1.0, (shade + nz * 0.2) * 2.4);
+                const variance = Math.random();
+                const baseColor = this.getBaseParticleColor(nx, nz, variance, false);
+                const r = baseColor.r;
+                const g = baseColor.g;
+                const b = baseColor.b;
 
                 this.colors[cIndex] = r;
                 this.colors[cIndex + 1] = g;
                 this.colors[cIndex + 2] = b;
 
-                this.baseColors.push(new THREE.Color(r, g, b));
+                this.baseColors.push(baseColor.clone());
+                this.colorSeeds[cIndex] = nx;
+                this.colorSeeds[cIndex + 1] = nz;
+                this.colorSeeds[cIndex + 2] = variance;
 
                 i += 3;
                 cIndex += 3;
@@ -312,13 +339,15 @@ class WebGLGrid {
         const texture = new THREE.CanvasTexture(canvas);
 
         const material = new THREE.PointsMaterial({
-            size: 0.3, // Slightly larger stardust
+            size: 0.18, // Smaller dots so neighboring particles do not blend into a gray sheet
+            color: new THREE.Color(this.additiveIntensity, this.additiveIntensity, this.additiveIntensity),
             vertexColors: true,
             map: texture,
             transparent: true,
-            opacity: 0.72, // Stronger default visibility for dark mode
-            alphaTest: 0.05,
-            blending: THREE.AdditiveBlending, // Makes overlapping particles glow beautifully
+            opacity: 1,
+            alphaTest: 0.08,
+            blending: THREE.AdditiveBlending,
+            depthTest: true,
             depthWrite: false
         });
 
@@ -331,31 +360,37 @@ class WebGLGrid {
         this.isLightMode = isLight;
 
         if (this.scene?.fog) {
-            this.scene.fog.color.setHex(isLight ? this.lightBgColor : this.darkBgColor);
+            this.scene.fog.color.setHex(isLight ? this.lightFogColor : this.darkFogColor);
+            this.scene.fog.density = isLight ? 0.0045 : 0.009;
         }
 
         if (this.points?.material) {
             this.points.material.blending = isLight ? THREE.NormalBlending : THREE.AdditiveBlending;
-            this.points.material.opacity = isLight ? 0.55 : 0.72;
+            this.points.material.opacity = 1;
+            const materialIntensity = isLight ? 1 : this.additiveIntensity;
+            this.points.material.color.setRGB(materialIntensity, materialIntensity, materialIntensity);
             this.points.material.needsUpdate = true;
         }
 
+        if (this.renderer?.domElement) {
+            this.renderer.domElement.style.mixBlendMode = 'normal';
+        }
+
         // Recolor base particles for the active theme
-        if (this.baseColors && this.originalBaseColors && this.colors && this.points) {
+        if (this.baseColors && this.originalBaseColors && this.colors && this.points && this.colorSeeds) {
             for (let i = 0; i < this.baseColors.length; i++) {
-                let r, g, b;
-                if (isLight) {
-                    // Vivid multi-hue palette using golden-angle spread
-                    const hue = (i * 137.508) % 360;
-                    const col = new THREE.Color().setHSL(hue / 360, 0.7, 0.42);
-                    r = col.r; g = col.g; b = col.b;
-                } else {
-                    r = this.originalBaseColors[i].r;
-                    g = this.originalBaseColors[i].g;
-                    b = this.originalBaseColors[i].b;
-                }
+                const seedIndex = i * 3;
+                const nx = this.colorSeeds[seedIndex];
+                const nz = this.colorSeeds[seedIndex + 1];
+                const variance = this.colorSeeds[seedIndex + 2];
+                const col = isLight
+                    ? this.getBaseParticleColor(nx, nz, variance, true)
+                    : this.originalBaseColors[i];
+                const r = col.r;
+                const g = col.g;
+                const b = col.b;
                 this.baseColors[i].setRGB(r, g, b);
-                this.colors[i * 3]     = r;
+                this.colors[i * 3] = r;
                 this.colors[i * 3 + 1] = g;
                 this.colors[i * 3 + 2] = b;
             }
@@ -1039,7 +1074,7 @@ document.addEventListener('DOMContentLoaded', () => {
             document.body.style.setProperty('--scroll-progress', scrollProgress.toString());
 
             // Work section parallax and tilt handoff (desktop only)
-            if (workSection && window.innerWidth > 768) {
+            if (workSection && window.innerWidth >= 768) {
                 const viewportHeight = window.innerHeight;
                 const entryProgress = workRect
                     ? clamp((viewportHeight - workRect.top) / Math.max(1, viewportHeight - workStickyTop))
@@ -1184,7 +1219,7 @@ document.addEventListener('DOMContentLoaded', () => {
         const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
             const cardWidth = sampleCard ? sampleCard.offsetWidth || 320 : 320;
-            const isMobileViewport = window.innerWidth <= 768;
+            const isMobileViewport = window.innerWidth < 768;
 
             if (!force && Math.abs(cardWidth - lastMeasuredCardWidth) < 1 && Math.abs(window.innerWidth - lastViewportWidth) < 1) {
                 return;
@@ -1209,7 +1244,6 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
                     card.style.display = '';
                     card.style.transform = `translateX(${flatIdx * flatStride}px)`;
-                    card.dataset.angle = theta * index;
                     card.dataset.flatIdx = String(flatIdx);
                     flatIdx++;
                 });
@@ -1782,7 +1816,7 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     window.addEventListener('resize', () => {
-        if (window.innerWidth > 768) {
+        if (window.innerWidth >= 768) {
             closeMobileMenu();
         }
     });
@@ -2733,11 +2767,3 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
 });
-
-
-
-
-
-
-
-

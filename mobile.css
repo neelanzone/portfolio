@@ -60,12 +60,26 @@
         white-space: normal;
     }
 
+    .mobile-break {
+        display: block;
+    }
+
     /* --------------------------------------------------------
        Work / Carousel (flat mode)
     -------------------------------------------------------- */
 
     #work.section {
+        position: relative;
+        top: auto;
+        min-height: auto;
+        margin-bottom: 0;
+        padding-bottom: 2rem;
+        scroll-margin-top: calc(var(--nav-height) + 0.5rem);
         overflow: hidden;
+    }
+
+    #work.section::after {
+        display: none;
     }
 
     #work.section > .container {
