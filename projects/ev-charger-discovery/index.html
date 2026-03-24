@@ -14,6 +14,18 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var storedTheme = localStorage.getItem('theme');
+                var themeClass = storedTheme === 'dark' ? 'dark-theme' : 'light-theme';
+                document.documentElement.classList.remove('light-theme', 'dark-theme');
+                document.documentElement.classList.add(themeClass);
+            } catch (error) {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">

@@ -1609,6 +1609,11 @@ html.light-theme body.project-page .moon-icon {
 }
 
 @media (max-width: 767px) {
+    .project-page .navbar::before {
+        background: rgb(var(--canvas));
+        opacity: 1;
+    }
+
     .project-page .nav-links,
     .project-page .nav-actions {
         display: none;

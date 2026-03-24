@@ -697,12 +697,26 @@ class ProjectSpaceField {
 
                 const threshold = getSectionPillOffset() + 8;
                 let activeId = pillSections[0].id;
+                const lastSection = pillSections[pillSections.length - 1];
+                const viewportBottom = window.scrollY + window.innerHeight;
+                const pageBottom = document.documentElement.scrollHeight;
 
                 pillSections.forEach(function (section) {
                     if (section.getBoundingClientRect().top <= threshold) {
                         activeId = section.id;
                     }
                 });
+
+                if (lastSection) {
+                    const lastSectionTop = lastSection.getBoundingClientRect().top + window.scrollY;
+                    const maxScrollTop = Math.max(0, pageBottom - window.innerHeight);
+                    const lastSectionNeedsBottomActivation = lastSectionTop - threshold > maxScrollTop;
+                    const isNearPageBottom = viewportBottom >= pageBottom - 8;
+
+                    if (lastSectionNeedsBottomActivation && isNearPageBottom) {
+                        activeId = lastSection.id;
+                    }
+                }
 
                 const activeIndex = sectionPillLinks.findIndex(function (link) {
                     return link.dataset.section === activeId;

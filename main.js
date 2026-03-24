@@ -1772,19 +1772,23 @@ document.addEventListener('DOMContentLoaded', () => {
         mobileMenu.setAttribute('aria-hidden', String(!isOpen));
     };
 
-    if (localStorage.getItem('theme') === 'light') {
-        document.documentElement.classList.add('light-theme');
-        webgl?.applyTheme(true);
+    const applyThemePreference = (theme) => {
+        const isLight = theme === 'light';
+        document.documentElement.classList.remove('light-theme', 'dark-theme');
+        document.documentElement.classList.add(isLight ? 'light-theme' : 'dark-theme');
+        localStorage.setItem('theme', isLight ? 'light' : 'dark');
+        webgl?.applyTheme(isLight);
         refreshNavbarState();
-    }
+    };
+
+    const storedTheme = localStorage.getItem('theme');
+    applyThemePreference(storedTheme === 'light' ? 'light' : 'dark');
 
     themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {
             playThemeToggleClick();
-            const isLight = document.documentElement.classList.toggle('light-theme');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            webgl?.applyTheme(isLight);
-            refreshNavbarState();
+            const isLight = document.documentElement.classList.contains('light-theme');
+            applyThemePreference(isLight ? 'dark' : 'light');
         });
     });
 
