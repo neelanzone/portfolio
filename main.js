@@ -1124,8 +1124,6 @@ document.addEventListener('DOMContentLoaded', () => {
     if (carouselContainer && carouselTrack) {
         const cards = Array.from(carouselTrack.querySelectorAll('.work-card'));
         const numCards = cards.length;
-        const theta = 360 / numCards;
-        let radius = 0;
         let lastViewportWidth = window.innerWidth;
         let lastMeasuredCardWidth = 0;
         let isFlatMode = false;
@@ -1145,9 +1143,47 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         };
 
+        // Filing cabinet hover state — shared across layout updates and event listeners
+        let filingCards = [];
+        let filingCardWidth = 0;
+        let filingActiveCard = null;
+        let filingActiveIdx = -1;
+
+        const applyFilingSpread = (hoveredIdx) => {
+            const spreadPx = Math.round(filingCardWidth * 0.5);
+            filingCards.forEach((card, i) => {
+                const base = parseInt(card.dataset.baseFilingX, 10);
+                const shift = i < hoveredIdx ? -spreadPx : i > hoveredIdx ? spreadPx : 0;
+                card.style.setProperty('--filing-x', `${base + shift}px`);
+            });
+        };
+
+        const resetFilingSpread = () => {
+            filingCards.forEach((card) => {
+                card.style.setProperty('--filing-x', `${card.dataset.baseFilingX}px`);
+            });
+        };
+
+        const openFilingCard = (card, idx) => {
+            if (filingActiveCard === card) return;
+            if (filingActiveCard) filingActiveCard.classList.remove('is-filing-open');
+            filingActiveCard = card;
+            filingActiveIdx = idx;
+            card.classList.add('is-filing-open');
+            applyFilingSpread(idx);
+        };
+
+        const closeFilingCard = () => {
+            if (!filingActiveCard) return;
+            filingActiveCard.classList.remove('is-filing-open');
+            filingActiveCard = null;
+            filingActiveIdx = -1;
+            resetFilingSpread();
+        };
+
         const updateCarouselGeometry = (force = false) => {
             const sampleCard = cards[0];
-            const cardWidth = sampleCard ? sampleCard.getBoundingClientRect().width || 320 : 320;
+            const cardWidth = sampleCard ? sampleCard.offsetWidth || 320 : 320;
             const isMobileViewport = window.innerWidth <= 768;
 
             if (!force && Math.abs(cardWidth - lastMeasuredCardWidth) < 1 && Math.abs(window.innerWidth - lastViewportWidth) < 1) {
@@ -1200,13 +1236,13 @@ document.addEventListener('DOMContentLoaded', () => {
                 flatNumCards = numCards;
 
                 // Filing cabinet layout: cards fanned horizontally, each slightly angled.
-                const containerWidth = carouselContainer.getBoundingClientRect().width || 1000;
+                const containerWidth = carouselContainer.offsetWidth || 1000;
                 const projCards = cards.filter(c => !c.classList.contains('title-card'));
                 const N = projCards.length;
-                const maxSpacing = N > 1 ? Math.round((containerWidth - cardWidth) / (N - 1)) : 0;
-                const spacing = Math.min(190, maxSpacing);
-                const groupWidth = (N - 1) * spacing + cardWidth;
-                const startX = Math.round((containerWidth - groupWidth) / 2);
+                // Space cards evenly; align so the middle card's edge sits at containerWidth/2.
+                // Visual edge of card i = startX + i*spacing + cardWidth/2
+                const spacing = Math.round(containerWidth / N);
+                const startX = Math.round(containerWidth / 2 - ((N - 1) / 2) * spacing - cardWidth / 2);
                 const midIdx = (N - 1) / 2;
 
                 // Clear track rotation — CSS handles card transforms via variables
@@ -1222,37 +1258,27 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 projCards.forEach((card, i) => {
                     card.style.display = '';
-                    const relIdx = i - midIdx;
-                    // Fan: positive angle tilts right face toward viewer (left cards), negative tilts left
-                    const angle = relIdx * 11;
-                    const depth = -Math.abs(relIdx) * 28;
-                    card.style.left = `${startX + i * spacing}px`;
-                    card.style.top = '0px';
-                    card.style.setProperty('--filing-angle', `${angle}deg`);
-                    card.style.setProperty('--filing-depth', `${depth}px`);
-                    card.style.transform = ''; // Let CSS handle resting state
-                    card.dataset.angle = String(theta * i);
-                    card.style.zIndex = String(Math.round(10 - Math.abs(relIdx)));
+                    card.style.left = '0';
+                    card.style.top = '0';
+                    card.style.setProperty('--filing-x', `${startX + i * spacing}px`);
+                    card.style.setProperty('--filing-tilt', `${(i - midIdx) * 3}deg`);
+                    card.style.transform = '';
+                    // Centre card on top; z decreases outward
+                    card.style.zIndex = String(N - Math.round(Math.abs(i - midIdx)));
+                    card.dataset.baseFilingX = String(startX + i * spacing);
                 });
+
+                // Update shared filing state for the container-level hover listener
+                filingCards = projCards;
+                filingCardWidth = cardWidth;
+                closeFilingCard();
             }
         };
 
-        // Initialize card positions and attach reliable click listeners
-        cards.forEach((card, index) => {
-            const angle = theta * index;
-            card.dataset.angle = angle;
-
-            // Native click listener to rigidly snap to this specific card
+        // Prevent link clicks from bubbling up to the container
+        cards.forEach((card) => {
             card.addEventListener('click', (event) => {
-                if (event.target.closest('.work-card-link')) {
-                    return;
-                }
-                if (window.innerWidth <= 768) return;
-                // Ignore clicks if the user was actually dragging across the card
-                if (Math.abs(currentXCarousel - startXCarousel) > 5) return;
-
-                targetRotation = -angle;
-                // No clamping, allow free rotation
+                if (event.target.closest('.work-card-link')) return;
             });
         });
 
@@ -1273,15 +1299,61 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(() => updateCarouselGeometry(true)); // re-measure after first paint
         window.addEventListener('resize', () => updateCarouselGeometry(false));
 
-        // Current rotation state
-        const titleCardIndex = cards.findIndex(card => card.classList.contains('title-card'));
-        const centerIndex = titleCardIndex !== -1 ? titleCardIndex : Math.floor(numCards / 2);
-        let currentRotation = -centerIndex * theta; // Start perfectly on the "Projects" title card
-        let targetRotation = -centerIndex * theta;
+        // Filing cabinet hover: proximity on first entry; directional swipe while a card is open.
+        let filingLastMouseX = 0;
+        let filingDxAccum = 0;
+        // Travel distance to advance: full rendered card width (card width × 0.85 scale)
+
+        carouselContainer.addEventListener('mouseenter', (e) => {
+            // Seed last position so first move doesn't produce a huge delta.
+            const rect = carouselContainer.getBoundingClientRect();
+            filingLastMouseX = e.clientX - rect.left;
+            filingDxAccum = 0;
+        });
+
+        carouselContainer.addEventListener('mousemove', (e) => {
+            if (!isFilingCabinet || !filingCards.length) return;
+            const rect = carouselContainer.getBoundingClientRect();
+            const mouseX = e.clientX - rect.left;
+            const dx = mouseX - filingLastMouseX;
+            filingLastMouseX = mouseX;
+
+            if (filingActiveCard && filingActiveIdx !== -1) {
+                // Reset accumulator if direction reverses.
+                if ((dx > 0 && filingDxAccum < 0) || (dx < 0 && filingDxAccum > 0)) filingDxAccum = 0;
+                filingDxAccum += dx;
+
+                const switchThreshold = 75;
+                if (filingDxAccum >= switchThreshold) {
+                    const next = filingActiveIdx + 1;
+                    if (next < filingCards.length) openFilingCard(filingCards[next], next);
+                    filingDxAccum = 0;
+                } else if (filingDxAccum <= -switchThreshold) {
+                    const prev = filingActiveIdx - 1;
+                    if (prev >= 0) openFilingCard(filingCards[prev], prev);
+                    filingDxAccum = 0;
+                }
+                return;
+            }
+
+            // No card open yet — activate the nearest one by proximity.
+            filingDxAccum = 0;
+            let nearest = null, nearestDist = Infinity, nearestIdx = -1;
+            filingCards.forEach((card, i) => {
+                const edgeX = parseInt(card.dataset.baseFilingX, 10) + filingCardWidth / 2;
+                const dist = Math.abs(mouseX - edgeX);
+                if (dist < nearestDist) { nearestDist = dist; nearest = card; nearestIdx = i; }
+            });
+            if (nearest) openFilingCard(nearest, nearestIdx);
+        });
+
+        carouselContainer.addEventListener('mouseleave', () => {
+            if (isFilingCabinet) { closeFilingCard(); filingDxAccum = 0; }
+        });
+
         let isDraggingCarousel = false;
         let startXCarousel = 0;
         let currentXCarousel = 0;
-        let dragStartRotation = targetRotation;
         let dragPointerType = 'mouse';
         let activeFrontCard = null;
         let pendingFrontCard = null;
@@ -1290,13 +1362,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let isCarouselAnimating = false;
         let isCarouselVisible = true;
         let isDocumentVisible = !document.hidden;
-
-        const normalizeAngle = (angle) => {
-            let normalized = angle % 360;
-            if (normalized > 180) normalized -= 360;
-            if (normalized < -180) normalized += 360;
-            return normalized;
-        };
 
         const getCenteredCard = () => {
             if (isFlatMode) {
@@ -1310,14 +1375,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 });
                 return closest;
             }
-            return cards.reduce((closestCard, card) => {
-                if (!closestCard) return card;
-                const cardAngle = parseFloat(card.dataset.angle) || 0;
-                const closestAngle = parseFloat(closestCard.dataset.angle) || 0;
-                const currentDistance = Math.abs(normalizeAngle(cardAngle + currentRotation));
-                const closestDistance = Math.abs(normalizeAngle(closestAngle + currentRotation));
-                return currentDistance < closestDistance ? card : closestCard;
-            }, null);
+            return null;
         };
 
         const syncActiveFrontCard = () => {
@@ -1373,9 +1431,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 flatCurrentOffset += (flatTargetOffset - flatCurrentOffset) * 0.1;
                 carouselTrack.style.transform = `translateX(${-flatCurrentOffset}px)`;
                 updateDots(Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride))));
-            } else if (!isFilingCabinet) {
-                currentRotation += (targetRotation - currentRotation) * 0.1;
-                carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
             }
             syncActiveFrontCard();
             carouselFrameId = requestAnimationFrame(animateCarousel);
@@ -1430,133 +1485,60 @@ document.addEventListener('DOMContentLoaded', () => {
         syncActiveFrontCard();
         updateCarouselAnimationState();
 
-        // Arrow button logic
-        const prevBtn = carouselContainer.querySelector('.carousel-control.prev');
-        const nextBtn = carouselContainer.querySelector('.carousel-control.next');
-
-        if (prevBtn && nextBtn) {
-            prevBtn.addEventListener('click', () => {
-                targetRotation += theta; // Move left visually by rotating right
-                const snapIndex = Math.round(targetRotation / theta);
-                targetRotation = snapIndex * theta;
-            });
-            nextBtn.addEventListener('click', () => {
-                targetRotation -= theta; // Move right visually by rotating left
-                const snapIndex = Math.round(targetRotation / theta);
-                targetRotation = snapIndex * theta;
-            });
-        }
-
-        // Keyboard navigation — fires globally, only acts when carousel is in view
+        // Keyboard navigation — mobile flat carousel only
         document.addEventListener('keydown', (e) => {
             if (e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') return;
-            if (!isCarouselVisible) return;
+            if (!isCarouselVisible || !isFlatMode) return;
             e.preventDefault();
-            if (isFlatMode) {
-                const direction = e.key === 'ArrowLeft' ? -1 : 1;
-                const currentIndex = Math.round(flatCurrentOffset / flatStride);
-                const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
-                flatTargetOffset = newIndex * flatStride;
-            } else {
-                if (e.key === 'ArrowLeft') {
-                    targetRotation += theta;
-                } else {
-                    targetRotation -= theta;
-                }
-                targetRotation = Math.round(targetRotation / theta) * theta;
-            }
+            const direction = e.key === 'ArrowLeft' ? -1 : 1;
+            const currentIndex = Math.round(flatCurrentOffset / flatStride);
+            const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
+            flatTargetOffset = newIndex * flatStride;
         });
 
-        // Pointer event dragging logic
+        // Mobile swipe dragging (desktop filing cabinet ignores this)
         carouselContainer.addEventListener('pointerdown', (e) => {
             if (isFilingCabinet) return;
             isDraggingCarousel = true;
             dragPointerType = e.pointerType || 'mouse';
             startXCarousel = e.clientX;
             currentXCarousel = e.clientX;
-            dragStartRotation = targetRotation;
             carouselContainer.style.cursor = 'grabbing';
             carouselTrack.style.transition = 'none';
         });
 
         window.addEventListener('pointermove', (e) => {
             if (!isDraggingCarousel) return;
-
             const dx = e.clientX - currentXCarousel;
             currentXCarousel = e.clientX;
-
-            if (isFlatMode) {
-                flatTargetOffset -= dx;
-                flatTargetOffset = Math.max(0, Math.min((flatNumCards - 1) * flatStride, flatTargetOffset));
-            } else {
-                const dragSensitivity = dragPointerType === 'touch' ? 0.28 : 0.15;
-                targetRotation += dx * dragSensitivity;
-            }
+            flatTargetOffset -= dx;
+            flatTargetOffset = Math.max(0, Math.min((flatNumCards - 1) * flatStride, flatTargetOffset));
         });
 
         window.addEventListener('pointercancel', () => {
             if (!isDraggingCarousel) return;
             isDraggingCarousel = false;
             carouselContainer.style.cursor = 'grab';
-            if (isFlatMode) {
-                const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
-                flatTargetOffset = snapIndex * flatStride;
-            }
+            const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
+            flatTargetOffset = snapIndex * flatStride;
         });
 
         window.addEventListener('pointerup', (e) => {
             if (!isDraggingCarousel) return;
             isDraggingCarousel = false;
             carouselContainer.style.cursor = 'grab';
-
             const totalDrag = e.clientX - startXCarousel;
-
-            if (isFlatMode) {
-                const swipeThreshold = Math.min(40, window.innerWidth * 0.07);
-                if (Math.abs(totalDrag) > swipeThreshold) {
-                    const direction = totalDrag < 0 ? 1 : -1;
-                    const currentIndex = Math.round(flatCurrentOffset / flatStride);
-                    const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
-                    flatTargetOffset = newIndex * flatStride;
-                } else {
-                    const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
-                    flatTargetOffset = snapIndex * flatStride;
-                }
+            const swipeThreshold = Math.min(40, window.innerWidth * 0.07);
+            if (Math.abs(totalDrag) > swipeThreshold) {
+                const direction = totalDrag < 0 ? 1 : -1;
+                const currentIndex = Math.round(flatCurrentOffset / flatStride);
+                const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
+                flatTargetOffset = newIndex * flatStride;
             } else {
-                const startSnapIndex = Math.round(dragStartRotation / theta);
-                const touchSwipeThreshold = Math.min(72, window.innerWidth * 0.09);
-
-                if (dragPointerType === 'touch' && Math.abs(totalDrag) > touchSwipeThreshold) {
-                    const direction = totalDrag < 0 ? -1 : 1;
-                    targetRotation = (startSnapIndex + direction) * theta;
-                } else {
-                    const snapIndex = Math.round(targetRotation / theta);
-                    targetRotation = snapIndex * theta;
-                }
+                const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                flatTargetOffset = snapIndex * flatStride;
             }
         });
-        
-        // Mouse wheel strictly for horizontal sweeps
-        let wheelTimeout;
-        carouselContainer.addEventListener('wheel', (e) => {
-            // Only hijack the scroll if the user is swiping horizontally (trackpad)
-            if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
-                e.preventDefault(); 
-                
-                // Scrub the rotation smoothly while scrolling
-                targetRotation += Math.sign(e.deltaX) * -theta * 0.15; 
-                
-                // Clear the previous timeout
-                clearTimeout(wheelTimeout);
-                
-                // Set a timeout to detect when the scroll gesture has actually finished
-                wheelTimeout = setTimeout(() => {
-                    // Snap to the nearest card exactly
-                    const snapIndex = Math.round(targetRotation / theta);
-                    targetRotation = snapIndex * theta;
-                }, 150); // 150ms of no scrolling means the swipe ended
-            }
-        }, { passive: false });
     }
 
     let themeToggleAudioContext;

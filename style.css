@@ -356,7 +356,7 @@ a:hover {
     display: none;
 }
 
-.mobile-work-heading {
+.work-section-heading {
     display: none;
 }
 
@@ -521,7 +521,8 @@ a:hover {
 :root.light-theme .work-desc {
     color: rgba(0, 0, 0, 0.6) !important;
 }
-:root.light-theme .work-pill {
+
+:root.light-theme .work-pill {
     background: rgba(247, 242, 232, 0.34);
     border: 1px solid rgba(255, 255, 255, 0.38);
     color: rgba(0, 0, 0, 0.78);
@@ -1087,7 +1088,7 @@ a:hover {
 }
 
 #about.section {
-    padding-top: 10.4rem; /* 30% more than --spacing-lg (8rem) so content lands lower */
+    padding-top: 2rem;
 }
 
 .about-grid {
@@ -1299,7 +1300,7 @@ a:hover {
     padding: 0.75rem 0 6rem; /* Increased bottom padding for breathing room */
     position: sticky;
     top: 4vh; /* Pull the section higher in the viewport when it sticks */
-    z-index: 10;
+    z-index: 1;
     margin-bottom: var(--work-handoff-space); /* Breathing room before the next section slides up */
     scroll-margin-top: 4vh; /* Keep anchor alignment matched to the sticky position */
     min-height: 100svh; /* Fill the viewport so the fixed hero background doesn't show through */
@@ -2004,6 +2005,8 @@ a:hover {
 .contact-heading .about-cta-line {
     margin-top: 0;
     justify-content: center;
+    flex-direction: column;
+    align-items: center;
 }
 
 .about-cta-line {
@@ -2032,16 +2035,21 @@ a:hover {
     vertical-align: baseline;
     position: relative;
     align-items: center;
+    justify-items: center;
+    justify-content: center;
     height: 1.28em;
     padding-bottom: 0.14em;
+    padding-inline: 0.75rem;
+    box-sizing: content-box;
 }
 
 .about-rotating-word {
     grid-area: 1 / 1;
     display: inline-flex;
     align-items: center;
+    justify-content: center;
     gap: 0.34em;
-    text-align: left;
+    text-align: center;
     white-space: nowrap;
     will-change: transform, opacity;
 }
@@ -2977,14 +2985,18 @@ footer {
    ============================================================ */
 @media (min-width: 768px) {
 
+    #work.section {
+        padding-top: calc(0.75rem + 32px);
+    }
+
     /* Show the work heading above the cabinet (title card is hidden) */
-    .mobile-work-heading {
+    .work-section-heading {
         display: block;
         font-size: 3.5rem;
         color: var(--text-color);
-        text-align: left;
-        padding: 0 0 1rem;
-        margin: 0;
+        text-align: center;
+        padding: 0 0 0.1rem;
+        margin: 2rem 0 0;
     }
 
     /* Container: perspective origin stays center, no drag cursor */
@@ -2993,6 +3005,7 @@ footer {
         perspective: 1400px;
         cursor: default;
         overflow: visible;
+        margin: 0;
     }
 
     .carousel-container:active {
@@ -3009,32 +3022,32 @@ footer {
         transform-style: preserve-3d;
     }
 
-    /* Resting state: per-card angle + depth driven by CSS variables set in JS */
+    /* Resting state: edge-on like records in a crate, each with its own slight lean */
     .work-card {
-        --filing-angle: 0deg;
-        --filing-depth: 0px;
-        transform: rotateY(var(--filing-angle)) translateZ(var(--filing-depth));
-        transition:
-            transform 0.5s cubic-bezier(0.34, 1.1, 0.64, 1),
-            opacity 0.35s ease,
-            box-shadow 0.35s ease;
+        --filing-x: 0px;     /* horizontal centre — set per-card by JS */
+        --filing-tilt: 0deg; /* individual z-axis lean — set per-card by JS */
+        left: 0;
+        transform: translateX(var(--filing-x)) rotateX(0deg) rotateY(10deg) rotateZ(var(--filing-tilt)) scale(0.85);
+        transition: transform 0.55s cubic-bezier(0.34, 1.1, 0.64, 1), opacity 0.35s ease;
         cursor: pointer;
     }
 
-    /* On hover: card pops forward and faces the viewer */
-    .work-card:hover {
-        transform: translateY(-28px) translateZ(90px) rotateY(0deg);
+    /* On hover / JS-driven open: flip to reveal front content */
+    .work-card:hover,
+    .work-card.is-filing-open {
+        transform: translateX(var(--filing-x)) translateY(-20px) translateZ(80px) rotateY(0deg) rotateZ(0deg) scale(0.85);
         z-index: 20 !important;
         opacity: 1 !important;
     }
 
-    /* Siblings dim and recede when a card is focused */
-    .carousel-track:has(.work-card:hover) .work-card:not(:hover) {
-        opacity: 0.38;
-        transform: rotateY(var(--filing-angle)) translateZ(calc(var(--filing-depth) - 18px));
+    /* Siblings stay edge-on with their individual tilts */
+    .carousel-track:has(.work-card.is-filing-open) .work-card:not(.is-filing-open) {
+        opacity: 0.5;
+        transform: translateX(var(--filing-x)) rotateX(0deg) rotateY(85deg) rotateZ(var(--filing-tilt)) scale(0.85);
     }
 
-    /* Title card is replaced by .mobile-work-heading on desktop */
+
+    /* Title card is replaced by .work-section-heading on desktop */
     .title-card {
         display: none !important;
     }
