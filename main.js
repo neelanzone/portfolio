@@ -2050,19 +2050,19 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTab.addEventListener('touchstart', (e) => {
             e.preventDefault();
             isPulling = true;
-            pullStartY = e.touches[0].clientY;
+            pullStartY = e.touches[0].pageY;
             resetTab.style.transition = 'none';
         }, { passive: false });
 
         resetTab.addEventListener('touchmove', (e) => {
             if (!isPulling) return;
             e.preventDefault();
-            const dy = Math.max(0, e.touches[0].clientY - pullStartY);
+            const dy = Math.max(0, e.touches[0].pageY - pullStartY);
             resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
         }, { passive: false });
 
         resetTab.addEventListener('touchend', (e) => {
-            onPullEnd(e.changedTouches[0].clientY);
+            onPullEnd(e.changedTouches[0].pageY);
         });
         resetTab.addEventListener('touchcancel', () => {
             isPulling = false;

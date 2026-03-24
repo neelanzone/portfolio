@@ -614,6 +614,7 @@ a:hover {
 
 .nav-links a,
 .mobile-menu a {
+    font-family: 'Space Mono', monospace;
     font-size: var(--type-menu);
     text-transform: uppercase;
     letter-spacing: 0.1em;

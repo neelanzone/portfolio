@@ -48,20 +48,6 @@
             "description": "A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery."
         },
         {
-            "slug": "ev-charger-discovery",
-            "title": "EV Charger Discovery",
-            "type": "UX/UI, 2026",
-            "image": {
-                "src": "Assets/grid-discovery.png",
-                "alt": "Interface preview for EV Charger Discovery"
-            },
-            "link": {
-                "type": "project",
-                "slug": "ev-charger-discovery"
-            },
-            "description": "A charger discovery experience designed for gig workers and urban EV users, centered on queue transparency, station availability, and trust scores."
-        },
-        {
             "slug": "venture-hub",
             "title": "Venture Hub",
             "type": "UX/UI & System Design, 2026",
@@ -74,20 +60,6 @@
                 "slug": "venture-hub"
             },
             "description": "A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders."
-        },
-        {
-            "slug": "protopack",
-            "title": "ProtoPack",
-            "type": "Product Design, 2022",
-            "image": {
-                "src": "Assets/10x-bag.mp4",
-                "alt": "Product preview for ProtoPack backpack concept"
-            },
-            "link": {
-                "type": "project",
-                "slug": "protopack"
-            },
-            "description": "A backpack designed to transform learning into a more hands-on, exploratory, and creative experience."
         }
     ]
 }

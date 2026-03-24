@@ -1,4 +1,4 @@
-﻿import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
+import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
 
 function renderMetaTags(project, site) {
     const title = project.seo?.title ?? `${project.title} | ${site.owner}`;
@@ -24,60 +24,30 @@ function renderMetaTags(project, site) {
     ].filter(Boolean).join('\n    ');
 }
 
-function renderNav(project) {
-    const navItems = project.sections
+function renderSectionPills(project) {
+    const pillItems = project.sections
         .filter((section) => section.navLabel)
         .map((section) => ({ id: section.id, label: section.navLabel }));
 
-    navItems.push({ id: 'more-projects', label: 'More Projects' });
+    pillItems.push({ id: 'more-projects', label: 'More' });
 
-    const desktopLinks = navItems.map((item, index) => {
-        const textClass = index === 0 ? 'text-ink' : 'text-subtext';
-        return `<a href="#${escapeHtml(item.id)}" class="nav-link font-mono text-eyebrow uppercase ${textClass} transition-colors hover:text-ink">${escapeHtml(item.label)}</a>`;
+    const pills = pillItems.map((item, index) => {
+        const activeClass = index === 0 ? ' is-active' : '';
+        return `<a href="#${escapeHtml(item.id)}" class="section-pill${activeClass}" data-section="${escapeHtml(item.id)}">${escapeHtml(item.label)}</a>`;
     }).join('\n                ');
 
-    const mobileLinks = navItems.map((item, index) => {
-        const textClass = index === 0 ? 'text-ink' : 'text-subtext';
-        return `<a href="#${escapeHtml(item.id)}" class="font-mono text-eyebrow uppercase ${textClass}">${escapeHtml(item.label)}</a>`;
-    }).join('\n                ');
-
-    return { desktopLinks, mobileLinks };
+    return `
+        <div id="section-pills" class="section-pill-bar" aria-hidden="true">
+            <div class="section-pill-bar__inner">
+                ${pills}
+            </div>
+        </div>`;
 }
 
 export function renderHeader(project, site, toRoot) {
-    const { desktopLinks, mobileLinks } = renderNav(project);
-    const homeHref = `${toRoot}${site.homeHref}`;
-
     return `
-    <div class="pointer-events-none fixed inset-x-0 top-0 z-40 h-24 bg-gradient-to-b from-canvas via-canvas/90 to-transparent"></div>
-
-    <header class="page-navbar fixed inset-x-0 top-0 z-50 border-b border-[color:var(--nav-border)] bg-[color:var(--nav-surface)] backdrop-blur-xl">
-        <div class="relative flex w-full items-center justify-between gap-5 px-5 py-1.5 sm:px-7 lg:px-12">
-            <a href="${escapeHtml(homeHref)}" class="brand-logo rounded-full focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent/40" aria-label="Back to homepage">
-                <img src="${escapeHtml(resolveAssetPath('Assets/identity-motion-active.gif', toRoot))}" alt="Neel logo" class="logo-default" width="90" height="90">
-                <img src="${escapeHtml(resolveAssetPath('Assets/identity-motion-hover.gif', toRoot))}" alt="" class="logo-hover" width="90" height="90" aria-hidden="true">
-            </a>
-
-            <nav class="hidden items-center gap-6 lg:absolute lg:left-1/2 lg:flex lg:-translate-x-1/2" aria-label="Section navigation">
-                ${desktopLinks}
-            </nav>
-
-            <div class="hidden items-center gap-2 lg:flex">
-                <button type="button" data-theme-toggle class="project-theme-toggle" aria-label="Toggle Dark Mode"><span class="project-theme-toggle__cap" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span></button>
-            </div>
-
-            <div class="flex items-center gap-2 lg:hidden">
-                <button type="button" data-theme-toggle class="project-theme-toggle" aria-label="Toggle Dark Mode"><span class="project-theme-toggle__cap" aria-hidden="true"><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-moon"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg><svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="theme-icon-sun"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg></span></button>
-                <button id="mobile-menu-button" type="button" class="inline-flex items-center justify-center rounded-full bg-[color:var(--toggle-surface)] px-4 py-1.5 font-mono text-eyebrow uppercase text-ink transition hover:bg-[color:var(--toggle-surface-hover)]" aria-expanded="false" aria-controls="mobile-menu">Menu</button>
-            </div>
-        </div>
-
-        <nav id="mobile-menu" class="hidden rounded-[4px] border-t border-[color:var(--nav-border)] bg-canvas px-5 py-4 sm:px-7 lg:hidden" aria-label="Mobile section navigation">
-            <div class="flex flex-col gap-3">
-                ${mobileLinks}
-            </div>
-        </nav>
-    </header>`;
+    <div data-navbar-mount data-navbar-variant="project" data-to-root="${escapeHtml(toRoot)}"></div>
+${renderSectionPills(project)}`;
 }
 
 function splitCardMeta(entry) {
@@ -126,7 +96,7 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
                         <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
                         <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
                         <div class="project-carousel-track">
-                            ${site.moreProjects.map((entry) => {
+                            ${site.moreProjects.filter((entry) => entry.slug !== project.slug).map((entry) => {
                                 const href = resolveProjectLink(entry.link, project.slug, toRoot);
                                 const current = entry.slug === project.slug;
                                 const { typeLabels, dateLabel } = splitCardMeta(entry);

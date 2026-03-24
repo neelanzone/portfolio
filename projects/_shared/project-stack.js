@@ -2,7 +2,8 @@
     const desktopQuery = window.matchMedia('(min-width: 1024px)');
     const pageScale = document.getElementById('page-scale');
     const overlayRoot = document.getElementById('project-stack-overlay');
-    const navbar = document.querySelector('.page-navbar');
+    const navbar = document.querySelector('.project-page .navbar') || document.querySelector('.page-navbar');
+    const sectionPills = document.getElementById('section-pills');
     const sectionChoreography = {
         hero: {
             pinAfter: 0
@@ -125,7 +126,9 @@
             }
 
             if (item.choreography.pinTo === 'navbar' && navbar) {
-                item.pinTop = Math.round(navbar.getBoundingClientRect().bottom);
+                const navbarBottom = navbar.getBoundingClientRect().bottom;
+                const pillsBottom = sectionPills ? sectionPills.getBoundingClientRect().bottom : navbarBottom;
+                item.pinTop = Math.round(Math.max(navbarBottom, pillsBottom));
                 return;
             }
 

@@ -227,9 +227,6 @@ class ProjectSpaceField {
             const section = carousel.closest('.project-carousel-section');
             const currentProject = section?.dataset.currentProject || '';
             const spaceField = section?.querySelector('[data-project-space]')?._projectSpaceField || null;
-            // Allow iOS Safari to pass horizontal swipes to JS instead of claiming them as scroll
-            carousel.style.touchAction = 'pan-y';
-
             const theta = 360 / cards.length;
             let radius = 0;
             let currentRotation = 0;
@@ -244,6 +241,7 @@ class ProjectSpaceField {
             let touchIdentifier = null;
             let touchStartY = 0;
             let touchLock = null;
+            let pressedLink = null;
             let suppressClickUntil = 0;
             let rafId = null;
             let isAnimating = false;
@@ -366,6 +364,7 @@ class ProjectSpaceField {
                 spaceField?.nudge?.(deltaStep * 0.014);
 
                 if (dragDistance > 6) {
+                    pressedLink = null;
                     suppressClickUntil = performance.now() + 320;
                 }
             };
@@ -379,14 +378,20 @@ class ProjectSpaceField {
                 activePointerId = null;
                 touchIdentifier = null;
                 touchLock = null;
+                snapToNearest();
+            };
 
-                const totalDrag = lastDragX - dragStartX;
-                const swipeThreshold = 30;
-                if (Math.abs(totalDrag) > swipeThreshold) {
-                    targetRotation = dragStartRotation;
-                    moveBy(totalDrag < 0 ? -1 : 1);
-                } else {
-                    snapToNearest();
+            const activatePressedLink = () => {
+                if (!pressedLink || dragDistance > 6) {
+                    pressedLink = null;
+                    return;
+                }
+
+                const href = pressedLink.getAttribute('href');
+                pressedLink = null;
+
+                if (href) {
+                    window.location.assign(href);
                 }
             };
 
@@ -430,6 +435,7 @@ class ProjectSpaceField {
                     return;
                 }
 
+                pressedLink = event.target.closest('.project-carousel-card__link');
                 startDrag(event.clientX, event.pointerId, event.clientY);
                 carousel.setPointerCapture?.(event.pointerId);
             });
@@ -447,8 +453,12 @@ class ProjectSpaceField {
                     return;
                 }
 
+                const shouldActivateLink = dragDistance <= 6 && Boolean(pressedLink);
                 carousel.releasePointerCapture?.(event.pointerId);
                 finishDrag();
+                if (shouldActivateLink) {
+                    activatePressedLink();
+                }
             };
 
             carousel.addEventListener('pointerup', endDrag);
@@ -460,6 +470,7 @@ class ProjectSpaceField {
                 }
 
                 const touch = event.touches[0];
+                pressedLink = event.target.closest('.project-carousel-card__link');
                 touchIdentifier = touch.identifier;
                 startDrag(touch.clientX, null, touch.clientY);
             }, { passive: true });
@@ -486,6 +497,7 @@ class ProjectSpaceField {
                 }
 
                 if (touchLock === 'vertical') {
+                    pressedLink = null;
                     finishDrag();
                     return;
                 }
@@ -501,11 +513,16 @@ class ProjectSpaceField {
 
                 const ended = Array.from(event.changedTouches).some((item) => item.identifier === touchIdentifier);
                 if (ended) {
+                    const shouldActivateLink = dragDistance <= 6 && Boolean(pressedLink);
                     finishDrag();
+                    if (shouldActivateLink) {
+                        activatePressedLink();
+                    }
                 }
             });
 
             carousel.addEventListener('touchcancel', () => {
+                pressedLink = null;
                 finishDrag();
             });
 
@@ -568,22 +585,62 @@ class ProjectSpaceField {
                 });
             });
 
-            const mobileButton = document.getElementById('mobile-menu-button');
+            const mobileButton = document.getElementById('mobile-menu-button') || document.getElementById('menu-toggle');
             const mobileMenu = document.getElementById('mobile-menu');
+            const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
+            const mobileWorkToggle = document.getElementById('mobile-work-toggle');
+            const mobileWorkProjects = document.getElementById('mobile-work-projects');
+
+            const closeMobileMenu = function () {
+                if (!mobileButton || !mobileMenu) {
+                    return;
+                }
+
+                mobileButton.classList.remove('is-open');
+                mobileButton.setAttribute('aria-expanded', 'false');
+                mobileButton.setAttribute('aria-label', 'Open navigation menu');
+                mobileMenu.classList.remove('is-open');
+                mobileMenu.setAttribute('aria-hidden', 'true');
+
+                if (mobileWorkToggle && mobileWorkProjects) {
+                    mobileWorkToggle.setAttribute('aria-expanded', 'false');
+                    mobileWorkProjects.classList.remove('is-open');
+                    mobileWorkProjects.setAttribute('aria-hidden', 'true');
+                }
+            };
+
             if (mobileButton && mobileMenu) {
                 mobileButton.addEventListener('click', function () {
                     const expanded = mobileButton.getAttribute('aria-expanded') === 'true';
+                    mobileButton.classList.toggle('is-open', !expanded);
                     mobileButton.setAttribute('aria-expanded', String(!expanded));
-                    mobileMenu.classList.toggle('hidden');
-                });
+                    mobileButton.setAttribute('aria-label', expanded ? 'Open navigation menu' : 'Close navigation menu');
+                    mobileMenu.classList.toggle('is-open', !expanded);
+                    mobileMenu.setAttribute('aria-hidden', String(expanded));
 
-                mobileMenu.querySelectorAll('a').forEach(function (link) {
-                    link.addEventListener('click', function () {
-                        mobileButton.setAttribute('aria-expanded', 'false');
-                        mobileMenu.classList.add('hidden');
-                    });
+                    if (expanded && mobileWorkToggle && mobileWorkProjects) {
+                        mobileWorkToggle.setAttribute('aria-expanded', 'false');
+                        mobileWorkProjects.classList.remove('is-open');
+                        mobileWorkProjects.setAttribute('aria-hidden', 'true');
+                    }
                 });
             }
+
+            if (mobileWorkToggle && mobileWorkProjects) {
+                mobileWorkToggle.addEventListener('click', function (event) {
+                    event.stopPropagation();
+                    const expanded = mobileWorkToggle.getAttribute('aria-expanded') === 'true';
+                    mobileWorkToggle.setAttribute('aria-expanded', String(!expanded));
+                    mobileWorkProjects.classList.toggle('is-open', !expanded);
+                    mobileWorkProjects.setAttribute('aria-hidden', String(expanded));
+                });
+            }
+
+            mobileMenuLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    closeMobileMenu();
+                });
+            });
 
             const navbarAnchorLinks = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
             const scrollToNavbarAnchor = function (hash) {
@@ -617,6 +674,78 @@ class ProjectSpaceField {
                 });
             });
 
+            const sectionPillLinks = Array.from(document.querySelectorAll('.section-pill[data-section]'));
+            const pillSections = sectionPillLinks
+                .map(function (link) {
+                    const id = link.dataset.section;
+                    return id ? document.getElementById(id) : null;
+                })
+                .filter(Boolean);
+
+            const getSectionPillOffset = function () {
+                const navbar = document.querySelector('.navbar');
+                const pillsBar = document.getElementById('section-pills');
+                const navbarBottom = navbar ? navbar.getBoundingClientRect().bottom : 0;
+                const pillsBottom = pillsBar ? pillsBar.getBoundingClientRect().bottom : navbarBottom;
+                return Math.max(navbarBottom, pillsBottom, 0);
+            };
+
+            const updateSectionPills = function () {
+                if (!sectionPillLinks.length || !pillSections.length) {
+                    return;
+                }
+
+                const threshold = getSectionPillOffset() + 8;
+                let activeId = pillSections[0].id;
+
+                pillSections.forEach(function (section) {
+                    if (section.getBoundingClientRect().top <= threshold) {
+                        activeId = section.id;
+                    }
+                });
+
+                const activeIndex = sectionPillLinks.findIndex(function (link) {
+                    return link.dataset.section === activeId;
+                });
+
+                sectionPillLinks.forEach(function (link, index) {
+                    const isActive = index === activeIndex;
+                    const isComplete = activeIndex !== -1 && index < activeIndex;
+                    link.classList.toggle('is-active', isActive);
+                    link.classList.toggle('is-complete', isComplete);
+                    link.setAttribute('aria-current', isActive ? 'true' : 'false');
+                });
+            };
+
+            sectionPillLinks.forEach(function (link) {
+                link.addEventListener('click', function (event) {
+                    const sectionId = link.dataset.section;
+                    if (!sectionId) {
+                        return;
+                    }
+
+                    const target = document.getElementById(sectionId);
+                    if (!target) {
+                        return;
+                    }
+
+                    event.preventDefault();
+                    const offset = getSectionPillOffset();
+                    const targetTop = target.getBoundingClientRect().top + window.scrollY - offset + 1;
+                    const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
+                    const clampedTop = Math.max(0, Math.min(targetTop, maxScrollTop));
+                    window.scrollTo({ top: clampedTop, behavior: 'auto' });
+                    history.pushState(null, '', '#' + sectionId);
+                    updateSectionPills();
+                });
+            });
+
+            if (sectionPillLinks.length && pillSections.length) {
+                window.addEventListener('scroll', updateSectionPills, { passive: true });
+                window.addEventListener('resize', updateSectionPills);
+                updateSectionPills();
+            }
+
             const navLinks = Array.from(document.querySelectorAll('.nav-link'));
             const sections = navLinks
                 .map(function (link) {
@@ -624,29 +753,6 @@ class ProjectSpaceField {
                     return id ? document.querySelector(id) : null;
                 })
                 .filter(Boolean);
-
-            // Section pill bar — show after scrolling past #overview
-            const pillsBar = document.getElementById('section-pills');
-            const overviewSection = document.getElementById('overview');
-            if (pillsBar && overviewSection) {
-                const pillsObserver = new IntersectionObserver(function (entries) {
-                    entries.forEach(function (entry) {
-                        const past = !entry.isIntersecting;
-                        pillsBar.classList.toggle('is-visible', past);
-                        pillsBar.setAttribute('aria-hidden', String(!past));
-                    });
-                }, { rootMargin: '-64px 0px 0px 0px', threshold: 0 });
-                pillsObserver.observe(overviewSection);
-
-                pillsBar.querySelectorAll('a[href^="#"]').forEach(function (pill) {
-                    pill.addEventListener('click', function (event) {
-                        const hash = pill.getAttribute('href');
-                        if (!hash || hash === '#') return;
-                        event.preventDefault();
-                        scrollToNavbarAnchor(hash);
-                    });
-                });
-            }
 
             if (sections.length && navLinks.length) {
                 const activateLink = function (id) {
@@ -659,12 +765,6 @@ class ProjectSpaceField {
                         link.classList.toggle('text-white/65', !active && darkMode);
                         link.setAttribute('aria-current', active ? 'true' : 'false');
                     });
-                    // Sync active pill
-                    if (pillsBar) {
-                        pillsBar.querySelectorAll('.section-pill[data-section]').forEach(function (pill) {
-                            pill.classList.toggle('is-active', pill.getAttribute('data-section') === id);
-                        });
-                    }
                 };
 
                 const observer = new IntersectionObserver(
