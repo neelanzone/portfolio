@@ -1325,6 +1325,9 @@ document.addEventListener('DOMContentLoaded', () => {
                 }
             });
             link.addEventListener('click', (event) => {
+                if (Date.now() < suppressCardClickUntil) {
+                    event.preventDefault();
+                }
                 event.stopPropagation();
             });
         });
@@ -1389,6 +1392,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let startXCarousel = 0;
         let currentXCarousel = 0;
         let dragPointerType = 'mouse';
+        let activeTouchCarouselId = null;
+        let touchStartXCarousel = 0;
+        let touchStartYCarousel = 0;
+        let touchCurrentXCarousel = 0;
+        let touchDraggingCarousel = false;
+        let suppressCardClickUntil = 0;
         let activeFrontCard = null;
         let pendingFrontCard = null;
         let pendingFrontCardTimeout = null;
@@ -1564,6 +1573,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const totalDrag = e.clientX - startXCarousel;
             const swipeThreshold = Math.min(40, window.innerWidth * 0.07);
             if (Math.abs(totalDrag) > swipeThreshold) {
+                suppressCardClickUntil = Date.now() + 300;
                 const direction = totalDrag < 0 ? 1 : -1;
                 const currentIndex = Math.round(flatCurrentOffset / flatStride);
                 const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
@@ -1573,6 +1583,73 @@ document.addEventListener('DOMContentLoaded', () => {
                 flatTargetOffset = snapIndex * flatStride;
             }
         });
+
+        carouselContainer.addEventListener('touchstart', (event) => {
+            if (isFilingCabinet || !isFlatMode || event.touches.length !== 1) return;
+            const touch = event.touches[0];
+            activeTouchCarouselId = touch.identifier;
+            touchStartXCarousel = touch.clientX;
+            touchStartYCarousel = touch.clientY;
+            touchCurrentXCarousel = touch.clientX;
+            touchDraggingCarousel = false;
+            carouselTrack.style.transition = 'none';
+        }, { passive: true });
+
+        carouselContainer.addEventListener('touchmove', (event) => {
+            if (isFilingCabinet || !isFlatMode || activeTouchCarouselId === null) return;
+            const touch = Array.from(event.touches).find((item) => item.identifier === activeTouchCarouselId);
+            if (!touch) return;
+
+            const totalDx = touch.clientX - touchStartXCarousel;
+            const totalDy = touch.clientY - touchStartYCarousel;
+
+            if (!touchDraggingCarousel) {
+                if (Math.abs(totalDx) < 8) return;
+                if (Math.abs(totalDx) <= Math.abs(totalDy)) {
+                    activeTouchCarouselId = null;
+                    return;
+                }
+                touchDraggingCarousel = true;
+            }
+
+            event.preventDefault();
+            const dx = touch.clientX - touchCurrentXCarousel;
+            touchCurrentXCarousel = touch.clientX;
+            flatTargetOffset -= dx;
+            flatTargetOffset = Math.max(0, Math.min((flatNumCards - 1) * flatStride, flatTargetOffset));
+        }, { passive: false });
+
+        const endTouchCarouselDrag = (event) => {
+            if (isFilingCabinet || !isFlatMode || activeTouchCarouselId === null) return;
+            const touch = Array.from(event.changedTouches).find((item) => item.identifier === activeTouchCarouselId);
+            activeTouchCarouselId = null;
+            if (!touch) return;
+
+            if (!touchDraggingCarousel) {
+                touchDraggingCarousel = false;
+                return;
+            }
+
+            touchDraggingCarousel = false;
+            const totalDrag = touch.clientX - touchStartXCarousel;
+            const swipeThreshold = Math.min(40, window.innerWidth * 0.07);
+            if (Math.abs(totalDrag) > swipeThreshold) {
+                suppressCardClickUntil = Date.now() + 300;
+                const direction = totalDrag < 0 ? 1 : -1;
+                const currentIndex = Math.round(flatCurrentOffset / flatStride);
+                const newIndex = Math.max(0, Math.min(flatNumCards - 1, currentIndex + direction));
+                flatTargetOffset = newIndex * flatStride;
+            } else {
+                const snapIndex = Math.max(0, Math.min(flatNumCards - 1, Math.round(flatCurrentOffset / flatStride)));
+                flatTargetOffset = snapIndex * flatStride;
+            }
+        };
+
+        carouselContainer.addEventListener('touchend', endTouchCarouselDrag, { passive: true });
+        carouselContainer.addEventListener('touchcancel', () => {
+            activeTouchCarouselId = null;
+            touchDraggingCarousel = false;
+        }, { passive: true });
     }
 
     let themeToggleAudioContext;
@@ -1658,90 +1735,9 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     let isAboutSectionVisible = true;
 
-    const stopGlitchTransition = () => {
-        if (!glitchAudioContext || glitchAudioContext.state !== 'running') return;
-        glitchAudioContext.suspend().catch(() => {});
-    };
+    const stopGlitchTransition = () => {};
 
-    const playGlitchTransition = () => {
-        if (!isAboutSectionVisible) {
-            stopGlitchTransition();
-            return;
-        }
-
-        const AudioContextClass = window.AudioContext || window.webkitAudioContext;
-        if (!AudioContextClass) return;
-        glitchAudioContext ??= new AudioContextClass();
-        const ctx = glitchAudioContext;
-        const triggerGlitch = () => {
-            try {
-                const now = ctx.currentTime + 0.002;
-                const output = ctx.createGain();
-                output.gain.setValueAtTime(0.0001, now);
-                output.gain.exponentialRampToValueAtTime(0.08, now + 0.01);
-                output.gain.exponentialRampToValueAtTime(0.0001, now + 0.18);
-                output.connect(ctx.destination);
-
-                const carrier = ctx.createOscillator();
-                carrier.type = 'sawtooth';
-                carrier.frequency.setValueAtTime(210, now);
-                carrier.frequency.exponentialRampToValueAtTime(620, now + 0.045);
-                carrier.frequency.exponentialRampToValueAtTime(180, now + 0.16);
-                const carrierGain = ctx.createGain();
-                carrierGain.gain.setValueAtTime(0.0001, now);
-                carrierGain.gain.exponentialRampToValueAtTime(0.05, now + 0.006);
-                carrierGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.12);
-                carrier.connect(carrierGain);
-                carrierGain.connect(output);
-                carrier.start(now);
-                carrier.stop(now + 0.14);
-
-                const sparkle = ctx.createOscillator();
-                sparkle.type = 'square';
-                sparkle.frequency.setValueAtTime(1400, now);
-                sparkle.frequency.exponentialRampToValueAtTime(780, now + 0.08);
-                const sparkleGain = ctx.createGain();
-                sparkleGain.gain.setValueAtTime(0.0001, now);
-                sparkleGain.gain.exponentialRampToValueAtTime(0.025, now + 0.004);
-                sparkleGain.gain.exponentialRampToValueAtTime(0.0001, now + 0.07);
-                sparkle.connect(sparkleGain);
-                sparkleGain.connect(output);
-                sparkle.start(now);
-                sparkle.stop(now + 0.08);
-
-                if (!glitchNoiseBuffer) {
-                    glitchNoiseBuffer = ctx.createBuffer(1, Math.max(1, Math.floor(ctx.sampleRate * 0.14)), ctx.sampleRate);
-                    const channel = glitchNoiseBuffer.getChannelData(0);
-                    for (let index = 0; index < channel.length; index += 1) {
-                        channel[index] = (Math.random() * 2 - 1) * Math.pow(1 - index / channel.length, 1.4);
-                    }
-                }
-
-                const noise = ctx.createBufferSource();
-                noise.buffer = glitchNoiseBuffer;
-                const noiseFilter = ctx.createBiquadFilter();
-                noiseFilter.type = 'bandpass';
-                noiseFilter.frequency.setValueAtTime(2200, now);
-                noiseFilter.Q.value = 1.6;
-                const noiseGain = ctx.createGain();
-                noiseGain.gain.setValueAtTime(0.0001, now);
-                noiseGain.exponentialRampToValueAtTime(0.04, now + 0.003);
-                noiseGain.exponentialRampToValueAtTime(0.0001, now + 0.09);
-                noise.connect(noiseFilter);
-                noiseFilter.connect(noiseGain);
-                noiseGain.connect(output);
-                noise.start(now);
-                noise.stop(now + 0.1);
-            } catch {
-                // Keep the visual title transition running even if Web Audio glitches.
-            }
-        };
-        if (ctx.state === 'suspended') {
-            ctx.resume().then(triggerGlitch).catch(() => {});
-            return;
-        }
-        triggerGlitch();
-    };
+    const playGlitchTransition = () => {};
     // Theme Toggle Logic
     const themeToggleButtons = document.querySelectorAll('[data-theme-toggle]');
     const menuToggleButton = document.getElementById('menu-toggle');
@@ -2031,12 +2027,14 @@ document.addEventListener('DOMContentLoaded', () => {
     const resetTab = document.getElementById('reset-tab');
     let isPulling = false;
     let pullStartY = 0;
+    let pullPointerId = null;
 
     if (resetTab) {
         const onPullEnd = (clientY) => {
             if (!isPulling) return;
             isPulling = false;
-            const dy = Math.max(0, pullStartY - clientY);
+            pullPointerId = null;
+            const dy = Math.max(0, clientY - pullStartY);
             resetTab.style.transition = 'transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1)';
             resetTab.style.setProperty('--pull-y', '0px');
             if (dy > 80) {
@@ -2059,7 +2057,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resetTab.addEventListener('touchmove', (e) => {
             if (!isPulling) return;
             e.preventDefault();
-            const dy = Math.max(0, pullStartY - e.touches[0].clientY);
+            const dy = Math.max(0, e.touches[0].clientY - pullStartY);
             resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
         }, { passive: false });
 
@@ -2072,22 +2070,33 @@ document.addEventListener('DOMContentLoaded', () => {
             resetTab.style.setProperty('--pull-y', '0px');
         });
 
-        // Mouse fallback for desktop — use window-level move/up so drag continues outside element
-        resetTab.addEventListener('mousedown', (e) => {
+        // Desktop pointer handling — capture the pointer so the pull remains active
+        // even when the cursor leaves the narrow tab.
+        resetTab.addEventListener('pointerdown', (e) => {
+            if (e.pointerType === 'touch') return;
             e.preventDefault();
             isPulling = true;
+            pullPointerId = e.pointerId;
             pullStartY = e.clientY;
             resetTab.style.transition = 'none';
+            resetTab.setPointerCapture(e.pointerId);
         });
-        window.addEventListener('mousemove', (e) => {
-            if (!isPulling) return;
-            const dy = Math.max(0, pullStartY - e.clientY);
+        resetTab.addEventListener('pointermove', (e) => {
+            if (!isPulling || pullPointerId !== e.pointerId) return;
+            const dy = Math.max(0, e.clientY - pullStartY);
             resetTab.style.setProperty('--pull-y', `${Math.min(dy, 120)}px`);
         });
-        window.addEventListener('mouseup', (e) => {
-            if (!isPulling) return;
+        const endDesktopPull = (e) => {
+            if (!isPulling || pullPointerId !== e.pointerId) return;
+            try {
+                resetTab.releasePointerCapture(e.pointerId);
+            } catch {
+                // Ignore release errors if capture has already been cleared.
+            }
             onPullEnd(e.clientY);
-        });
+        };
+        resetTab.addEventListener('pointerup', endDesktopPull);
+        resetTab.addEventListener('pointercancel', endDesktopPull);
     }
 
     const contactScene = document.querySelector('.contact-notebook-scene');

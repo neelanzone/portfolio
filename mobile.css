@@ -19,6 +19,18 @@
         display: flex;
     }
 
+    /* Safari is more reliable when the fixed navbar itself participates in hit-testing
+       instead of relying on pointer-events being re-enabled only on descendants. */
+    .navbar {
+        pointer-events: auto;
+    }
+
+    .logo,
+    .mobile-nav-actions,
+    .mobile-nav-actions * {
+        pointer-events: auto;
+    }
+
     /* +30% button base — cap stays the same; parent context beats max-width:480px rule */
     .mobile-nav-actions .menu-toggle {
         width: 62px;
@@ -107,7 +119,7 @@
         width: 100vw;
         height: calc(65vw * 2 + 1.5rem);
         padding: 0;
-        touch-action: pan-y;
+        touch-action: pan-y pinch-zoom;
     }
 
     .carousel-track {

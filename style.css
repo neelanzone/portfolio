@@ -1770,10 +1770,11 @@ a:hover {
     align-items: center;
     justify-content: flex-end; /* Pack text to the bottom curve */
     cursor: grab;
-    z-index: 1; /* Hide strictly under the Z:2 photo */
-    /* Push it down slightly by default to reveal PULL, plus dynamic drag */
-    transform: translateY(calc(42px - var(--pull-y, 0px)));
+    z-index: 1; /* Sit behind the portrait so only the exposed lower tab is visible */
+    /* Rest below the portrait and travel farther downward as the user pulls */
+    transform: translateY(calc(42px + var(--pull-y, 0px)));
     touch-action: none;
+    pointer-events: auto;
     box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
 }
 
@@ -3065,8 +3066,6 @@ footer {
         animation: none !important;
     }
 }
-
-
 
 
 
