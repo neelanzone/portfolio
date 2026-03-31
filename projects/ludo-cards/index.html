@@ -1,0 +1,815 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="dark-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ludo Cards | Neel</title>
+    <meta name="description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Ludo Cards | Neel">
+    <meta property="og:description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Ludo Cards | Neel">
+    <meta name="twitter:description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>(function(){try{var storedTheme=localStorage.getItem('theme');var themeClass=storedTheme==='light'?'light-theme':'dark-theme';document.documentElement.classList.remove('light-theme','dark-theme');document.documentElement.classList.add(themeClass);}catch(error){document.documentElement.classList.add('dark-theme');}})();</script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../_shared/tailwind-config.js"></script>
+    <link rel="stylesheet" href="../_shared/project-reference.css">
+    <link rel="stylesheet" href="../_shared/project-system.css">
+    <link rel="stylesheet" href="../../shared/project-navbar.css">
+    <link rel="stylesheet" href="../_templates/template-replication/ludo-bento.css">
+</head>
+<body class="project-page template-ludo-bento theme-art overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
+    <div data-navbar-mount data-navbar-variant="project" data-to-root="../../"></div>
+    <main class="ludo-bento-stage">
+        <div class="ludo-bento" aria-label="Ludo Cards bento layout">
+            <section class="ludo-bento__topfold">
+                <article class="ludo-bento__hero-card">
+                    <div class="ludo-bento__hero-content">
+                        <header class="ludo-bento__hero-header">
+                            <h1>Ludo Cards</h1>
+                            <div class="ludo-bento__hero-tags">
+                                <span>UX-UI</span>
+                                <span>Game Design</span>
+                            </div>
+                        </header>
+                        
+        <div class="ludo-bento__hero-tabs" role="tablist" aria-label="Ludo Cards project summary tabs">
+        <button
+            class="ludo-bento__hero-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="ludo-hero-panel-problem"
+            id="ludo-hero-tab-problem"
+            data-ludo-hero-tab="problem"
+        >Problem</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-approach"
+            id="ludo-hero-tab-approach"
+            data-ludo-hero-tab="approach"
+        >Approach</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-outcome"
+            id="ludo-hero-tab-outcome"
+            data-ludo-hero-tab="outcome"
+        >Outcome</button>
+        </div>
+        <div class="ludo-bento__hero-panels">
+        <div
+            class="ludo-bento__hero-panel-body is-active"
+            id="ludo-hero-panel-problem"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-problem"
+            
+            data-ludo-hero-panel="problem"
+        >
+            <p class="ludo-bento__hero-summary">Classic Ludo often leaves too much to chance, which elevates tension before the dice roll but limits tactical depth and player agency.</p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-approach"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-approach"
+            hidden
+            data-ludo-hero-panel="approach"
+        >
+            <p class="ludo-bento__hero-summary">RPG mechanics, narrative framing, and deck-based abilities were layered onto the familiar loop so each turn could reward foresight instead of a single lucky throw.</p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-outcome"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-outcome"
+            hidden
+            data-ludo-hero-panel="outcome"
+        >
+            <p class="ludo-bento__hero-summary">Intentional, immersive play rooted in decision making, tradeoff acknowledgement, and player agency.</p>
+        </div>
+        </div>
+                        
+        <button class="ludo-bento__quote-stack" type="button" data-ludo-quote-stack data-active-quote="0" aria-label="Show next playtester quote">
+            
+                <span hidden data-ludo-quote-source data-ludo-quote-index="0" data-ludo-quote-source-text="I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all." data-ludo-quote-source-meta="anonymous - 28 years old"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="1" data-ludo-quote-source-text="It&#39;s frustrating to wait for a 1 or 6 to get my pawn out, feels like I&#39;m losing before the game even begins." data-ludo-quote-source-meta="playtester, age 12"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="2" data-ludo-quote-source-text="when someone takes out my token right before the safe passage to the finish, I&#39;m helpless." data-ludo-quote-source-meta="anonymous, age 11"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="3" data-ludo-quote-source-text="I&#39;d love a reason to care about which pawn to move, not just which one is safest" data-ludo-quote-source-meta="playtester, age 29"></span>
+            <span class="ludo-bento__quote-deck">
+                <span class="ludo-bento__quote-layer ludo-bento__quote-layer--third" aria-hidden="true"></span>
+                <span class="ludo-bento__quote-layer ludo-bento__quote-layer--second" aria-hidden="true"></span>
+                <span class="ludo-bento__quote-card">
+                    <span class="ludo-bento__quote-text" data-ludo-quote-current-text>I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all.</span>
+                    <span class="ludo-bento__quote-footer">
+                        <span class="ludo-bento__quote-meta" data-ludo-quote-current-meta>anonymous - 28 years old</span>
+                        <span class="ludo-bento__quote-count" data-ludo-quote-current-count>1/4</span>
+                    </span>
+                </span>
+            </span>
+        </button>
+                    </div>
+                </article>
+                <div class="ludo-bento__top-grid" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
+                    
+        <article class="ludo-bento__info-card" data-ludo-info-card data-ludo-info-origin="left" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Narrative Design">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Narrative<br>Design</h2>
+                        <p>The building blocks of a basic story - the hero&#39;s journey, factions, spatial context - already exist in Classic Ludo. We just never saw it that way. We rolled dice, raced pawns, and took out competition when the dice gods let us. It is nostalgic, and I felt something was missing - lore.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__legend-grid">
+                
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--sun"></span>
+                        Mountains
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--sea"></span>
+                        Oceans
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--leaf"></span>
+                        Valleys
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--gold"></span>
+                        Sky
+                    </span>
+            </div>
+                    </div>
+                </div>
+                
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Worldbuilding Hooks</h3>
+                    <p>Terrain names turned each lane into a setting cue, which helped movement feel more like traversal through regions than a color-coded sprint.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>Narrative Payoff</h3>
+                    <p>That framing opened room for quests, regional hazards, and card abilities that could feel anchored to the world instead of randomly assigned to a pawn.</p>
+                </div>
+        </div>
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+        <article class="ludo-bento__info-card" data-ludo-info-card data-ludo-info-origin="center" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Board Game Design">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Board Game<br>Design</h2>
+                        <p>Ludo Cards was born from the idea of adding RPG elements to Classic Ludo. A familiar game gets more interesting when players can plan instead of only react.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__stat-grid">
+                
+                    <span class="ludo-bento__stat-item">
+                        <span class="ludo-bento__stat-icon-frame" aria-hidden="true">
+                            <img src="../../Assets/Icons/armor-1.png" alt="" loading="lazy" decoding="async">
+                        </span>
+                        <span>Armour</span>
+                    </span>
+                    <span class="ludo-bento__stat-item">
+                        <span class="ludo-bento__stat-icon-frame" aria-hidden="true">
+                            <img src="../../Assets/Icons/weapons-1.png" alt="" loading="lazy" decoding="async">
+                        </span>
+                        <span>Weapons</span>
+                    </span>
+                    <span class="ludo-bento__stat-item">
+                        <span class="ludo-bento__stat-icon-frame" aria-hidden="true">
+                            <img src="../../Assets/Icons/hitpoints-1.png" alt="" loading="lazy" decoding="async">
+                        </span>
+                        <span>Hitpoints</span>
+                    </span>
+            </div>
+                    </div>
+                </div>
+                
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Placeholder 01</h3>
+                    <p>Placeholder copy for balancing combat loops, reward pacing, and how defensive tools should offset aggressive play.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>Placeholder 02</h3>
+                    <p>Placeholder copy for encounter tuning, item economy, and how player decisions stay legible across longer matches.</p>
+                </div>
+        </div>
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+        <article class="ludo-bento__info-card" data-ludo-info-card data-ludo-info-origin="right" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Digital Development">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Digital<br>Development</h2>
+                        <p>By playtesting the physical game, I realised that the characters, action cards, traps, and board events were too complex for players to keep track of. There was now a need for a digital game.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__development-support">
+                <div class="ludo-bento__development-block">
+                    <h3 class="ludo-bento__support-heading">Vibe Coded Prototype</h3>
+                    
+        <div class="ludo-bento__timeline">
+            
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--live"></span>
+                        <span class="ludo-bento__timeline-line"></span>
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 01</span>
+                        <strong class="ludo-bento__timeline-title">Remote Multiplayer</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--live" aria-hidden="true"></span>Live</span>
+                    </span>
+                </div>
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--progress"></span>
+                        <span class="ludo-bento__timeline-line"></span>
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 02</span>
+                        <strong class="ludo-bento__timeline-title">Characters</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--progress" aria-hidden="true"></span>In Progress</span>
+                    </span>
+                </div>
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--tbd"></span>
+                        
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 03</span>
+                        <strong class="ludo-bento__timeline-title">Traps &amp; Events</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--tbd" aria-hidden="true"></span>TBD</span>
+                    </span>
+                </div>
+        </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+                
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+                </div>
+            </section>
+            <section class="ludo-bento__rail-card" id="artifacts">
+                
+        <div class="ludo-bento__rail-header">
+            <div class="ludo-bento__rail-tabs" role="tablist" aria-label="Ludo RPG asset groups">
+        <button
+            class="ludo-bento__rail-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="ludo-card-group-characters-01"
+            id="ludo-card-tab-characters-01"
+            data-ludo-card-tab="characters-01"
+        >Characters Iteration 01</button>
+        <button
+            class="ludo-bento__rail-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-card-group-characters-02"
+            id="ludo-card-tab-characters-02"
+            data-ludo-card-tab="characters-02"
+        >Characters Iteration 02</button>
+        <button
+            class="ludo-bento__rail-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-card-group-trap-cards"
+            id="ludo-card-tab-trap-cards"
+            data-ludo-card-tab="trap-cards"
+        >Trap Cards</button>
+        <button
+            class="ludo-bento__rail-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-card-group-action-cards"
+            id="ludo-card-tab-action-cards"
+            data-ludo-card-tab="action-cards"
+        >Action Cards</button>
+            </div>
+        </div>
+        <div class="ludo-bento__rail-panels">
+        <div
+            class="ludo-bento__card-group is-active"
+            id="ludo-card-group-characters-01"
+            role="tabpanel"
+            aria-labelledby="ludo-card-tab-characters-01"
+            
+            data-ludo-card-panel="characters-01"
+        >
+            <div class="ludo-bento__card-strip" tabindex="0" aria-label="Characters Iteration 01 image strip">
+                
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="0"
+            data-ludo-card-id="gulbahar-speed"
+            data-ludo-card-title="Gulbahar / Speedster"
+            data-ludo-card-name="Gulbahar"
+            data-ludo-card-role="Speedster"
+            data-ludo-card-body="Gulbahar explores the speedster archetype inside the Ludo RPG system. These kits are tuned for momentum, lane pressure, and fast repositioning across the board. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gulbahar-speed.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-gulbahar-speed.jpg"
+            aria-label="Open Gulbahar / Speedster in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gulbahar-speed.jpg" alt="Ludo RPG flat character card Gulbahar Speedster" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="1"
+            data-ludo-card-id="tariq-speed"
+            data-ludo-card-title="Tariq / Speedster"
+            data-ludo-card-name="Tariq"
+            data-ludo-card-role="Speedster"
+            data-ludo-card-body="Tariq explores the speedster archetype inside the Ludo RPG system. These kits are tuned for momentum, lane pressure, and fast repositioning across the board. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-tariq-speed.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-tariq-speed.jpg"
+            aria-label="Open Tariq / Speedster in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-tariq-speed.jpg" alt="Ludo RPG flat character card Tariq Speedster" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="2"
+            data-ludo-card-id="veera-speed"
+            data-ludo-card-title="Veera / Speedster"
+            data-ludo-card-name="Veera"
+            data-ludo-card-role="Speedster"
+            data-ludo-card-body="Veera explores the speedster archetype inside the Ludo RPG system. These kits are tuned for momentum, lane pressure, and fast repositioning across the board. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-veera-speed.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-veera-speed.jpg"
+            aria-label="Open Veera / Speedster in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-veera-speed.jpg" alt="Ludo RPG flat character card Veera Speedster" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="3"
+            data-ludo-card-id="velan-speed"
+            data-ludo-card-title="Velan / Speedster"
+            data-ludo-card-name="Velan"
+            data-ludo-card-role="Speedster"
+            data-ludo-card-body="Velan explores the speedster archetype inside the Ludo RPG system. These kits are tuned for momentum, lane pressure, and fast repositioning across the board. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-velan-speed.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-velan-speed.jpg"
+            aria-label="Open Velan / Speedster in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-velan-speed.jpg" alt="Ludo RPG flat character card Velan Speedster" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="4"
+            data-ludo-card-id="chemban-tank"
+            data-ludo-card-title="Chemban / Tank"
+            data-ludo-card-name="Chemban"
+            data-ludo-card-role="Tank"
+            data-ludo-card-body="Chemban explores the tank archetype inside the Ludo RPG system. These kits are built around endurance, threat absorption, and holding tactical space for longer. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-chemban-tank.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-chemban-tank.jpg"
+            aria-label="Open Chemban / Tank in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-chemban-tank.jpg" alt="Ludo RPG flat character card Chemban Tank" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="5"
+            data-ludo-card-id="maari-tank"
+            data-ludo-card-title="Maari / Tank"
+            data-ludo-card-name="Maari"
+            data-ludo-card-role="Tank"
+            data-ludo-card-body="Maari explores the tank archetype inside the Ludo RPG system. These kits are built around endurance, threat absorption, and holding tactical space for longer. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maari-tank.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-maari-tank.jpg"
+            aria-label="Open Maari / Tank in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maari-tank.jpg" alt="Ludo RPG flat character card Maari Tank" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="6"
+            data-ludo-card-id="noorjehan-tank"
+            data-ludo-card-title="Noorjehan / Tank"
+            data-ludo-card-name="Noorjehan"
+            data-ludo-card-role="Tank"
+            data-ludo-card-body="Noorjehan explores the tank archetype inside the Ludo RPG system. These kits are built around endurance, threat absorption, and holding tactical space for longer. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-noorjehan-tank.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-noorjehan-tank.jpg"
+            aria-label="Open Noorjehan / Tank in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-noorjehan-tank.jpg" alt="Ludo RPG flat character card Noorjehan Tank" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="7"
+            data-ludo-card-id="pratima-tank"
+            data-ludo-card-title="Pratima / Tank"
+            data-ludo-card-name="Pratima"
+            data-ludo-card-role="Tank"
+            data-ludo-card-body="Pratima explores the tank archetype inside the Ludo RPG system. These kits are built around endurance, threat absorption, and holding tactical space for longer. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-pratima-tank.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-pratima-tank.jpg"
+            aria-label="Open Pratima / Tank in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-pratima-tank.jpg" alt="Ludo RPG flat character card Pratima Tank" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="8"
+            data-ludo-card-id="kali-assassin"
+            data-ludo-card-title="Kali / Assassin"
+            data-ludo-card-name="Kali"
+            data-ludo-card-role="Assassin"
+            data-ludo-card-body="Kali explores the assassin archetype inside the Ludo RPG system. These kits sharpen timing, precision, and opportunistic plays that punish hesitation. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kali-assassin.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-kali-assassin.jpg"
+            aria-label="Open Kali / Assassin in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kali-assassin.jpg" alt="Ludo RPG flat character card Kali Assassin" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="9"
+            data-ludo-card-id="kalya-assassin"
+            data-ludo-card-title="Kalya / Assassin"
+            data-ludo-card-name="Kalya"
+            data-ludo-card-role="Assassin"
+            data-ludo-card-body="Kalya explores the assassin archetype inside the Ludo RPG system. These kits sharpen timing, precision, and opportunistic plays that punish hesitation. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kalya-assassin.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-kalya-assassin.jpg"
+            aria-label="Open Kalya / Assassin in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kalya-assassin.jpg" alt="Ludo RPG flat character card Kalya Assassin" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="10"
+            data-ludo-card-id="maya-assassin"
+            data-ludo-card-title="Maya / Assassin"
+            data-ludo-card-name="Maya"
+            data-ludo-card-role="Assassin"
+            data-ludo-card-body="Maya explores the assassin archetype inside the Ludo RPG system. These kits sharpen timing, precision, and opportunistic plays that punish hesitation. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maya-assassin.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-maya-assassin.jpg"
+            aria-label="Open Maya / Assassin in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maya-assassin.jpg" alt="Ludo RPG flat character card Maya Assassin" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="11"
+            data-ludo-card-id="raktim-assassin"
+            data-ludo-card-title="Raktim / Assassin"
+            data-ludo-card-name="Raktim"
+            data-ludo-card-role="Assassin"
+            data-ludo-card-body="Raktim explores the assassin archetype inside the Ludo RPG system. These kits sharpen timing, precision, and opportunistic plays that punish hesitation. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-raktim-assassin.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-raktim-assassin.jpg"
+            aria-label="Open Raktim / Assassin in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-raktim-assassin.jpg" alt="Ludo RPG flat character card Raktim Assassin" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="12"
+            data-ludo-card-id="kaveri-cleric"
+            data-ludo-card-title="Kaveri / Cleric"
+            data-ludo-card-name="Kaveri"
+            data-ludo-card-role="Cleric"
+            data-ludo-card-body="Kaveri explores the cleric archetype inside the Ludo RPG system. These kits focus on sustain, recovery, and stabilising a match after a costly swing. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kaveri-cleric.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-kaveri-cleric.jpg"
+            aria-label="Open Kaveri / Cleric in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kaveri-cleric.jpg" alt="Ludo RPG flat character card Kaveri Cleric" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="13"
+            data-ludo-card-id="prasanna-cleric"
+            data-ludo-card-title="Prasanna / Cleric"
+            data-ludo-card-name="Prasanna"
+            data-ludo-card-role="Cleric"
+            data-ludo-card-body="Prasanna explores the cleric archetype inside the Ludo RPG system. These kits focus on sustain, recovery, and stabilising a match after a costly swing. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-prasanna-cleric.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-prasanna-cleric.jpg"
+            aria-label="Open Prasanna / Cleric in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-prasanna-cleric.jpg" alt="Ludo RPG flat character card Prasanna Cleric" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="14"
+            data-ludo-card-id="bhairava-necromancer"
+            data-ludo-card-title="Bhairava / Necromancer"
+            data-ludo-card-name="Bhairava"
+            data-ludo-card-role="Necromancer"
+            data-ludo-card-body="Bhairava explores the necromancer archetype inside the Ludo RPG system. These kits lean into attrition, lingering threat, and consequences that outlast a single turn. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-bhairava-necromancer.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-bhairava-necromancer.jpg"
+            aria-label="Open Bhairava / Necromancer in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-bhairava-necromancer.jpg" alt="Ludo RPG flat character card Bhairava Necromancer" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="15"
+            data-ludo-card-id="nishi-necromancer"
+            data-ludo-card-title="Nishi / Necromancer"
+            data-ludo-card-name="Nishi"
+            data-ludo-card-role="Necromancer"
+            data-ludo-card-body="Nishi explores the necromancer archetype inside the Ludo RPG system. These kits lean into attrition, lingering threat, and consequences that outlast a single turn. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-nishi-necromancer.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-nishi-necromancer.jpg"
+            aria-label="Open Nishi / Necromancer in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-nishi-necromancer.jpg" alt="Ludo RPG flat character card Nishi Necromancer" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="16"
+            data-ludo-card-id="gargi-mystic"
+            data-ludo-card-title="Gargi / Mystic"
+            data-ludo-card-name="Gargi"
+            data-ludo-card-role="Mystic"
+            data-ludo-card-body="Gargi explores the mystic archetype inside the Ludo RPG system. These kits widen the decision space with flexible abilities, layered effects, and high agency turns. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gargi-mystic.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-gargi-mystic.jpg"
+            aria-label="Open Gargi / Mystic in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gargi-mystic.jpg" alt="Ludo RPG flat character card Gargi Mystic" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="17"
+            data-ludo-card-id="ilango-mystic"
+            data-ludo-card-title="Ilango / Mystic"
+            data-ludo-card-name="Ilango"
+            data-ludo-card-role="Mystic"
+            data-ludo-card-body="Ilango explores the mystic archetype inside the Ludo RPG system. These kits widen the decision space with flexible abilities, layered effects, and high agency turns. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-ilango-mystic.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-ilango-mystic.jpg"
+            aria-label="Open Ilango / Mystic in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-ilango-mystic.jpg" alt="Ludo RPG flat character card Ilango Mystic" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="18"
+            data-ludo-card-id="kabir-mystic"
+            data-ludo-card-title="Kabir / Mystic"
+            data-ludo-card-name="Kabir"
+            data-ludo-card-role="Mystic"
+            data-ludo-card-body="Kabir explores the mystic archetype inside the Ludo RPG system. These kits widen the decision space with flexible abilities, layered effects, and high agency turns. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kabir-mystic.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-kabir-mystic.jpg"
+            aria-label="Open Kabir / Mystic in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kabir-mystic.jpg" alt="Ludo RPG flat character card Kabir Mystic" loading="lazy" decoding="async" draggable="false">
+        </button>
+        <button
+            class="ludo-bento__card-frame"
+            type="button"
+            data-ludo-card-trigger
+            data-ludo-card-group="characters-01"
+            data-ludo-card-index="19"
+            data-ludo-card-id="rafi-mystic"
+            data-ludo-card-title="Rafi / Mystic"
+            data-ludo-card-name="Rafi"
+            data-ludo-card-role="Mystic"
+            data-ludo-card-body="Rafi explores the mystic archetype inside the Ludo RPG system. These kits widen the decision space with flexible abilities, layered effects, and high agency turns. The fullscreen viewer pairs the flat exploration with its stylised alternate so both visual directions can be compared in motion and detail."
+            data-ludo-card-flat="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-rafi-mystic.jpg"
+            data-ludo-card-stylised="../../Assets/ludo-rpg-cards/character-iteration-01-stylised/character-stylised-rafi-mystic.jpg"
+            aria-label="Open Rafi / Mystic in fullscreen viewer"
+        >
+            <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-rafi-mystic.jpg" alt="Ludo RPG flat character card Rafi Mystic" loading="lazy" decoding="async" draggable="false">
+        </button>
+            </div>
+        </div>
+        <div
+            class="ludo-bento__card-group"
+            id="ludo-card-group-characters-02"
+            role="tabpanel"
+            aria-labelledby="ludo-card-tab-characters-02"
+            hidden
+            data-ludo-card-panel="characters-02"
+        >
+            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Characters Iteration 02 image strip">
+                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            </div>
+        </div>
+        <div
+            class="ludo-bento__card-group"
+            id="ludo-card-group-trap-cards"
+            role="tabpanel"
+            aria-labelledby="ludo-card-tab-trap-cards"
+            hidden
+            data-ludo-card-panel="trap-cards"
+        >
+            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Trap Cards image strip">
+                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            </div>
+        </div>
+        <div
+            class="ludo-bento__card-group"
+            id="ludo-card-group-action-cards"
+            role="tabpanel"
+            aria-labelledby="ludo-card-tab-action-cards"
+            hidden
+            data-ludo-card-panel="action-cards"
+        >
+            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Action Cards image strip">
+                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            </div>
+        </div>
+        </div>
+            </section>
+            <section class="ludo-bento__actions-row" id="project-links">
+                
+        <a class="ludo-bento__nav-arrow" href="../venture-hub/index.html" aria-label="Prev. Project: Venture Hub">
+            <span class="ludo-bento__nav-arrow-ring" aria-hidden="true">
+                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="ludo-bento__nav-arrow-label">Prev. Project</span>
+            <span class="ludo-bento__nav-arrow-title">Venture Hub</span>
+        </a>
+                <div class="ludo-bento__actions-grid">
+                    
+        <article class="ludo-bento__cta-card">
+            <h3>Web App Prototype</h3>
+            <p>Interactive prototype with remote multiplayer live.</p>
+            <span class="ludo-bento__cta-pill" aria-hidden="true">Play</span>
+        </article>
+        <article class="ludo-bento__cta-card">
+            <h3>Reflections</h3>
+            <p>Notes accumulated through the journey. Challenges, constraints, workarounds.</p>
+            <span class="ludo-bento__cta-pill" aria-hidden="true">Read</span>
+        </article>
+        <article class="ludo-bento__cta-card">
+            <h3>Expansion Pack</h3>
+            <p>A card expansion pack that you can download, print, and play.</p>
+            <span class="ludo-bento__cta-pill" aria-hidden="true">Download</span>
+        </article>
+                </div>
+                
+        <a class="ludo-bento__nav-arrow" href="../managed-asset-search/index.html" aria-label="Next Project: Managed Asset Search">
+            <span class="ludo-bento__nav-arrow-ring" aria-hidden="true">
+                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            </span>
+            <span class="ludo-bento__nav-arrow-label">Next Project</span>
+            <span class="ludo-bento__nav-arrow-title">Managed Asset Search</span>
+        </a>
+            </section>
+        </div>
+    </main>
+    
+    <div class="ludo-bento__lightbox" data-ludo-lightbox hidden aria-hidden="true">
+        <section class="ludo-bento__lightbox-shell" role="dialog" aria-modal="true" aria-label="Fullscreen character viewer">
+            <button class="ludo-bento__lightbox-close" type="button" data-ludo-lightbox-close aria-label="Close fullscreen character viewer">X</button>
+            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--prev" type="button" data-ludo-lightbox-prev aria-label="View previous character card">
+                <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+                <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            </button>
+            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--next" type="button" data-ludo-lightbox-next aria-label="View next character card">
+                <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+                <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            </button>
+            <div class="ludo-bento__lightbox-stage">
+                <div class="ludo-bento__lightbox-pills" aria-hidden="true">
+                    <p class="ludo-bento__lightbox-pill" data-ludo-lightbox-role></p>
+                    <p class="ludo-bento__lightbox-pill" data-ludo-lightbox-count></p>
+                </div>
+                <aside class="ludo-bento__lightbox-side ludo-bento__lightbox-side--left" aria-live="polite">
+                    <h3 class="ludo-bento__lightbox-side-title" data-ludo-lightbox-copy-title>Flat</h3>
+                    <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-copy-body></p>
+                </aside>
+                <aside class="ludo-bento__lightbox-side ludo-bento__lightbox-side--right" aria-live="polite">
+                    <div class="ludo-bento__lightbox-side-row">
+                        <h3 class="ludo-bento__lightbox-side-title" data-ludo-lightbox-detail-name-title>Character name</h3>
+                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-name-body>Placeholder copy for this character will go here.</p>
+                    </div>
+                    <div class="ludo-bento__lightbox-side-row">
+                        <h3 class="ludo-bento__lightbox-side-title" data-ludo-lightbox-detail-class-title>Character class</h3>
+                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-class-body>Placeholder copy for this class will go here.</p>
+                    </div>
+                </aside>
+                <div class="ludo-bento__lightbox-canvas" data-ludo-lightbox-canvas></div>
+                <div class="ludo-bento__lightbox-versions" role="tablist" aria-label="Card render styles">
+                    <button class="ludo-bento__lightbox-version is-active" type="button" data-ludo-lightbox-version="flat" aria-pressed="true">Flat</button>
+                    <button class="ludo-bento__lightbox-version" type="button" data-ludo-lightbox-version="stylised" aria-pressed="false">Stylised</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+        <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
+            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
+                <div class="flex items-center gap-[1.15rem]">
+                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                </div>
+            </div>
+        </footer>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="../../shared/navbar.js" defer></script>
+    <script src="../_shared/project-page.js" defer></script>
+    <script src="../_templates/template-replication/ludo-bento.js" defer></script>
+</body>
+</html>

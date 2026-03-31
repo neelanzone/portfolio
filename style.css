@@ -491,19 +491,17 @@ a:hover {
 }
 
 :root.light-theme .work-image {
-    box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+    box-shadow: none;
 }
 
 :root.light-theme .work-card:hover .work-image {
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.1), 0 0 40px rgba(255, 255, 255, 0.5);
+    box-shadow: none;
 }
 
 :root.light-theme .work-info::before {
     background: rgba(247, 242, 232, 0.96);
     border-top: 1px solid rgba(17, 17, 17, 0.08);
-    box-shadow:
-        0 -10px 24px rgba(0, 0, 0, 0.08),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 :root.light-theme .work-info h3 {
@@ -780,6 +778,38 @@ a:hover {
         inset 0 1px 0 rgba(255, 255, 255, 0.9),
         inset 0 -2px 4px rgba(0, 0, 0, 0.12),
         0 1px 2px rgba(0, 0, 0, 0.08);
+}
+
+.navbar .theme-toggle,
+.navbar .menu-toggle {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.35),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.12) !important;
+}
+
+.navbar .theme-toggle__cap,
+.navbar .theme-toggle:hover .theme-toggle__cap,
+.navbar .menu-toggle__cap,
+.navbar .menu-toggle:hover .menu-toggle__cap {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.4) !important;
+}
+
+:root.light-theme .theme-toggle,
+.navbar.navbar-light .theme-toggle {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.08) !important;
+}
+
+:root.light-theme .theme-toggle__cap,
+:root.light-theme .menu-toggle__cap,
+.navbar.navbar-light .theme-toggle__cap,
+.navbar.navbar-light .menu-toggle__cap {
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+        inset 0 -2px 4px rgba(0, 0, 0, 0.12) !important;
 }
 
 .carousel-dots {
@@ -1473,8 +1503,7 @@ a:hover {
     border: 1px solid rgba(255, 255, 255, 0.1);
     box-shadow:
         inset 0 1px 0 rgba(255, 255, 255, 0.08),
-        inset 0 -1px 0 rgba(0, 0, 0, 0.28),
-        0 4px 10px rgba(0, 0, 0, 0.12);
+        inset 0 -1px 0 rgba(0, 0, 0, 0.28);
     opacity: 0.88;
     pointer-events: none;
     transform: translateZ(calc(var(--work-card-back-offset) * -1));
@@ -1485,7 +1514,9 @@ a:hover {
 .work-card.is-active .work-card-shell::before {
     opacity: 0.24;
     transform: translateZ(calc(var(--work-card-back-offset) * -0.7));
-    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.1);
+    box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.08),
+        inset 0 -1px 0 rgba(0, 0, 0, 0.28);
 }
 
 .title-card {
@@ -1516,14 +1547,12 @@ a:hover {
     z-index: 1;
     transform-style: preserve-3d;
     transform: translateZ(1px);
-    /* Skeumorphic resting shadow */
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25);
+    box-shadow: none;
     transition: box-shadow 0.5s cubic-bezier(0.19, 1, 0.22, 1);
 }
 
 .work-card:hover .work-image {
-    /* Deeper shadow and a brighter, more intense backlight glow */
-    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.2);
+    box-shadow: none;
 }
 
 /* Glass/Plastic Rim Lighting Overlay */
@@ -1667,9 +1696,7 @@ a:hover {
     pointer-events: none;
     background: rgba(9, 10, 13, 0.9);
     border-top: 1px solid rgba(255, 255, 255, 0.08);
-    box-shadow:
-        0 -10px 24px rgba(0, 0, 0, 0.18),
-        inset 0 1px 0 rgba(255, 255, 255, 0.02);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
 }
 
 .work-info h3 {
@@ -1759,6 +1786,7 @@ a:hover {
 
 .pull-tab {
     position: absolute;
+    left: 50%;
     bottom: 0px; /* Attach to bottom of wrapper */
     background: #e63946;
     color: #fff;
@@ -1774,7 +1802,7 @@ a:hover {
     cursor: grab;
     z-index: 1; /* Sit behind the portrait so only the exposed lower tab is visible */
     /* Rest below the portrait and travel farther downward as the user pulls */
-    transform: translateY(calc(42px + var(--pull-y, 0px)));
+    transform: translateX(calc(-50% - 10%)) translateY(calc(42px + var(--pull-y, 0px)));
     touch-action: none;
     pointer-events: auto;
     box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
@@ -1859,8 +1887,7 @@ a:hover {
     gap: 6px;
     opacity: 0;
     pointer-events: none; /* Until hovered */
-    /* Add a significant delay before disappearing so the user can easily reach it */
-    transition: opacity 0.3s ease 0.6s;
+    transition: opacity 0.18s ease;
     z-index: 30;
     background: rgba(255, 255, 255, 0.4);
     padding: 4px 8px;
@@ -1876,8 +1903,7 @@ a:hover {
 }
 
 .accessory-wrapper:hover .gui-container,
-.accessory-wrapper.dragging .gui-container,
-.accessory-wrapper.is-selected .gui-container {
+.accessory-wrapper.dragging .gui-container {
     opacity: 1;
     pointer-events: auto; /* Enable interaction when wrapper hovered */
     /* Appear instantly when hovered */
@@ -3068,7 +3094,3 @@ footer {
         animation: none !important;
     }
 }
-
-
-
-

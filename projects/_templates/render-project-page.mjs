@@ -1,5 +1,6 @@
 import { renderFooterBlock, renderHeader, renderMetaTags, renderMoreProjectsBlock } from './layout.mjs';
 import { renderSection } from './render-sections.mjs';
+import { renderLudoBentoPage } from './template-replication/ludo-bento.mjs';
 import { escapeHtml } from './template-utils.mjs';
 
 function buildStackSections(project) {
@@ -29,6 +30,10 @@ function buildStackSections(project) {
 }
 
 export function renderProjectPage(project, site) {
+    if (project.customTemplate === 'ludo-bento') {
+        return renderLudoBentoPage(project, site);
+    }
+
     const toRoot = '../../';
     const defaultThemeClass = 'light-theme';
     const themeClass = `theme-${project.theme}`;
@@ -75,4 +80,3 @@ ${sectionsMarkup}
 </body>
 </html>`;
 }
-

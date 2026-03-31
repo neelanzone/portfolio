@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cylinder Carousel — Fallback</title>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;0,6..12,700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-color: #050505;
+            --text-color: #f0f0f0;
+            --text-muted: #888;
+            --surface-light: rgba(255,255,255,0.03);
+            --surface-border: rgba(255,255,255,0.08);
+            --font-primary: 'Space Mono', monospace;
+        }
+
+        body {
+            background: var(--bg-color);
+            color: var(--text-color);
+            font-family: var(--font-primary);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        h1 {
+            font-size: 1rem;
+            font-weight: 400;
+            letter-spacing: 0.2em;
+            text-transform: uppercase;
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
+        /* ── Carousel container ── */
+        .carousel-container {
+            position: relative;
+            width: 100vw;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+            cursor: grab;
+            transform-style: preserve-3d;
+            user-select: none;
+        }
+        .carousel-container:active { cursor: grabbing; }
+
+        .carousel-track {
+            position: relative;
+            width: 320px;
+            height: 480px;
+            transform-style: preserve-3d;
+            will-change: transform;
+        }
+
+        /* Arrow controls */
+        .carousel-control {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 30;
+            background: transparent;
+            color: var(--text-color);
+            border: none;
+            font-size: 3.5rem;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-weight: 300;
+            cursor: pointer;
+            opacity: 0.4;
+            transition: opacity 0.2s, transform 0.2s;
+            padding: 0 1rem;
+        }
+        .carousel-control:hover { opacity: 1; transform: translateY(-50%) scale(1.1); }
+        .carousel-control.prev { left: 2rem; }
+        .carousel-control.next { right: 2rem; }
+
+        /* ── Cards ── */
+        .work-card {
+            --work-card-back-offset: 2px;
+            position: absolute;
+            top: 0; left: 0;
+            width: 320px; height: 480px;
+            backface-visibility: visible;
+            transform-style: preserve-3d;
+        }
+
+        .work-card-link {
+            display: block; width: 100%; height: 100%;
+            color: inherit; text-decoration: none;
+            transform-style: preserve-3d;
+        }
+
+        .work-card-shell {
+            position: relative; width: 100%; height: 100%;
+            transform-style: preserve-3d;
+            border-radius: 10px;
+        }
+
+        .work-card-shell::before {
+            content: '';
+            position: absolute; inset: 1px;
+            border-radius: 8px;
+            background-image:
+                linear-gradient(115deg, rgba(255,255,255,0.16) 0%, rgba(255,255,255,0.04) 16%, rgba(255,255,255,0) 30%),
+                linear-gradient(180deg, rgba(10,12,16,0.58) 0%, rgba(8,9,12,0.72) 100%),
+                url('../Assets/plate-texture-optimized.jpg');
+            background-size: 100% 100%, 100% 100%, cover;
+            background-blend-mode: screen, multiply, normal;
+            border: 1px solid rgba(255,255,255,0.1);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), inset 0 -1px 0 rgba(0,0,0,0.28), 0 4px 10px rgba(0,0,0,0.12);
+            opacity: 0.88;
+            pointer-events: none;
+            transform: translateZ(calc(var(--work-card-back-offset) * -1));
+            transition: opacity 0.35s, transform 0.35s, box-shadow 0.35s;
+        }
+
+        .work-card.is-active .work-card-shell::before {
+            opacity: 0.24;
+            transform: translateZ(calc(var(--work-card-back-offset) * -0.7));
+        }
+
+        .title-card {
+            display: flex; justify-content: center; align-items: center;
+            background: transparent; padding: 3rem;
+            pointer-events: none; text-align: center;
+        }
+        .carousel-title {
+            font-size: 3.5rem; font-weight: 700;
+            color: #f7f2e8; letter-spacing: 1.3px;
+        }
+
+        .work-image {
+            width: 100%; height: 480px;
+            background-color: var(--surface-light);
+            border-radius: 8px;
+            overflow: hidden; position: relative;
+            z-index: 1; transform-style: preserve-3d;
+            transform: translateZ(1px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.25);
+            transition: box-shadow 0.5s cubic-bezier(0.19,1,0.22,1);
+        }
+        .work-card:hover .work-image,
+        .work-card.is-active .work-image {
+            box-shadow: 0 25px 50px rgba(0,0,0,0.8), 0 0 40px rgba(255,255,255,0.2);
+        }
+
+        .work-image::before {
+            content: ''; position: absolute; inset: 0;
+            pointer-events: none; border-radius: inherit; z-index: 10;
+            border: 1px solid rgba(255,255,255,0.15);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.05), inset 0 3px 0 rgba(255,255,255,0.25), inset 0 -3px 0 rgba(0,0,0,0.5);
+            transition: border 0.5s, box-shadow 0.5s;
+        }
+        .work-card:hover .work-image::before {
+            border: 1px solid rgba(255,255,255,0.3);
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.1), inset 0 3px 0 rgba(255,255,255,0.4), inset 0 -3px 0 rgba(0,0,0,0.7);
+        }
+
+        .work-bg-image {
+            position: absolute; top: -10%; left: 0;
+            width: 100%; height: 120%;
+            object-fit: cover; z-index: 0;
+        }
+        .work-card:hover .work-bg-image { transform: scale(1.05); }
+
+        .work-card-pills {
+            position: absolute; top: 16px; left: 16px; right: 16px;
+            z-index: 18; display: flex; align-items: flex-start;
+            justify-content: space-between; gap: 0.75rem;
+            pointer-events: none;
+        }
+        .work-pill {
+            display: inline-flex; align-items: center;
+            padding: 0.38rem 0.72rem; border-radius: 999px;
+            border: 1px solid rgba(255,255,255,0.22);
+            background: rgba(9,10,13,0.42);
+            backdrop-filter: blur(10px);
+            color: rgba(255,255,255,0.9);
+            font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.85rem; font-weight: 400;
+            white-space: nowrap;
+        }
+        .work-pill-date { margin-left: auto; flex-shrink: 0; }
+
+        .work-info {
+            position: absolute; bottom: 0; left: 0; width: 100%;
+            padding: 22px 16px 22px 24px; z-index: 2;
+            display: flex; flex-direction: column; gap: 0.25rem;
+            transition: padding 0.55s cubic-bezier(0.32,0,0.2,1);
+        }
+        .work-card:hover .work-info,
+        .work-card.is-active .work-info { padding-top: 20px; }
+
+        .work-info::before {
+            content: ''; position: absolute; inset: 0; z-index: -1;
+            pointer-events: none;
+            background: rgba(9,10,13,0.9);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            box-shadow: 0 -10px 24px rgba(0,0,0,0.18), inset 0 1px 0 rgba(255,255,255,0.02);
+        }
+        .work-info h3 {
+            margin: 0; font-family: 'Nunito Sans', sans-serif;
+            font-size: 1.25rem; line-height: 1.12; font-weight: 700; color: #fff;
+        }
+        .work-info p {
+            margin: 0; font-family: 'Nunito Sans', sans-serif;
+            font-size: 0.9rem; line-height: 1.5; color: rgba(255,255,255,0.7);
+            max-height: 0; opacity: 0; overflow: hidden;
+            transition: max-height 0.55s cubic-bezier(0.32,0,0.2,1), opacity 0.55s cubic-bezier(0.32,0,0.2,1);
+        }
+        .work-card:hover .work-info p,
+        .work-card.is-active .work-info p { max-height: 120px; opacity: 1; }
+    </style>
+</head>
+<body>
+
+<h1>Cylinder Carousel — Fallback</h1>
+
+<div class="carousel-container" tabindex="0">
+    <button class="carousel-control prev">&lt;</button>
+    <button class="carousel-control next">&gt;</button>
+    <div class="carousel-track">
+
+        <article class="work-card">
+            <a class="work-card-link" href="../projects/ludo-reimagined/index.html">
+                <div class="work-card-shell">
+                    <div class="work-image">
+                        <video autoplay loop muted playsinline class="work-bg-image" preload="none">
+                            <source src="../Assets/ludo-cards.mp4" type="video/mp4">
+                        </video>
+                        <div class="work-card-pills">
+                            <span class="work-pill">Game Design</span>
+                            <span class="work-pill work-pill-date">2026</span>
+                        </div>
+                        <div class="work-info">
+                            <h3>Ludo Reimagined</h3>
+                            <p>A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="work-card">
+            <a class="work-card-link" href="../projects/managed-asset-search/index.html">
+                <div class="work-card-shell">
+                    <div class="work-image">
+                        <video autoplay loop muted playsinline class="work-bg-image" preload="none">
+                            <source src="../Assets/DAM-TE.mp4" type="video/mp4">
+                        </video>
+                        <div class="work-card-pills">
+                            <span class="work-pill">Information Architecture</span>
+                            <span class="work-pill work-pill-date">2021</span>
+                        </div>
+                        <div class="work-info">
+                            <h3>Managed Asset Search</h3>
+                            <p>A metadata-led asset management system focused on information architecture and faster asset discovery.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="work-card title-card">
+            <h2 class="carousel-title">Projects</h2>
+        </article>
+
+        <article class="work-card">
+            <a class="work-card-link" href="../projects/ev-charger-discovery/index.html">
+                <div class="work-card-shell">
+                    <div class="work-image">
+                        <picture>
+                            <source srcset="../Assets/grid-discovery.avif" type="image/avif">
+                            <img src="../Assets/grid-discovery.png" alt="EV Charger Discovery" class="work-bg-image">
+                        </picture>
+                        <div class="work-card-pills">
+                            <span class="work-pill">UX/UI</span>
+                            <span class="work-pill work-pill-date">2026</span>
+                        </div>
+                        <div class="work-info">
+                            <h3>EV Charger Discovery</h3>
+                            <p>A charger discovery experience designed for gig workers and urban EV users, centered on queue transparency and trust scores.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="work-card">
+            <a class="work-card-link" href="../projects/venture-hub/index.html">
+                <div class="work-card-shell">
+                    <div class="work-image">
+                        <picture>
+                            <source srcset="../Assets/accelerator-dashboard.avif" type="image/avif">
+                            <img src="../Assets/accelerator-dashboard.png" alt="Venture Hub" class="work-bg-image">
+                        </picture>
+                        <div class="work-card-pills">
+                            <span class="work-pill">UX/UI &amp; System Design</span>
+                            <span class="work-pill work-pill-date">2026</span>
+                        </div>
+                        <div class="work-info">
+                            <h3>Venture Hub</h3>
+                            <p>A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+        <article class="work-card">
+            <a class="work-card-link" href="../projects/protopack/index.html">
+                <div class="work-card-shell">
+                    <div class="work-image">
+                        <video autoplay loop muted playsinline class="work-bg-image" preload="none">
+                            <source src="../Assets/10x-bag.mp4" type="video/mp4">
+                        </video>
+                        <div class="work-card-pills">
+                            <span class="work-pill">Product Design</span>
+                            <span class="work-pill work-pill-date">2022</span>
+                        </div>
+                        <div class="work-info">
+                            <h3>ProtoPack</h3>
+                            <p>A backpack designed to transform learning into a more hands-on, exploratory, and creative experience.</p>
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </article>
+
+    </div><!-- /.carousel-track -->
+</div><!-- /.carousel-container -->
+
+<script>
+    const carouselContainer = document.querySelector('.carousel-container');
+    const carouselTrack     = document.querySelector('.carousel-track');
+    const cards    = Array.from(carouselTrack.querySelectorAll('.work-card'));
+    const numCards = cards.length;
+    const theta    = 360 / numCards;
+    let   radius   = 0;
+
+    // ── Rotation state ────────────────────────────────────────────────────────
+    const titleCardIndex = cards.findIndex(c => c.classList.contains('title-card'));
+    const centerIndex    = titleCardIndex !== -1 ? titleCardIndex : Math.floor(numCards / 2);
+    let currentRotation  = -centerIndex * theta;
+    let targetRotation   = -centerIndex * theta;
+    let isDragging = false, startX = 0, currentX = 0, dragStart = targetRotation;
+    let activeFrontCard  = null;
+    let rafId = null, isAnimating = false;
+
+    // ── Geometry ──────────────────────────────────────────────────────────────
+    const setupGeometry = () => {
+        const cardWidth  = cards[0].getBoundingClientRect().width || 320;
+        const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / numCards));
+        const naturalRadius = baseRadius + Math.max(24, cardWidth * 0.16);
+        const minRadius = naturalRadius * 2; // 100% expanded — hard floor
+        radius = Math.max(naturalRadius, minRadius);
+        cards.forEach((card, i) => {
+            const angle = theta * i;
+            card.style.transform = `rotateY(${angle}deg) translateZ(${radius}px)`;
+            card.dataset.angle   = angle;
+        });
+    };
+
+    const normalizeAngle = a => {
+        let n = a % 360;
+        if (n > 180)  n -= 360;
+        if (n < -180) n += 360;
+        return n;
+    };
+
+    const getCenteredCard = () => cards.reduce((best, card) => {
+        if (!best) return card;
+        const distA = Math.abs(normalizeAngle(parseFloat(card.dataset.angle) + currentRotation));
+        const distB = Math.abs(normalizeAngle(parseFloat(best.dataset.angle) + currentRotation));
+        return distA < distB ? card : best;
+    }, null);
+
+    const syncActive = () => {
+        const centered = getCenteredCard();
+        const next = centered && !centered.classList.contains('title-card') ? centered : null;
+        if (activeFrontCard && activeFrontCard !== next) {
+            activeFrontCard.classList.remove('is-active');
+            activeFrontCard = null;
+        }
+        if (next && next !== activeFrontCard) {
+            next.classList.add('is-active');
+            activeFrontCard = next;
+        }
+    };
+
+    // ── RAF loop ──────────────────────────────────────────────────────────────
+    const animate = () => {
+        if (!isAnimating) return;
+        currentRotation += (targetRotation - currentRotation) * 0.1;
+        carouselTrack.style.transform = `translateZ(-${radius}px) rotateY(${currentRotation}deg)`;
+        syncActive();
+        rafId = requestAnimationFrame(animate);
+    };
+
+    const startAnim = () => { if (isAnimating) return; isAnimating = true; animate(); };
+
+    // ── Controls ──────────────────────────────────────────────────────────────
+    document.querySelector('.carousel-control.prev').addEventListener('click', () => {
+        targetRotation = Math.round((targetRotation + theta) / theta) * theta;
+    });
+    document.querySelector('.carousel-control.next').addEventListener('click', () => {
+        targetRotation = Math.round((targetRotation - theta) / theta) * theta;
+    });
+
+    // Card click to focus
+    cards.forEach((card, i) => {
+        card.addEventListener('click', e => {
+            if (e.target.closest('.work-card-link')) return;
+            targetRotation = -(theta * i);
+        });
+    });
+
+    // Drag
+    carouselContainer.addEventListener('pointerdown', e => {
+        isDragging = true; startX = e.clientX; currentX = e.clientX;
+        dragStart  = targetRotation;
+        carouselContainer.style.cursor = 'grabbing';
+        carouselTrack.style.transition = 'none';
+    });
+    window.addEventListener('pointermove', e => {
+        if (!isDragging) return;
+        const dx = e.clientX - currentX; currentX = e.clientX;
+        targetRotation += dx * 0.15;
+    });
+    window.addEventListener('pointerup', e => {
+        if (!isDragging) return;
+        isDragging = false;
+        carouselContainer.style.cursor = 'grab';
+        const totalDrag = e.clientX - startX;
+        const startSnap = Math.round(dragStart / theta);
+        if (e.pointerType === 'touch' && Math.abs(totalDrag) > 72) {
+            targetRotation = (startSnap + (totalDrag < 0 ? -1 : 1)) * theta;
+        } else {
+            targetRotation = Math.round(targetRotation / theta) * theta;
+        }
+    });
+
+    // Keyboard
+    document.addEventListener('keydown', e => {
+        if (e.key === 'ArrowLeft')  { e.preventDefault(); targetRotation = Math.round((targetRotation + theta) / theta) * theta; }
+        if (e.key === 'ArrowRight') { e.preventDefault(); targetRotation = Math.round((targetRotation - theta) / theta) * theta; }
+    });
+
+    // Wheel (horizontal trackpad swipe)
+    let wheelTimeout;
+    carouselContainer.addEventListener('wheel', e => {
+        if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
+            e.preventDefault();
+            targetRotation += Math.sign(e.deltaX) * -theta * 0.15;
+            clearTimeout(wheelTimeout);
+            wheelTimeout = setTimeout(() => {
+                targetRotation = Math.round(targetRotation / theta) * theta;
+            }, 150);
+        }
+    }, { passive: false });
+
+    // ── Init ──────────────────────────────────────────────────────────────────
+    setupGeometry();
+    requestAnimationFrame(setupGeometry); // re-measure after first paint
+    window.addEventListener('resize', setupGeometry);
+    startAnim();
+</script>
+</body>
+</html>

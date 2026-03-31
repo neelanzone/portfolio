@@ -1,4 +1,4 @@
-import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
+﻿import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
 
 function renderMetaTags(project, site) {
     const title = project.seo?.title ?? `${project.title} | ${site.owner}`;
@@ -56,7 +56,7 @@ function splitCardMeta(entry) {
     const dateLabel = parts.length > 1 ? parts.pop().trim() : '';
 
     const explicitLabelsBySlug = {
-        'ludo-reimagined': ['Game Design'],
+        'ludo-cards': ['Game Design'],
         'managed-asset-search': ['IA', 'Taxonomy'],
         'venture-hub': ['System Design']
     };
@@ -93,8 +93,14 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
                         <p class="project-carousel-eyebrow font-mono text-eyebrow uppercase">More Projects</p>
                     </div>
                     <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
-                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
-                        <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="${escapeHtml(resolveAssetPath('Assets/Icons/left-arrow-button-dark.svg', toRoot))}" alt="" aria-hidden="true">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="${escapeHtml(resolveAssetPath('Assets/Icons/left-arrow-button-light.svg', toRoot))}" alt="" aria-hidden="true">
+                        </button>
+                        <button class="project-carousel-control next" type="button" aria-label="Next project">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="${escapeHtml(resolveAssetPath('Assets/Icons/right-arrow-button-dark.svg', toRoot))}" alt="" aria-hidden="true">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="${escapeHtml(resolveAssetPath('Assets/Icons/right-arrow-button-light.svg', toRoot))}" alt="" aria-hidden="true">
+                        </button>
                         <div class="project-carousel-track">
                             ${site.moreProjects.filter((entry) => entry.slug !== project.slug).map((entry) => {
                                 const href = resolveProjectLink(entry.link, project.slug, toRoot);
@@ -123,14 +129,20 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
 export function renderFooterBlock(site, toRoot) {
     return `
         <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="flex max-w-[70rem] justify-center text-subtext">
+            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
                 <div class="flex items-center gap-[1.15rem]">
                     <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="${escapeHtml(resolveAssetPath('Assets/social/x.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                     <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="${escapeHtml(resolveAssetPath('Assets/social/github.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                     <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="${escapeHtml(resolveAssetPath('Assets/social/linkedin.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="${escapeHtml(resolveAssetPath('Assets/social/mail.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                 </div>
             </div>
         </footer>`;
 }
 
 export { renderMetaTags };
+
+
+
+
+

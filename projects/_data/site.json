@@ -1,4 +1,4 @@
-{
+﻿{
     "owner": "Neel",
     "copyrightOwner": "neelanzone",
     "year": "2026",
@@ -16,20 +16,24 @@
         {
             "label": "LinkedIn",
             "href": "https://www.linkedin.com/in/neelanzone/"
+        },
+        {
+            "label": "Email",
+            "href": "mailto:neelanzone@gmail.com"
         }
     ],
     "moreProjects": [
         {
-            "slug": "ludo-reimagined",
-            "title": "Ludo Reimagined",
+            "slug": "ludo-cards",
+            "title": "Ludo Cards",
             "type": "Game Design, 2026",
             "image": {
                 "src": "Assets/ludo-cards.mp4",
-                "alt": "Animated gameplay preview for Ludo Reimagined"
+                "alt": "Animated gameplay preview for Ludo Cards"
             },
             "link": {
                 "type": "project",
-                "slug": "ludo-reimagined"
+                "slug": "ludo-cards"
             },
             "description": "A strategic twist on Ludo that gives players more control, agency, and tactical depth."
         },
@@ -63,3 +67,6 @@
         }
     ]
 }
+
+
+

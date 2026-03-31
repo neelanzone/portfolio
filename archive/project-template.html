@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Template | Neel</title>
+    <meta name="description" content="Reusable project page template for portfolio case studies.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="project-template.css">
+</head>
+<body>
+    <div class="project-page">
+        <header class="project-topbar">
+            <a class="project-topbar__brand" href="index.html" aria-label="Go to homepage">
+                <img src="Assets/identity-motion-active.gif" alt="Neel logo" class="logo-default" width="72" height="72">
+                <img src="Assets/identity-motion-hover.gif" alt="Neel logo" class="logo-hover" width="72" height="72">
+            </a>
+            <nav class="project-topbar__links" aria-label="Project sections">
+                <a href="#overview">Overview</a>
+                <a href="#context">Context</a>
+                <a href="#process">Process</a>
+                <a href="#artifacts">Artifacts</a>
+                <a href="#outcome">Outcome</a>
+                <a href="#more-projects">More Projects</a>
+            </nav>
+            <div class="project-topbar__actions">
+                <div class="mobile-nav-actions">
+                    <button class="theme-toggle mobile-theme-toggle" data-theme-toggle type="button" aria-label="Toggle Dark Mode">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation menu" aria-controls="mobile-menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <button class="theme-toggle desktop-theme-toggle" data-theme-toggle type="button" aria-label="Toggle Dark Mode">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <a href="index.html#about">About</a>
+            <div class="mobile-menu-group">
+                <div class="mobile-menu-work-row">
+                    <a href="index.html#work-anchor" class="mobile-menu-work-link">Work</a>
+                    <button
+                        class="mobile-menu-toggle"
+                        id="mobile-work-toggle"
+                        type="button"
+                        aria-label="Toggle work projects"
+                        aria-controls="mobile-work-projects"
+                        aria-expanded="false"
+                    >
+                        <span class="mobile-menu-toggle-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="mobile-submenu" id="mobile-work-projects" aria-hidden="true">
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Ludo Reimagined</span>
+                        <span class="mobile-submenu-type">Game Design &amp; Development</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Managed Asset Search</span>
+                        <span class="mobile-submenu-type">Information Architecture</span>
+                    </a>
+                    <a href="ev-charger-discovery.html" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">EV Charger Discovery</span>
+                        <span class="mobile-submenu-type">UX/UI</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Venture Hub</span>
+                        <span class="mobile-submenu-type">UX/UI &amp; System Design</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">ProtoPack</span>
+                        <span class="mobile-submenu-type">Product Design</span>
+                    </a>
+                </div>
+            </div>
+            <a href="index.html#contact">Contact</a>
+        </div>
+
+        <main class="project-shell">
+            <section class="project-hero">
+                <div class="project-title-block">
+                    <p class="project-eyebrow">Case Study / Product Design / 2026</p>
+                    <h1>[Project Title]</h1>
+                    <p class="project-summary">A one-line thesis about what changed, why it mattered, and what made the project interesting. Keep this sharp enough to work as the mobile cover statement.</p>
+                    <div class="project-meta-grid">
+                        <article class="meta-card">
+                            <span class="meta-card__label">Role</span>
+                            <span class="meta-card__value">Product Designer</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Timeline</span>
+                            <span class="meta-card__value">12 weeks</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Team</span>
+                            <span class="meta-card__value">4 people</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Focus</span>
+                            <span class="meta-card__value">Trust + Clarity</span>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="project-visual">
+                    <div class="project-visual__frame">
+                        <div class="project-visual__screen project-visual__screen--placeholder">
+                            <span>Cover visual, prototype, or layered mockup goes here.</span>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <nav class="project-chapters" aria-label="Project sections">
+                <a href="#overview">Overview</a>
+                <a href="#context">Context</a>
+                <a href="#process">Process</a>
+                <a href="#artifacts">Artifacts</a>
+                <a href="#outcome">Outcome</a>
+                <a href="#more-projects">More Projects</a>
+            </nav>
+
+            <section class="project-section" id="overview">
+                <div class="summary-card">
+                    <div class="overview-bento">
+                        <div class="overview-bento__intro">
+                            <p class="section-label">Overview</p>
+                            <h2>The fast read.</h2>
+                            <p>Start with a concise snapshot that makes sense on mobile without demanding a long scroll. This should help a recruiter understand the why, what, and impact before they commit to the full narrative.</p>
+                        </div>
+                        <div class="summary-grid">
+                            <article>
+                                <h3>Problem</h3>
+                                <p>What tension or failure point made this work necessary?</p>
+                            </article>
+                            <article>
+                                <h3>Approach</h3>
+                                <p>What design, research, or system moves shaped the project?</p>
+                            </article>
+                            <article>
+                                <h3>Outcome</h3>
+                                <p>What changed in practical terms after the work?</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="context">
+                <p class="section-label">Context</p>
+                <div class="section-body">
+                    <div class="summary-card">
+                        <h2>Lead with the tension, not the timeline.</h2>
+                        <p>Use this section to explain the situation clearly. Who was the user? What made the job difficult? What constraint or opportunity sharpened the brief?</p>
+                        <p>When this is written well, the rest of the case study becomes easier to follow because the reader understands the stakes before they reach the screens.</p>
+                    </div>
+                    <div class="media-panel media-panel--placeholder">
+                        <span>Insert a key map, storyboard, service blueprint, or compressed artifact here.</span>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="process">
+                <p class="section-label">Process</p>
+                <div class="section-body">
+                    <div class="chapter-stack">
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">01</span>
+                            <h3>Understand</h3>
+                            <p>Research inputs, audits, or framing moves that helped define the real problem.</p>
+                        </article>
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">02</span>
+                            <h3>Structure</h3>
+                            <p>Flows, architecture, priorities, and system decisions that created clarity.</p>
+                        </article>
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">03</span>
+                            <h3>Refine</h3>
+                            <p>Iterations, critiques, and tests that moved the project from idea to confidence.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="artifacts">
+                <p class="section-label">Artifacts</p>
+                <div class="section-body">
+                    <div class="artifact-grid">
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Screen / Diagram / Artifact</span></div>
+                            <h3>Decision One</h3>
+                            <p>Use this card to explain what changed and why that decision mattered.</p>
+                        </article>
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Screen / Diagram / Artifact</span></div>
+                            <h3>Decision Two</h3>
+                            <p>Keep each card self-contained enough to work on mobile without surrounding context.</p>
+                        </article>
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Screen / Diagram / Artifact</span></div>
+                            <h3>Decision Three</h3>
+                            <p>This structure is intentionally modular so different project types can reuse it.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section">
+                <div class="quote-card">
+                    <p class="section-label">Proof</p>
+                    <blockquote>"Place the sharpest synthesis, quote, or result here so the page gets a memorable pause."</blockquote>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="outcome">
+                <p class="section-label">Outcome</p>
+                <div class="section-body">
+                    <div class="summary-card">
+                        <h2>End with what changed.</h2>
+                        <p>Wrap with the shipped result, measurable improvement, learning, or operating shift. Mobile readers should still be able to scan the ending quickly without losing the core value of the project.</p>
+                    </div>
+                    <div class="metrics-grid">
+                        <article class="metric-card">
+                            <span class="metric-card__label">Metric</span>
+                            <span class="metric-card__value">+28%</span>
+                            <p>Example result or movement</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Time Saved</span>
+                            <span class="metric-card__value">4 wks</span>
+                            <p>Example process gain</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Systems</span>
+                            <span class="metric-card__value">1</span>
+                            <p>Example consolidation</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Confidence</span>
+                            <span class="metric-card__value">High</span>
+                            <p>Example user or team signal</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-carousel-section" id="more-projects">
+                <div class="project-carousel-space" data-project-space aria-hidden="true"></div>
+                <div class="project-carousel-shell">
+                    <div class="project-carousel-heading">
+                        <p class="section-label">More Projects</p>
+                        <p class="project-carousel-copy">Swipe through the rest of the portfolio in a wide orbit.</p>
+                    </div>
+                    <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
+                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
+                        <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                        <div class="project-carousel-track">
+                            <article class="project-carousel-card" data-project-slug="ludo-reimagined">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/ludo-cards.gif" alt="Animated gameplay preview for Ludo Reimagined" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Game Design &amp; Development</span>
+                                        <h3 class="project-carousel-card__title">Ludo Reimagined</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="managed-asset-search">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/DAM-TE.gif" alt="Animated interface preview for Managed Asset Search" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Information Architecture</span>
+                                        <h3 class="project-carousel-card__title">Managed Asset Search</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="ev-charger-discovery">
+                                <a class="project-carousel-card__link" href="ev-charger-discovery.html">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/grid-discovery.png" alt="Interface preview for EV Charger Discovery" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">UX/UI</span>
+                                        <h3 class="project-carousel-card__title">EV Charger Discovery</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="venture-hub">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">UX/UI &amp; System Design</span>
+                                        <h3 class="project-carousel-card__title">Venture Hub</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="protopack">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/10x-bag.gif" alt="Product preview for ProtoPack backpack concept" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Product Design</span>
+                                        <h3 class="project-carousel-card__title">ProtoPack</h3>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="project-template.js"></script>
+</body>
+</html>

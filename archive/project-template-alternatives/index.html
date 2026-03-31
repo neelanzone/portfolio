@@ -1,0 +1,141 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Template Alternatives</title>
+    <style>
+        :root {
+            color-scheme: dark;
+            --bg: #0a0a0b;
+            --panel: #141417;
+            --border: rgba(255, 255, 255, 0.1);
+            --text: #f3f0ea;
+            --muted: #aaa397;
+            --accent: #f2682c;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at top left, rgba(242, 104, 44, 0.18), transparent 24%),
+                linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent 20%),
+                var(--bg);
+        }
+
+        main {
+            width: min(1040px, calc(100vw - 32px));
+            margin: 0 auto;
+            padding: 48px 0 64px;
+        }
+
+        h1 {
+            margin: 0 0 12px;
+            font-size: clamp(2.5rem, 7vw, 5rem);
+            line-height: 0.95;
+            letter-spacing: -0.05em;
+        }
+
+        p {
+            margin: 0;
+            max-width: 60ch;
+            font: 400 1rem/1.6 "Nunito Sans", Arial, sans-serif;
+            color: var(--muted);
+        }
+
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 16px;
+            margin-top: 32px;
+        }
+
+        a.card {
+            display: grid;
+            gap: 12px;
+            padding: 18px;
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            color: inherit;
+            text-decoration: none;
+            background:
+                linear-gradient(180deg, rgba(255, 255, 255, 0.03), transparent 48%),
+                var(--panel);
+            transition: transform 0.2s ease, border-color 0.2s ease;
+        }
+
+        a.card:hover {
+            transform: translateY(-4px);
+            border-color: rgba(242, 104, 44, 0.6);
+        }
+
+        .eyebrow {
+            font: 700 0.78rem/1 "Space Mono", monospace;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            color: var(--accent);
+        }
+
+        h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            line-height: 1;
+            letter-spacing: -0.04em;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <div class="eyebrow">Alternatives</div>
+        <h1>Project page aesthetic directions.</h1>
+        <p>Seven project-page explorations and references, including the archived live cards layout. These are standalone references and do not replace the live project template.</p>
+        <section class="grid">
+            <a class="card" href="editorial-minimal.html">
+                <div class="eyebrow">Option 01</div>
+                <h2>Editorial Minimal</h2>
+                <p>Warm paper, sharp black typography, restrained cards, and quiet structure.</p>
+            </a>
+            <a class="card" href="dark-gallery.html">
+                <div class="eyebrow">Option 02</div>
+                <h2>Dark Gallery</h2>
+                <p>Cinematic surfaces, large imagery, and a moodier portfolio continuation.</p>
+            </a>
+            <a class="card" href="tech-dossier.html">
+                <div class="eyebrow">Option 03</div>
+                <h2>Tech Dossier</h2>
+                <p>System language, grid discipline, and product-led analytical framing.</p>
+            </a>
+            <a class="card" href="museum-poster.html">
+                <div class="eyebrow">Option 04</div>
+                <h2>Museum Poster</h2>
+                <p>Oversized type, poster composition, and a more art-directed rhythm.</p>
+            </a>
+            <a class="card" href="retro-skeuomorphism.html">
+                <div class="eyebrow">Option 05</div>
+                <h2>Retro Skeuomorphism</h2>
+                <p>Gloss, tactile panels, beveled buttons, and a playful early-digital product feel.</p>
+            </a>
+            <a class="card" href="poster-editorial-wave.html">
+                <div class="eyebrow">Option 06</div>
+                <h2>Poster x Editorial Wave</h2>
+                <p>Poster typography, quiet editorial modules, and a desktop-only scroll-reactive pixel field.</p>
+            </a>
+            <a class="card" href="project-pages-template-cards.html">
+                <div class="eyebrow">Option 07</div>
+                <h2>Project Pages / Cards</h2>
+                <p>Archived reference for the current live project-page system with stacked sections, pill nav, and card-driven storytelling.</p>
+            </a>
+        </section>
+    </main>
+</body>
+</html>
+
+
+

@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EV Charger Discovery | Neel</title>
+    <meta name="description" content="EV Charger Discovery case study by Neel.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="project-template.css">
+</head>
+<body>
+    <div class="project-page">
+        <header class="project-topbar">
+            <a class="project-topbar__brand" href="index.html" aria-label="Go to homepage">
+                <img src="Assets/identity-motion-active.gif" alt="Neel logo" class="logo-default" width="72" height="72">
+                <img src="Assets/identity-motion-hover.gif" alt="Neel logo" class="logo-hover" width="72" height="72">
+            </a>
+            <nav class="project-topbar__links" aria-label="Project sections">
+                <a href="#overview">Overview</a>
+                <a href="#context">Context</a>
+                <a href="#process">Process</a>
+                <a href="#artifacts">Artifacts</a>
+                <a href="#outcome">Outcome</a>
+                <a href="#more-projects">More Projects</a>
+            </nav>
+            <div class="project-topbar__actions">
+                <div class="mobile-nav-actions">
+                    <button class="theme-toggle mobile-theme-toggle" data-theme-toggle type="button" aria-label="Toggle Dark Mode">
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </button>
+                    <button class="menu-toggle" id="menu-toggle" aria-label="Open navigation menu" aria-controls="mobile-menu" aria-expanded="false">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </button>
+                </div>
+                <button class="theme-toggle desktop-theme-toggle" data-theme-toggle type="button" aria-label="Toggle Dark Mode">
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                    </svg>
+                    <svg viewBox="0 0 24 24" width="20" height="20" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                        <circle cx="12" cy="12" r="5"></circle>
+                        <line x1="12" y1="1" x2="12" y2="3"></line>
+                        <line x1="12" y1="21" x2="12" y2="23"></line>
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                        <line x1="1" y1="12" x2="3" y2="12"></line>
+                        <line x1="21" y1="12" x2="23" y2="12"></line>
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                    </svg>
+                </button>
+            </div>
+        </header>
+        <div class="mobile-menu" id="mobile-menu" aria-hidden="true">
+            <a href="index.html#about">About</a>
+            <div class="mobile-menu-group">
+                <div class="mobile-menu-work-row">
+                    <a href="index.html#work-anchor" class="mobile-menu-work-link">Work</a>
+                    <button
+                        class="mobile-menu-toggle"
+                        id="mobile-work-toggle"
+                        type="button"
+                        aria-label="Toggle work projects"
+                        aria-controls="mobile-work-projects"
+                        aria-expanded="false"
+                    >
+                        <span class="mobile-menu-toggle-icon" aria-hidden="true"></span>
+                    </button>
+                </div>
+                <div class="mobile-submenu" id="mobile-work-projects" aria-hidden="true">
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Ludo Reimagined</span>
+                        <span class="mobile-submenu-type">Game Design &amp; Development</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Managed Asset Search</span>
+                        <span class="mobile-submenu-type">Information Architecture</span>
+                    </a>
+                    <a href="ev-charger-discovery.html" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">EV Charger Discovery</span>
+                        <span class="mobile-submenu-type">UX/UI</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">Venture Hub</span>
+                        <span class="mobile-submenu-type">UX/UI &amp; System Design</span>
+                    </a>
+                    <a href="index.html#work-anchor" class="mobile-submenu-link">
+                        <span class="mobile-submenu-title">ProtoPack</span>
+                        <span class="mobile-submenu-type">Product Design</span>
+                    </a>
+                </div>
+            </div>
+            <a href="index.html#contact">Contact</a>
+        </div>
+
+        <main class="project-shell">
+            <section class="project-hero">
+                <div class="project-title-block">
+                    <p class="project-eyebrow">Case Study / UX-UI / 2026</p>
+                    <h1>EV Charger Discovery</h1>
+                    <p class="project-summary">Designing a charger discovery experience for gig workers and urban EV users who needed clearer availability, faster comparison, and more confidence before committing to a stop.</p>
+                    <div class="project-meta-grid">
+                        <article class="meta-card">
+                            <span class="meta-card__label">Role</span>
+                            <span class="meta-card__value">Product Designer</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Scope</span>
+                            <span class="meta-card__value">Discovery + Interface</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Users</span>
+                            <span class="meta-card__value">Urban EV Drivers</span>
+                        </article>
+                        <article class="meta-card">
+                            <span class="meta-card__label">Focus</span>
+                            <span class="meta-card__value">Queue Transparency</span>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="project-visual">
+                    <div class="project-visual__frame">
+                        <div class="project-visual__screen">
+                            <img src="Assets/grid-discovery.png" alt="EV Charger Discovery interface preview">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <nav class="project-chapters" aria-label="Project sections">
+                <a href="#overview">Overview</a>
+                <a href="#context">Context</a>
+                <a href="#process">Process</a>
+                <a href="#artifacts">Artifacts</a>
+                <a href="#outcome">Outcome</a>
+                <a href="#more-projects">More Projects</a>
+            </nav>
+
+            <section class="project-section" id="overview">
+                <div class="summary-card">
+                    <div class="overview-bento">
+                        <div class="overview-bento__intro">
+                            <p class="section-label">Overview</p>
+                            <h2>The fast read.</h2>
+                            <p>This concept reframed charger discovery as a trust-and-timing problem. Instead of only helping users locate a station, it helps them decide whether that station is worth committing to in the first place.</p>
+                        </div>
+                        <div class="summary-grid">
+                            <article>
+                                <h3>Problem</h3>
+                                <p>Nearby chargers can still be the wrong choice when queues, reliability, and wait conditions are unclear.</p>
+                            </article>
+                            <article>
+                                <h3>Approach</h3>
+                                <p>I explored a map-first interface that foregrounds queue status, station credibility, and decision confidence.</p>
+                            </article>
+                            <article>
+                                <h3>Outcome</h3>
+                                <p>The result is a clearer discovery layer built around trust, scan speed, and lower decision friction.</p>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="context">
+                <p class="section-label">Context</p>
+                <div class="section-body">
+                    <div class="context-bento">
+                        <div class="context-bento__copy">
+                            <h2>Charging decisions break down when uncertainty stacks up.</h2>
+                            <p>For urban EV users, the issue is not just finding a charger. It is judging whether a station is available enough, credible enough, and efficient enough to justify the detour.</p>
+                            <p>That uncertainty matters even more for gig workers, whose route changes, idle time, and earnings are all directly shaped by charging downtime.</p>
+                        </div>
+                        <div class="context-bento__media media-panel">
+                            <img src="Assets/grid-discovery.png" alt="Large EV Charger Discovery mockup">
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="process">
+                <p class="section-label">Process</p>
+                <div class="section-body">
+                    <div class="chapter-stack">
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">01</span>
+                            <h3>Prioritize trust signals</h3>
+                            <p>Queue visibility, charger status, and reliability cues were treated as core UI, not secondary metadata.</p>
+                        </article>
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">02</span>
+                            <h3>Reduce scan time</h3>
+                            <p>The hierarchy was designed so users could compare stations quickly without drilling into every option.</p>
+                        </article>
+                        <article class="chapter-card">
+                            <span class="chapter-card__index">03</span>
+                            <h3>Support faster commitment</h3>
+                            <p>The interaction model was built to make route tradeoffs and queue risk legible before arrival.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="artifacts">
+                <p class="section-label">Artifacts</p>
+                <div class="section-body">
+                    <div class="artifact-grid">
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Map layer / station confidence</span></div>
+                            <h3>Visibility before arrival</h3>
+                            <p>The system helps users understand charger conditions before they commit to the route change.</p>
+                        </article>
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Station detail / queue cues</span></div>
+                            <h3>Decision support</h3>
+                            <p>The detail layer focuses on the information that determines whether a charger is worth choosing right now.</p>
+                        </article>
+                        <article class="artifact-card">
+                            <div class="artifact-card__media"><span>Route + availability synthesis</span></div>
+                            <h3>Urban EV practicality</h3>
+                            <p>The concept is designed for time-sensitive use, not leisurely browsing or speculative planning.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section">
+                <div class="quote-card">
+                    <p class="section-label">Proof</p>
+                    <blockquote>"The product is not just helping users find chargers. It is helping them avoid bad charging decisions."</blockquote>
+                </div>
+            </section>
+
+            <section class="project-section project-section--split" id="outcome">
+                <p class="section-label">Outcome</p>
+                <div class="section-body">
+                    <div class="summary-card">
+                        <h2>A better discovery layer for real charging tradeoffs.</h2>
+                        <p>This page is now structured as a mobile-first case-study shell for the full EV Charger Discovery story. From here, you can add journey maps, annotated screens, evaluation notes, and measurable outcomes without rewriting the layout.</p>
+                    </div>
+                    <div class="metrics-grid">
+                        <article class="metric-card">
+                            <span class="metric-card__label">Trust</span>
+                            <span class="metric-card__value">High</span>
+                            <p>Reliability cues move earlier in the flow.</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Scan Time</span>
+                            <span class="metric-card__value">Low</span>
+                            <p>Nearby stations become faster to compare.</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Queue Risk</span>
+                            <span class="metric-card__value">Visible</span>
+                            <p>Wait conditions are easier to read before arrival.</p>
+                        </article>
+                        <article class="metric-card">
+                            <span class="metric-card__label">Confidence</span>
+                            <span class="metric-card__value">Stronger</span>
+                            <p>Users can commit with less hesitation.</p>
+                        </article>
+                    </div>
+                </div>
+            </section>
+
+            <section class="project-section project-carousel-section" id="more-projects" data-current-project="ev-charger-discovery">
+                <div class="project-carousel-space" data-project-space aria-hidden="true"></div>
+                <div class="project-carousel-shell">
+                    <div class="project-carousel-heading">
+                        <p class="section-label">More Projects</p>
+                        <p class="project-carousel-copy">Swipe through the rest of the portfolio in a wide orbit.</p>
+                    </div>
+                    <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
+                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
+                        <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                        <div class="project-carousel-track">
+                            <article class="project-carousel-card" data-project-slug="ludo-reimagined">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/ludo-cards.gif" alt="Animated gameplay preview for Ludo Reimagined" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Game Design &amp; Development</span>
+                                        <h3 class="project-carousel-card__title">Ludo Reimagined</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="managed-asset-search">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/DAM-TE.gif" alt="Animated interface preview for Managed Asset Search" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Information Architecture</span>
+                                        <h3 class="project-carousel-card__title">Managed Asset Search</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="ev-charger-discovery">
+                                <a class="project-carousel-card__link" href="ev-charger-discovery.html" aria-current="page">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/grid-discovery.png" alt="Interface preview for EV Charger Discovery" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">UX/UI</span>
+                                        <h3 class="project-carousel-card__title">EV Charger Discovery</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="venture-hub">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">UX/UI &amp; System Design</span>
+                                        <h3 class="project-carousel-card__title">Venture Hub</h3>
+                                    </div>
+                                </a>
+                            </article>
+                            <article class="project-carousel-card" data-project-slug="protopack">
+                                <a class="project-carousel-card__link" href="index.html#work-anchor">
+                                    <div class="project-carousel-card__image">
+                                        <img src="Assets/10x-bag.gif" alt="Product preview for ProtoPack backpack concept" loading="lazy" decoding="async">
+                                    </div>
+                                    <div class="project-carousel-card__meta">
+                                        <span class="project-carousel-card__type">Product Design</span>
+                                        <h3 class="project-carousel-card__title">ProtoPack</h3>
+                                    </div>
+                                </a>
+                            </article>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="project-template.js"></script>
+</body>
+</html>

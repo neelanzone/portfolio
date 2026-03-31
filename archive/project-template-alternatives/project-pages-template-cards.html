@@ -1,0 +1,214 @@
+﻿<!DOCTYPE html>
+<html lang="en" class="light-theme">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Pages / Template Cards | Archive</title>
+    <meta name="description" content="Archived reference for the current cards-based project page layout.">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Project Pages / Template Cards | Archive">
+    <meta property="og:description" content="Archived reference for the current cards-based project page layout.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Project Pages / Template Cards | Archive">
+    <meta name="twitter:description" content="Archived reference for the current cards-based project page layout.">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+    <script>
+        (function () {
+            try {
+                var storedTheme = localStorage.getItem('theme');
+                var themeClass = storedTheme === 'dark' ? 'dark-theme' : 'light-theme';
+                document.documentElement.classList.remove('light-theme', 'dark-theme');
+                document.documentElement.classList.add(themeClass);
+            } catch (error) {
+                document.documentElement.classList.add('light-theme');
+            }
+        })();
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../../projects/_shared/tailwind-config.js"></script>
+    <link rel="stylesheet" href="../../projects/_shared/project-reference.css">
+    <link rel="stylesheet" href="../../projects/_shared/project-system.css">
+    <link rel="stylesheet" href="../../shared/project-navbar.css">
+</head>
+<body class="project-page theme-design overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
+
+    <div data-navbar-mount data-navbar-variant="project" data-to-root="../../"></div>
+
+        <div id="section-pills" class="section-pill-bar" aria-hidden="true">
+            <div class="section-pill-bar__inner">
+                <a href="#overview" class="section-pill is-active" data-section="overview">Overview</a>
+                <a href="#context" class="section-pill" data-section="context">Context</a>
+                <a href="#process" class="section-pill" data-section="process">Artifacts</a>
+                <a href="#outcomes" class="section-pill" data-section="outcomes">Outcomes</a>
+                <a href="#more-projects" class="section-pill" data-section="more-projects">More</a>
+            </div>
+        </div>
+    <div id="project-stack-overlay" aria-hidden="true"></div>
+    <div id="page-scale">
+        <main class="project-scroll-stage pt-20 sm:pt-20 lg:pt-24">
+            <div class="mx-auto max-w-[70rem] px-5 pb-3 sm:px-7 lg:px-12 lg:pb-4">
+                <div class="rounded-[4px] border border-rule bg-surface/80 px-4 py-3 shadow-soft">
+                    <p class="font-mono text-tag uppercase tracking-[0.16em] text-subtext">Archive reference</p>
+                    <p class="mt-2 max-w-3xl text-sm leading-6 text-subtext">This page preserves the current live cards-based project-page layout using EV Charger Discovery as the sample case study. <a href="index.html" class="text-ink underline underline-offset-4">Back to template alternatives</a>.</p>
+                </div>
+            </div>
+
+        <section id="hero" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="0" style="--stack-card-index:0;" data-desktop-variant="split" data-mobile-variant="summary-first">
+            <div class="project-stack-card__inner">
+                <div class="project-stack-card__content mx-auto flex max-w-[70rem] flex-col gap-8 px-5 py-4 sm:px-7 lg:px-12 lg:py-6">
+                    <div class="project-hero-grid grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
+                        <div class="space-y-6">
+                            <div class="space-y-3">
+                                <div class="flex flex-wrap gap-2">
+                                    <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">UX-UI</span>
+                                <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">2026</span>
+                                </div>
+                                <h1 class="max-w-xl font-display text-displayhero font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">EV Charger Discovery</h1>
+                            </div>
+
+                            <div class="grid max-w-2xl gap-4 sm:grid-cols-2">
+                                <div class="space-y-1"><p class="font-mono text-eyebrow uppercase text-subtext">Scope</p><p class="text-body text-ink">Discovery + Interface</p></div><div class="space-y-1"><p class="font-mono text-eyebrow uppercase text-subtext">Users</p><p class="text-body text-ink">Urban EV drivers</p></div>
+                            </div>
+                        </div>
+
+                        <div class="project-hero-summary lg:flex lg:min-h-full lg:items-end">
+                            <p class="max-w-lg text-lead text-subtext lg:border-l lg:border-rule lg:pl-6">This concept reframes charger discovery for gig workers and urban EV users as a trust-and-timing problem. Instead of only helping users find a station, it helps them judge whether that station is worth committing to in the first place.</p>
+                        </div>
+                    </div>
+
+                    <figure class="project-hero-media h-[40vh] w-full overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
+                        <img src="../../Assets/grid-discovery.png" alt="Preview of the EV Charger Discovery mobile interface showing charger cards and a map-driven layout." class="h-full w-full object-cover" loading="eager" decoding="async">
+                    </figure>
+                </div>
+            </div>
+        </section>
+
+        <section id="overview" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="1" style="--stack-card-index:1;" data-desktop-variant="notes-aside" data-mobile-variant="notes-inline">
+            <div class="project-stack-card__inner">
+                <div class="project-stack-card__content mx-auto grid max-w-[70rem] gap-10 px-5 py-12 sm:px-7 lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-16">
+                    <div class="space-y-5">
+                        <div class="space-y-3">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Overview</p>
+                            <h2 class="font-display text-displaysubhead font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Quick read</h2>
+                        </div>
+
+                        <div class="divide-y divide-rule">
+                            <article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Problem</p><p class="max-w-[44rem] text-body text-ink">Nearby chargers can still be the wrong choice when queues, reliability, and wait conditions are unclear.</p></article><article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Approach</p><p class="max-w-[44rem] text-body text-ink">Explored a map-first interface that foregrounds queue status, station credibility, and decision confidence.</p></article><article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Outcome</p><p class="max-w-[44rem] text-body text-ink">The result is a clearer discovery layer built around trust, scan speed, and lower decision friction.</p></article>
+                        </div>
+                    </div>
+
+                    <div class="project-overview-notes grid gap-4 self-start pt-1 lg:translate-x-12 xl:translate-x-16">
+                        <article class="rotate-[-2deg] bg-note-gold hover:bg-[#f3e3a5] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">Field note</p><p class="project-note-card__body mt-2 text-body">Had to spend an hour at a charging station because of the long queues.</p></article><article class="rotate-[1.6deg] bg-note-lilac hover:bg-[#e8c8f8] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">Service friction</p><p class="project-note-card__body mt-2 text-body">The first charger was broken, so was the second. I had to drive around to find one that was working.</p></article><article class="rotate-[-1deg] bg-note-peach hover:bg-[#f6d4c7] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">Breakdown moment</p><p class="project-note-card__body mt-2 text-body">The battery swapping station was under maintenance, the next station was 2kms away.</p></article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="context" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="2" style="--stack-card-index:2;">
+            <div class="project-stack-card__inner">
+                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 pt-12 pb-8 sm:px-7 lg:px-12 lg:pt-16 lg:pb-10">
+                    <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
+                        <div class="space-y-5">
+                            <p class="font-mono text-eyebrow uppercase text-subtext">Context</p>
+                            <h2 class="max-w-3xl font-display text-displaysection font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Charging decisions break down when uncertainty stacks up</h2>
+                        </div>
+
+                        <div class="border-l border-rule pl-6 lg:translate-x-3 lg:translate-y-4">
+                            <p class="text-base leading-7 text-subtext">The challenge is not only locating a charger, but deciding whether it is reliable enough to justify the detour. That uncertainty hits hardest for time-sensitive users whose routines depend on predictable charging.</p>
+                        </div>
+                    </div>
+                    
+        <div class="mt-10 lg:mt-14" data-desktop-variant="comparison-table" data-mobile-variant="stacked-cards">
+            <div class="mb-7 lg:mb-9">
+                <h2 class="font-sans text-displaysubhead font-bold text-ink md:whitespace-nowrap">Three user groups, three charging realities.</h2>
+            </div>
+
+            <div class="project-users-table">
+                <div class="hidden gap-6 pb-4 lg:grid lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]">
+                    <div></div>
+                    <p class="font-mono text-eyebrow uppercase text-subtext">Daily Usage (in kms)</p>
+                    <p class="text-center font-mono text-eyebrow uppercase text-subtext">Needs</p>
+                    <p class="text-center font-mono text-eyebrow uppercase text-subtext">Pains</p>
+                    <p class="text-center font-mono text-eyebrow uppercase text-subtext">Priorities</p>
+                </div>
+                <article class="project-user-row grid gap-6 border-b border-rule py-2 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]"><div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start"><div class="flex h-14 w-14 items-center justify-center text-accent"><svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 16h13l4-4"></path><path d="M5 16l1-5h8l2 5"></path><circle cx="8" cy="18" r="2"></circle><circle cx="18" cy="18" r="2"></circle><path d="M12 7h4"></path></svg></div><p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Gig Riders</p></div><div><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">180-240</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Reliable, predictable charging or swapping</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Downtime is lost income</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Maximise earnings, minimise fuel cost</p></div></article><article class="project-user-row grid gap-6 border-b border-rule py-4 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]"><div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start"><div class="flex h-14 w-14 items-center justify-center text-accent"><svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M6 18h11"></path><path d="M8 18V8l4-3 4 3v10"></path><path d="M10 11h4"></path><circle cx="17" cy="18" r="2"></circle><circle cx="7" cy="18" r="2"></circle></svg></div><p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Urban Commuter</p></div><div><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">40-60</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Nearby charger status and viable alternatives</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Battery replacement and resale anxiety</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Tech-forward lifestyle,<br>low upkeep cost</p></div></article><article class="project-user-row grid gap-6  py-2 lg:items-center lg:grid-cols-[220px_0.72fr_1.15fr_0.9fr_1.05fr]"><div class="grid w-full grid-cols-[3.5rem_minmax(0,1fr)] items-center gap-4 justify-self-start"><div class="flex h-14 w-14 items-center justify-center text-accent"><svg viewBox="0 0 24 24" class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20h16"></path><path d="M6 20V7h12v13"></path><path d="M9 10h1"></path><path d="M14 10h1"></path><path d="M9 14h1"></path><path d="M14 14h1"></path></svg></div><p class="min-w-0 font-display text-cardtitle font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Fleet Owner</p></div><div><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Daily Usage (in kms)</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0 lg:pl-3">180-240</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Needs</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Depot charging visibility<br>and analytics</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Pains</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Fleet health visibility and scheduling complexity</p></div><div class="lg:text-left"><p class="font-mono text-eyebrow uppercase text-subtext lg:hidden">Priorities</p><p class="mt-3 text-base leading-7 text-ink lg:mt-0">Lower per-delivery cost</p></div></article>
+            </div>
+        </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="process" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="3" style="--stack-card-index:3;" data-desktop-variant="preview-cards" data-mobile-variant="stacked-cards">
+            <div class="project-stack-card__inner">
+                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 py-12 sm:px-7 lg:px-12 lg:py-16">
+                    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                        <p class="font-mono text-eyebrow uppercase text-subtext">Artifacts</p>
+                        <p class="hidden font-mono text-tag uppercase tracking-[0.16em] text-subtext/75 lg:block">Click to expand</p>
+                    </div>
+
+                    <div class="mt-6 process-stack" id="process-stack" data-active-card="none" data-ready="false">
+                        <article data-process-card data-process-origin="left" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Prioritize Trust Signals"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/20"><svg viewBox="0 0 520 360" class="h-full w-full" aria-hidden="true"><polygon points="260,20 410,70 380,320 260,290" fill="#d9d7d2"></polygon><polygon points="260,20 110,70 140,320 260,290" fill="#dfddd9"></polygon><polygon points="170,52 260,20 350,52 318,255 260,238 202,255" fill="#d3d1cd"></polygon></svg></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">01</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Prioritize<br>Trust Signals</h3></div><p class="process-card__description text-subtext">Queue visibility, charger status, and reliability cues were treated as core UI, not secondary metadata.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article><article data-process-card data-process-origin="center" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Reduce Scan Time"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/30"><div class="grid h-full w-full content-center gap-3"><div class="h-10 rounded-[4px] bg-surface"></div><div class="grid grid-cols-[1.15fr_0.85fr] gap-3"><div class="rounded-[4px] bg-surface p-4"><div class="h-3 w-3/4 rounded-full bg-rule/60"></div><div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div></div><div class="rounded-[4px] bg-surface p-4"><div class="h-3 w-2/3 rounded-full bg-rule/60"></div><div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div></div></div><div class="h-24 rounded-[4px] bg-surface"></div></div></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">02</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Reduce<br>Scan Time</h3></div><p class="process-card__description text-subtext">The hierarchy helped users compare stations fast, without having to drill into every option.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article><article data-process-card data-process-origin="right" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Support Faster Commitment"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/25"><div class="grid h-full w-full content-center gap-4"><div class="rounded-[4px] bg-surface p-4"><div class="flex items-center justify-between"><div class="h-3 w-24 rounded-full bg-rule/60"></div><div class="h-8 w-20 rounded-full bg-note-gold/70"></div></div><div class="mt-5 grid grid-cols-3 gap-3"><div class="h-20 rounded-[4px] bg-rule/30"></div><div class="h-20 rounded-[4px] bg-rule/40"></div><div class="h-20 rounded-[4px] bg-rule/30"></div></div></div></div></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">03</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Support Faster Commitment</h3></div><p class="process-card__description text-subtext">The interaction model was built to make route tradeoffs and queue risk legible before arrival.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="outcomes" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="4" style="--stack-card-index:4;">
+            <div class="project-stack-card__inner">
+                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 pt-12 pb-4 sm:px-7 lg:px-12 lg:pt-16 lg:pb-2">
+                    <p class="mb-4 font-mono text-eyebrow uppercase text-subtext">Outcomes</p>
+
+                    <div class="overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
+                        <div class="px-4 pb-4 sm:px-6 sm:pb-6">
+                            <div class="relative h-[60vh] overflow-hidden rounded-[4px] border border-rule bg-rule/30 lg:relative lg:left-1/2 lg:w-[108%] lg:-translate-x-1/2">
+                                <img src="../../Assets/grid-discovery.png" alt="Rendered interface of the EV Charger Discovery concept." class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center" loading="lazy" decoding="async">
+                            </div>
+                        </div>
+
+                        <div class="grid gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4">
+                            <article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Trust</p><p class="mt-3 font-sans text-stat font-bold text-ink">High</p><p class="mt-2 text-base leading-7 text-subtext">Reliability cues move earlier in the flow.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Scan time</p><p class="mt-3 font-sans text-stat font-bold text-ink">Low</p><p class="mt-2 text-base leading-7 text-subtext">Nearby stations become faster to compare.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Queue</p><p class="mt-3 font-sans text-stat font-bold text-ink">Visible</p><p class="mt-2 text-base leading-7 text-subtext">Wait conditions are easier to read before arrival.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Confidence</p><p class="mt-3 font-sans text-stat font-bold text-ink">High</p><p class="mt-2 text-base leading-7 text-subtext">Users commit with less hesitation.</p></article>
+                        </div>
+                    </div>
+
+                    
+        <div id="more-projects" class="project-tail-block pt-5 lg:pt-6">
+            <div class="project-carousel-section" data-current-project="ev-charger-discovery">
+                <div class="project-carousel-space" data-project-space aria-hidden="true"></div>
+                <div class="project-carousel-shell">
+                    <div class="project-carousel-heading">
+                        <p class="project-carousel-eyebrow font-mono text-eyebrow uppercase">More Projects</p>
+                    </div>
+                    <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
+                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
+                        <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                        <div class="project-carousel-track">
+                            <article class="project-carousel-card" data-project-slug="ludo-reimagined"><a class="project-carousel-card__link" href="../../projects/ludo-reimagined/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">Game Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="../../Assets/ludo-cards.mp4" type="video/mp4"></video></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Ludo Reimagined</h3><p class="project-carousel-card__description">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p></div></div></div></a></article><article class="project-carousel-card" data-project-slug="managed-asset-search"><a class="project-carousel-card__link" href="../../projects/managed-asset-search/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">IA</span><span class="project-carousel-card__pill project-carousel-card__pill--type">Taxonomy</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2021</span></div><div class="project-carousel-card__image"><video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="../../Assets/DAM-TE.mp4" type="video/mp4"></video></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Managed Asset Search</h3><p class="project-carousel-card__description">A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.</p></div></div></div></a></article><article class="project-carousel-card" data-project-slug="venture-hub"><a class="project-carousel-card__link" href="../../projects/venture-hub/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">System Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><img src="../../Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async"></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Venture Hub</h3><p class="project-carousel-card__description">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p></div></div></div></a></article>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
+            <div class="flex max-w-[70rem] justify-center text-subtext">
+                <div class="flex items-center gap-[1.15rem]">
+                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                </div>
+            </div>
+        </footer>
+                </div>
+            </div>
+        </section>
+        </main>
+    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
+    <script src="../../shared/navbar.js" defer></script>
+    <script src="../../projects/_shared/project-page.js" defer></script>
+    <script src="../../projects/_shared/project-stack.js" defer></script>
+</body>
+</html>
+

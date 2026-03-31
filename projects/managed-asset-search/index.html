@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en" class="light-theme">
 <head>
     <meta charset="UTF-8">
@@ -14,18 +14,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script>
-        (function () {
-            try {
-                var storedTheme = localStorage.getItem('theme');
-                var themeClass = storedTheme === 'dark' ? 'dark-theme' : 'light-theme';
-                document.documentElement.classList.remove('light-theme', 'dark-theme');
-                document.documentElement.classList.add(themeClass);
-            } catch (error) {
-                document.documentElement.classList.add('light-theme');
-            }
-        })();
-    </script>
+    <script>(function(){try{var storedTheme=localStorage.getItem('theme');var themeClass=storedTheme==='dark'?'dark-theme':'light-theme';document.documentElement.classList.remove('light-theme','dark-theme');document.documentElement.classList.add(themeClass);}catch(error){document.documentElement.classList.add('light-theme');}})();</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
@@ -159,10 +148,16 @@
                         <p class="project-carousel-eyebrow font-mono text-eyebrow uppercase">More Projects</p>
                     </div>
                     <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
-                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">&lt;</button>
-                        <button class="project-carousel-control next" type="button" aria-label="Next project">&gt;</button>
+                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" aria-hidden="true">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" aria-hidden="true">
+                        </button>
+                        <button class="project-carousel-control next" type="button" aria-label="Next project">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" aria-hidden="true">
+                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" aria-hidden="true">
+                        </button>
                         <div class="project-carousel-track">
-                            <article class="project-carousel-card" data-project-slug="ludo-reimagined"><a class="project-carousel-card__link" href="../ludo-reimagined/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">Game Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="../../Assets/ludo-cards.mp4" type="video/mp4"></video></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Ludo Reimagined</h3><p class="project-carousel-card__description">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p></div></div></div></a></article><article class="project-carousel-card" data-project-slug="venture-hub"><a class="project-carousel-card__link" href="../venture-hub/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">System Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><img src="../../Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async"></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Venture Hub</h3><p class="project-carousel-card__description">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p></div></div></div></a></article>
+                            <article class="project-carousel-card" data-project-slug="ludo-cards"><a class="project-carousel-card__link" href="../ludo-cards/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">Game Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="../../Assets/ludo-cards.mp4" type="video/mp4"></video></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Ludo Cards</h3><p class="project-carousel-card__description">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p></div></div></div></a></article><article class="project-carousel-card" data-project-slug="venture-hub"><a class="project-carousel-card__link" href="../venture-hub/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">System Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><img src="../../Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async"></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Venture Hub</h3><p class="project-carousel-card__description">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p></div></div></div></a></article>
                         </div>
                     </div>
                 </div>
@@ -170,11 +165,12 @@
         </div>
 
         <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="flex max-w-[70rem] justify-center text-subtext">
+            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
                 <div class="flex items-center gap-[1.15rem]">
                     <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                     <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                     <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
                 </div>
             </div>
         </footer>

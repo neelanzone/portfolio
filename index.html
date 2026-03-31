@@ -1,5 +1,5 @@
-<!DOCTYPE html>
-<html lang="en">
+﻿<!DOCTYPE html>
+<html lang="en" data-home-tone="color">
 
 <head>
     <script>
@@ -9,210 +9,141 @@
                 var themeClass = storedTheme === 'light' ? 'light-theme' : 'dark-theme';
                 document.documentElement.classList.remove('light-theme', 'dark-theme');
                 document.documentElement.classList.add(themeClass);
+                document.documentElement.dataset.homeTone = 'color';
             } catch (error) {
                 document.documentElement.classList.add('dark-theme');
             }
         })();
     </script>
-    <style>
-        :root {
-            --loader-bg: #050505;
-            --loader-fg: #f0f0f0;
-            --loader-bar-start: rgba(255, 255, 255, 0.35);
-            --loader-bar-end: rgba(255, 255, 255, 1);
-        }
-
-        :root.light-theme {
-            --loader-bg: #f7f2e8;
-            --loader-fg: #181716;
-            --loader-bar-start: rgba(24, 23, 22, 0.2);
-            --loader-bar-end: rgba(24, 23, 22, 0.8);
-        }
-
-        body.is-loading {
-            overflow: hidden;
-            background: var(--loader-bg);
-        }
-
-        body.is-loading > :not(.page-loader) {
-            visibility: hidden;
-        }
-
-        .page-loader {
-            position: fixed;
-            inset: 0;
-            z-index: 1000;
-            display: grid;
-            place-items: center;
-            background: var(--loader-bg);
-            color: var(--loader-fg);
-        }
-
-        .page-loader__inner {
-            display: grid;
-            justify-items: center;
-            gap: 0.85rem;
-        }
-
-        .page-loader__logo {
-            width: 112px;
-            height: 112px;
-            object-fit: contain;
-        }
-
-        .page-loader__text {
-            font: 0.75rem/1.2 "Space Mono", monospace;
-            letter-spacing: 0.28em;
-            text-transform: uppercase;
-            opacity: 0.7;
-        }
-
-        .page-loader__bar {
-            width: 140px;
-            height: 3px;
-            overflow: hidden;
-        }
-
-        .page-loader__bar-fill {
-            width: 100%;
-            height: 100%;
-            border-radius: 999px;
-            background: linear-gradient(90deg, var(--loader-bar-start), var(--loader-bar-end));
-            transform: scaleX(0);
-            transform-origin: left center;
-            transition: transform 0.18s ease-out;
-        }
-    </style>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portfolio | Designer </title>
-    <!-- SEO & Meta Tags -->
-    <meta name="description"
-        content="Experience designer creative portfolio">
-
-    <!-- Fonts -->
+    <title>Portfolio | Nilanjan Banerjee</title>
+    <meta name="description" content="Minimal homepage shell for Nilanjan Banerjee with shared navigation, profile orbit, and selected projects.">
+    <style>
+        html.dark-theme body.home-alt { background: #070d1d; color: #f3eee7; }
+        html.light-theme body.home-alt { background: #f7f2e8; color: #1c1a16; }
+        body.home-alt { margin: 0; min-height: 100vh; overflow-x: hidden; }
+        body.home-alt.home-alt--booting #three-container,
+        body.home-alt.home-alt--booting .home-sidebar,
+        body.home-alt.home-alt--booting .navbar--home,
+        body.home-alt.home-alt--booting .home-shell,
+        body.home-alt.home-alt--booting footer {
+            opacity: 0;
+            pointer-events: none;
+        }
+        body.home-alt.home-alt--booting .home-sidebar { transform: translateX(-12px); }
+        body.home-alt.home-alt--booting .navbar--home { transform: translateY(-10px); }
+        body.home-alt.home-alt--booting .home-shell,
+        body.home-alt.home-alt--booting footer { transform: translateY(18px); }
+        body.home-alt.home-alt--scene-only .home-shell { padding-top: 72px; padding-bottom: 0; }
+        body.home-alt.home-alt--scene-only .home-composition,
+        body.home-alt.home-alt--scene-only .home-shell__anchor,
+        body.home-alt.home-alt--scene-only #work { display: none; }
+        :where(body.home-alt) .home-shell { position: relative; padding: 72px 24px 40px; }
+        :where(body.home-alt) .home-composition { width: min(1180px, 100%); margin: 0 auto; overflow: visible; }
+        :where(body.home-alt) #about { position: relative; display: grid; place-items: center; min-height: 60svh; overflow: visible; }
+        :where(body.home-alt) .collage-container { position: relative; width: min(24rem, 100%); height: 20rem; margin: 0 auto; overflow: visible; }
+        :where(body.home-alt) .about-stage {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: min(40rem, calc(100vw - 2rem));
+            height: 34rem;
+            transform: translate(-50%, -50%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: visible;
+        }
+        :where(body.home-alt) .photo-wrapper {
+            position: relative;
+            z-index: 5;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 176px;
+        }
+        :where(body.home-alt) .collage-photo {
+            display: block;
+            width: 176px;
+            height: 176px;
+            object-fit: cover;
+            border-radius: 50%;
+            position: relative;
+            z-index: 2;
+        }
+        :where(body.home-alt) .pull-tab {
+            position: absolute;
+            left: 50%;
+            bottom: 0;
+            transform: translateX(calc(-50% - 10%)) translateY(calc(42px + var(--pull-y, 0px)));
+            background: #e63946;
+            color: #fff;
+            width: 22px;
+            padding-top: 105px;
+            padding-bottom: 8px;
+            border-radius: 0 0 12px 12px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-end;
+            z-index: 1;
+            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
+            font-family: 'Nunito Sans', sans-serif;
+        }
+        @media (max-width: 767px) {
+            :where(body.home-alt) .pull-tab {
+                transform: translateX(-50%) translateY(calc(15px + var(--pull-y, 0px)));
+            }
+        }
+        :where(body.home-alt) .tab-label-pull {
+            font-size: 0.5rem;
+            font-weight: 800;
+            letter-spacing: 2px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+        }
+        :where(body.home-alt) .tab-label-reset {
+            font-size: 0.48rem;
+            font-weight: 700;
+            letter-spacing: 0.7px;
+            writing-mode: vertical-rl;
+            text-orientation: mixed;
+            transform: rotate(180deg);
+            margin-bottom: 7px;
+            white-space: nowrap;
+        }
+        :where(body.home-alt) .accessory-wrapper {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            --active-x: var(--base-x);
+            --active-y: var(--base-y);
+            transform: translate(calc(-50% + var(--active-x) + var(--drag-x, 0px)), calc(-50% + var(--active-y) + var(--drag-y, 0px))) rotate(var(--rot, 0deg)) scale(var(--scale, 1));
+            transform-origin: center center;
+        }
+        body.home-alt .accessory { display: block; height: auto; max-width: 128px; }
+    </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
-
-    <!-- Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="mobile.css">
+    <link rel="stylesheet" href="home-alt.css">
 </head>
 
-<body class="is-loading">
-    <div class="page-loader" aria-live="polite" aria-label="Loading page">
-        <div class="page-loader__inner">
-            <img class="page-loader__logo" width="112" height="112" src="Assets/identity-motion-active.gif" alt="">
-            <p class="page-loader__text">Loading</p>
-            <div class="page-loader__bar" aria-hidden="true"><div class="page-loader__bar-fill"></div></div>
-        </div>
-    </div>
+<body class="home-alt home-alt--sidebar-collapsed home-alt--booting">
+    <div id="three-container" aria-hidden="true"></div>
     <div data-navbar-mount data-navbar-variant="home"></div>
 
-
-
-    <header class="hero" id="hero">
-        <div id="three-container"></div>
-        <div class="hero-content">
-            <div class="hero-content-inner">
-                <h1>Some ripples make waves,<br><span class="highlight">and some waves, ripples</span></h1>
-                <h3>Drawn to systems,<br class="mobile-break"> obsessed with play.</h3>
-            </div>
-        </div>
-    </header>
-
-        <div id="work-anchor" aria-hidden="true"></div>
-        <section id="work" class="section">
-            <div class="container">
-                <h2 class="work-section-heading">Projects</h2>
-                <div class="carousel-container" tabindex="0" role="region" aria-label="Work carousel">
-                    <button class="carousel-control prev" aria-label="Previous">&lt;</button>
-                    <button class="carousel-control next" aria-label="Next">&gt;</button>
-                    <div class="carousel-track">
-                        <article class="work-card">
-    <a class="work-card-link" href="projects/ludo-reimagined/index.html" aria-label="Open Ludo Reimagined case study">
-        <div class="work-card-shell">
-            <div class="work-image placeholder-image">
-                <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
-                    <source src="Assets/ludo-cards.mp4" type="video/mp4">
-                </video>
-                <div class="work-card-pills">
-                    <span class="work-pill">Game Design</span>
-                    <span class="work-pill work-pill-date">2026</span>
-                </div>
-                <div class="work-info">
-                    <h3>Ludo Reimagined</h3>
-                    <p class="work-desc">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p>
-                </div>
-            </div>
-        </div>
-    </a>
-</article>
-
-<article class="work-card">
-    <a class="work-card-link" href="projects/managed-asset-search/index.html" aria-label="Open Managed Asset Search case study">
-        <div class="work-card-shell">
-            <div class="work-image placeholder-image">
-                <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
-                    <source src="Assets/DAM-TE.mp4" type="video/mp4">
-                </video>
-                <div class="work-card-pills">
-                    <span class="work-pill">Information Architecture</span>
-                    <span class="work-pill work-pill-date">2021</span>
-                </div>
-                <div class="work-info">
-                    <h3>Managed Asset Search</h3>
-                    <p class="work-desc">A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.</p>
-                </div>
-            </div>
-        </div>
-    </a>
-</article>
-
-<article class="work-card title-card">
-    <h2 class="carousel-title">Projects</h2>
-</article>
-
-<article class="work-card">
-    <a class="work-card-link" href="projects/venture-hub/index.html" aria-label="Open Venture Hub case study">
-        <div class="work-card-shell">
-            <div class="work-image placeholder-image">
-                <picture>
-                    <source srcset="Assets/accelerator-dashboard.avif" type="image/avif">
-                    <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" class="work-bg-image" loading="lazy" decoding="async">
-                </picture>
-                <div class="work-card-pills">
-                    <span class="work-pill">UX/UI &amp; System Design</span>
-                    <span class="work-pill work-pill-date">2026</span>
-                </div>
-                <div class="work-info">
-                    <h3>Venture Hub</h3>
-                    <p class="work-desc">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p>
-                </div>
-            </div>
-        </div>
-    </a>
-</article>
-
-
-                    </div>
-                </div>
-                <div class="carousel-dots" id="carousel-dots" aria-hidden="true"></div>
-            </div>
-        </section>
-
-
-    <main>
-        <section id="about" class="section">
-            <div class="container">
-                <h2 class="section-title about-glitch-title">
-                    <span class="about-glitch-title__text" data-about-glitch-text data-text="Neelanzone"><span class="about-glitch-title__label">Neelanzone</span><span class="about-glitch-title__bottom" aria-hidden="true">Neelanzone</span><span class="about-glitch-title__block" aria-hidden="true"></span></span>
-                </h2>
-                <div class="about-grid">
-                    <div class="collage-container">
+    <main class="home-shell" id="hero">
+        <div class="home-composition">
+            <section class="home-column home-column--about home-column--intro" id="about" aria-label="Profile and about summary">
+                <div class="collage-container">
+                    <div class="about-stage">
                         <div class="photo-wrapper">
-                            <img src="Assets/About-me/photo-self.png" id="photo-self" class="collage-photo" alt="Neel's Portrait" loading="lazy" decoding="async" draggable="false">
+                            <img src="Assets/About-me/photo-self.png" id="photo-self" class="collage-photo" alt="Neel's Portrait" width="176" height="176" loading="lazy" decoding="async" draggable="false">
                             <div id="reset-tab" class="pull-tab">
                                 <span class="tab-label-reset">TO RESET</span>
                                 <span class="tab-label-pull">PULL</span>
@@ -227,6 +158,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
+
                             <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * -0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * -0.866); --rot: 8deg; --scale: 0.95;">
                                 <img src="Assets/About-me/sewn-hat.png" class="accessory" id="acc-sewn" alt="Sewn Hat" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
@@ -236,6 +168,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
+
                             <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -1); --mobile-base-y: 0px; --rot: 7deg; --scale: 0.95;">
                                 <img src="Assets/About-me/noir-hat.png" class="accessory" id="acc-noir" alt="Noir Hat" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
@@ -245,6 +178,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
+
                             <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * -0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * -0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: -8deg; --scale: 1.425;">
                                 <img src="Assets/About-me/gandhi-glasses.png" class="accessory" id="acc-gandhi" alt="Round Glasses" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
@@ -254,6 +188,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
+
                             <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 0.5); --base-y: calc(var(--about-orbit-radius) * 0.866); --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 0.5); --mobile-base-y: calc(var(--about-mobile-orbit-radius) * 0.866); --rot: 7deg; --scale: 1.425;">
                                 <img src="Assets/About-me/swag-glasses.png" class="accessory" id="acc-swag" alt="Swag Glasses" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
@@ -263,6 +198,7 @@
                                     <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
                                 </div>
                             </div>
+
                             <div class="accessory-wrapper draggable" style="--base-x: calc(var(--about-orbit-radius) * 1); --base-y: 0px; --mobile-base-x: calc(var(--about-mobile-orbit-radius) * 1); --mobile-base-y: 0px; --rot: -8deg; --scale: 0.95;">
                                 <img src="Assets/About-me/venetian-mask.png" class="accessory" id="acc-venetian" alt="Venetian Mask" loading="lazy" decoding="async" draggable="false">
                                 <div class="gui-container">
@@ -274,161 +210,93 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="about-text">
-                        <div class="about-summary" data-about-copy>
-                            <button type="button" class="about-tldr-toggle" data-about-tldr aria-pressed="false">
-                                <span class="about-tldr-switch" aria-hidden="true">
-                                    <span class="about-tldr-knob"></span>
-                                </span>
-                            </button>
-                            <p><span class="about-strike">I have worn many hats in my journey so far. I've been a</span> <span class="about-keep">co-founder</span><span class="about-strike">, a</span> <span class="about-keep">marketer</span><span class="about-strike">, an</span> <span class="about-keep">educator</span><span class="about-strike">; but always a</span> <span class="about-keep">designer</span> <span class="about-strike">through it all. Nowadays, I design</span> <span class="about-keep">interfaces</span> <span class="about-strike">and</span> <span class="about-keep">product</span> <span class="about-keep">experiences</span> <span class="about-strike">that make systems easier to use, information easier to read and decisions easier to take.</span></p>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-    
-        <section id="contact" class="section">
-            <div class="container contact-container">
-                <h2 class="contact-heading">
-                    <span class="about-cta-line">
-                        <span class="about-cta-prefix">Let's ship something</span>
-                        <span class="about-rotating-word-wrap" data-rotating-word-wrap>
-                            <span class="about-rotating-word about-rotating-word--current" data-rotating-word-current>fun 🫧</span>
-                            <span class="about-rotating-word about-rotating-word--next" data-rotating-word-next aria-hidden="true">meaningful 🪞</span>
-                            <span class="about-rotating-word-sizer" data-rotating-word-sizer aria-hidden="true">fun 🫧</span>
-                        </span>
-                    </span>
-                </h2>
-                <div class="contact-scale-frame">
-                    <div class="contact-notebook-scene" aria-label="Interactive notebook collage">
-                        <button type="button" class="contact-business-card" data-contact-card aria-label="Pull out business card"></button>
-                        <img src="Assets/contact/blank-notebook.png" class="contact-notebook" alt="Open notebook with room for draggable stickers" width="1181" height="1181" draggable="false">
-                        <div class="contact-reset-track" aria-hidden="true"></div>
-                        <div class="contact-reset-tab" data-contact-reset-tab aria-label="Pull to reset stickers"></div>
-
-                        <div class="contact-sticker contact-sticker--cat" data-contact-sticker data-meow-sticker style="--x: -18%; --y: 22%; --w: 36%; --z: 5; --scale: 1.5; --drag-x: -200px; --drag-y: 100px;">
-                            <img src="Assets/contact/halftone-cat.png" alt="Halftone cat sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--flower" data-contact-sticker style="--x: 132%; --y: 28%; --w: 38%; --z: 7; --scale: 2; --drag-x: 150px; --drag-y: 100px;">
-                            <span class="contact-sticker-hitbox" aria-hidden="true"></span>
-                            <img src="Assets/contact/dried-flower.png" alt="Dried flower sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--tape contact-sticker--tape-top" data-contact-sticker style="--x: -10%; --y: 6%; --w: 13%; --z: 6; --drag-x: -180px; --drag-y: 105px;">
-                            <img src="Assets/contact/washi-tape.png" alt="Washi tape sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--tape contact-sticker--tape-bottom" data-contact-sticker style="--x: -20%; --y: 47%; --w: 13%; --z: 6; --drag-x: -240px; --drag-y: 40px; --rot: 30deg;">
-                            <img src="Assets/contact/washi-tape.png" alt="Washi tape sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--ladybug" data-contact-sticker style="--x: 126%; --y: 37%; --w: 9%; --z: 8; --scale: 2; --drag-x: 70px; --drag-y: 50px;">
-                            <img src="Assets/contact/ladybug.png" alt="Ladybug sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 66%; --y: 20%; --w: 22%; --z: 5; --drag-x: 70px; --drag-y: 50px;">
-                            <img src="Assets/logos/indus-international-school.png" alt="Indus International School sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 62%; --y: 34%; --w: 16%; --z: 5; --scale: 1.1; --drag-x: 4px; --drag-y: 10px;">
-                            <img src="Assets/logos/total-environment.png" alt="Total Environment sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 70%; --y: 48%; --w: 18%; --z: 5; --drag-x: 50px; --drag-y: -20px;">
-                            <img src="Assets/logos/reliance.png" alt="Reliance sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 63%; --y: 62%; --w: 16%; --z: 5; --drag-y: -40px;">
-                            <img src="Assets/logos/apeejay-group.png" alt="Apeejay sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-
-                        <div class="contact-sticker contact-sticker--logo" data-contact-sticker data-contact-logo style="--x: 69%; --y: 75%; --w: 14%; --z: 5; --drag-x: 60px; --drag-y: -110px;">
-                            <img src="Assets/logos/gyproc-saint-gobain.png" alt="Gyproc sticker" draggable="false">
-                            <div class="gui-container">
-                                <div class="gui-handle gui-rotate" data-tooltip="Rotate"><span class="icon-light">&#8635;</span></div>
-                                <div class="gui-handle gui-scale" data-tooltip="Scale"><span class="icon-light">&#10529;</span></div>
-                                <div class="gui-handle gui-layer-up" data-tooltip="Front"><span class="icon-light">&#8593;</span></div>
-                                <div class="gui-handle gui-layer-down" data-tooltip="Back"><span class="icon-light">&#8595;</span></div>
-                            </div>
-                        </div>
-                    </div>
-                    <a href="mailto:neelanzone@gmail.com" class="button">Mail Me</a>
                 </div>
 
-                <div class="contact-card-modal" data-contact-card-modal hidden aria-hidden="true">
-                    <div class="contact-card-modal__backdrop" data-contact-card-close></div>
-                    <div class="contact-card-modal__panel" role="dialog" aria-modal="true" aria-labelledby="contact-card-title">
-                        <button type="button" class="contact-card-modal__close" data-contact-card-close aria-label="Close business card">&times;</button>
-                        <p class="contact-card-modal__eyebrow">Business Card</p>
-                        <h3 id="contact-card-title">Nilanjan Banerjee</h3>
-                        <a class="contact-card-modal__whatsapp" href="https://wa.me/919845107326?text=Hi%20Nilanjan" target="_blank" rel="noreferrer">
-                            <span class="contact-card-modal__whatsapp-icon" aria-hidden="true">
-                                <svg viewBox="0 0 32 32" focusable="false">
-                                    <path fill="currentColor" d="M16 3C8.83 3 3 8.64 3 15.61c0 2.45.74 4.84 2.13 6.89L3.5 29l6.72-1.76A13.16 13.16 0 0 0 16 28.22c7.17 0 13-5.64 13-12.61S23.17 3 16 3Zm0 22.98a10.8 10.8 0 0 1-5.48-1.48l-.39-.23-3.99 1.05 1.07-3.87-.26-.4a10.28 10.28 0 0 1-1.6-5.44C5.35 10 10.06 5.5 16 5.5c5.94 0 10.65 4.5 10.65 10.11S21.94 25.98 16 25.98Zm5.86-7.8c-.32-.16-1.87-.92-2.16-1.02-.29-.1-.5-.16-.71.16-.21.31-.81 1.01-.99 1.22-.18.21-.36.24-.68.08-.32-.16-1.34-.48-2.56-1.53-.95-.82-1.59-1.83-1.78-2.14-.18-.31-.02-.47.14-.63.14-.14.32-.37.48-.55.16-.18.21-.31.32-.52.11-.21.05-.39-.03-.55-.08-.16-.71-1.68-.98-2.31-.26-.61-.52-.53-.71-.54h-.61c-.21 0-.55.08-.84.39s-1.1 1.07-1.1 2.61 1.13 3.03 1.29 3.24c.16.21 2.21 3.46 5.49 4.72.78.33 1.39.53 1.86.67.78.25 1.49.21 2.05.13.63-.09 1.87-.76 2.13-1.49.26-.73.26-1.36.18-1.49-.08-.13-.29-.21-.61-.37Z"/>
-                                </svg>
+                <div class="about-text">
+                    <div class="about-summary" data-about-copy>
+                        <button type="button" class="about-tldr-toggle" data-about-tldr aria-pressed="false" aria-label="Toggle concise about summary">
+                            <span class="about-tldr-switch" aria-hidden="true">
+                                <span class="about-tldr-knob"></span>
                             </span>
-                            <span>Text on WhatsApp</span>
-                        </a>
+                        </button>
+                        <p><span class="about-strike">I have worn many hats in my journey so far. I've been a</span> <span class="about-keep">co-founder</span><span class="about-strike">, a</span> <span class="about-keep">marketer</span><span class="about-strike">, an</span> <span class="about-keep">educator</span><span class="about-strike">; but always a</span> <span class="about-keep">designer</span><span class="about-strike"> through it all.</span></p>
+                        <p><span class="about-strike">I design</span> <span class="about-keep">interfaces</span> <span class="about-strike">and</span> <span class="about-keep">product experiences</span> <span class="about-strike">that make systems easier to use, information easier to read and decisions easier to take.</span></p>
                     </div>
                 </div>
+            </section>
+
+        </div>
+
+        <div id="work-anchor" class="home-shell__anchor" aria-hidden="true"></div>
+        <section id="work" class="section home-work-archive">
+            <div class="container">
+                <div class="carousel-container" tabindex="0" role="region" aria-label="Work carousel">
+                    <button class="carousel-control prev" aria-label="Previous">&lt;</button>
+                    <button class="carousel-control next" aria-label="Next">&gt;</button>
+                    <div class="carousel-track">
+                        <article class="work-card">
+                            <a class="work-card-link" href="projects/ludo-cards/index.html" aria-label="Open Ludo Cards case study">
+                                <div class="work-card-shell">
+                                    <div class="work-image placeholder-image">
+                                        <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
+                                            <source src="Assets/ludo-cards.mp4" type="video/mp4">
+                                        </video>
+                                        <div class="work-card-pills">
+                                            <span class="work-pill">Game Design</span>
+                                            <span class="work-pill work-pill-date">2026</span>
+                                        </div>
+                                        <div class="work-info">
+                                            <h3>Ludo Cards</h3>
+                                            <p class="work-desc">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+
+                        <article class="work-card">
+                            <a class="work-card-link" href="projects/managed-asset-search/index.html" aria-label="Open Managed Asset Search case study">
+                                <div class="work-card-shell">
+                                    <div class="work-image placeholder-image">
+                                        <video autoplay loop muted playsinline class="work-bg-image" preload="none" aria-hidden="true">
+                                            <source src="Assets/DAM-TE.mp4" type="video/mp4">
+                                        </video>
+                                        <div class="work-card-pills">
+                                            <span class="work-pill">Information Architecture</span>
+                                            <span class="work-pill work-pill-date">2021</span>
+                                        </div>
+                                        <div class="work-info">
+                                            <h3>Managed Asset Search</h3>
+                                            <p class="work-desc">A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+
+                        <article class="work-card">
+                            <a class="work-card-link" href="projects/venture-hub/index.html" aria-label="Open Venture Hub case study">
+                                <div class="work-card-shell">
+                                    <div class="work-image placeholder-image">
+                                        <picture>
+                                            <source srcset="Assets/accelerator-dashboard.avif" type="image/avif">
+                                            <img src="Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" class="work-bg-image" loading="lazy" decoding="async">
+                                        </picture>
+                                        <div class="work-card-pills">
+                                            <span class="work-pill">UX/UI &amp; System Design</span>
+                                            <span class="work-pill work-pill-date">2026</span>
+                                        </div>
+                                        <div class="work-info">
+                                            <h3>Venture Hub</h3>
+                                            <p class="work-desc">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </a>
+                        </article>
+                    </div>
+                </div>
+                <div class="carousel-dots" id="carousel-dots" aria-hidden="true"></div>
             </div>
         </section>
     </main>
@@ -436,6 +304,9 @@
     <footer>
         <div class="container footer-content">
             <div class="footer-socials" aria-label="Social links">
+                <a id="contact" href="mailto:neelanzone@gmail.com" aria-label="Email">
+                    <img src="Assets/social/mail.svg" alt="" width="28" height="28">
+                </a>
                 <a href="https://x.com/Neelanzone" target="_blank" rel="noreferrer" aria-label="X">
                     <img src="Assets/social/x.svg" alt="" width="28" height="28">
                 </a>
@@ -449,17 +320,13 @@
         </div>
     </footer>
 
-    <!-- Three.js and dependencies from CDN -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
     <script src="shared/navbar.js"></script>
-    <script src="main.js"></script>
+    <script src="home-background.js" defer></script>
+    <script src="home-alt.js"></script>
 </body>
 
 </html>
-
-
-
-
 
 
 

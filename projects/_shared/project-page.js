@@ -231,7 +231,6 @@ class ProjectSpaceField {
             let radius = 0;
             let currentRotation = 0;
             let targetRotation = 0;
-            let dragRotationFactor = 0.42;
             let dragStartX = 0;
             let dragDistance = 0;
             let lastDragX = 0;
@@ -242,7 +241,6 @@ class ProjectSpaceField {
             let touchIdentifier = null;
             let touchStartY = 0;
             let touchLock = null;
-            let pressedLink = null;
             let suppressClickUntil = 0;
             let rafId = null;
             let isAnimating = false;
@@ -268,7 +266,6 @@ class ProjectSpaceField {
                 const baseRadius = Math.round((cardWidth / 2) / Math.tan(Math.PI / cards.length));
                 const wideBoost = isMobile ? cardWidth * 1.7 : cardWidth * 3.9;
                 radius = Math.max(baseRadius + wideBoost, isMobile ? 360 : 760);
-                dragRotationFactor = Math.max(0.34, theta / Math.max(cardWidth * 1.3, 170));
 
                 cards.forEach((card, index) => {
                     const angle = theta * index;
@@ -362,11 +359,10 @@ class ProjectSpaceField {
                 const deltaStep = clientX - lastDragX;
                 lastDragX = clientX;
                 dragDistance = Math.max(dragDistance, Math.abs(deltaX));
-                targetRotation = dragStartRotation + deltaX * dragRotationFactor;
-                spaceField?.nudge?.(deltaStep * 0.02);
+                targetRotation = dragStartRotation + deltaX * 0.18;
+                spaceField?.nudge?.(deltaStep * 0.014);
 
                 if (dragDistance > 6) {
-                    pressedLink = null;
                     suppressClickUntil = performance.now() + 320;
                 }
             };
@@ -381,20 +377,6 @@ class ProjectSpaceField {
                 touchIdentifier = null;
                 touchLock = null;
                 snapToNearest();
-            };
-
-            const activatePressedLink = () => {
-                if (!pressedLink || dragDistance > 6) {
-                    pressedLink = null;
-                    return;
-                }
-
-                const href = pressedLink.getAttribute('href');
-                pressedLink = null;
-
-                if (href) {
-                    window.location.assign(href);
-                }
             };
 
             prevButton?.addEventListener('click', () => moveBy(1));
@@ -437,7 +419,6 @@ class ProjectSpaceField {
                     return;
                 }
 
-                pressedLink = event.target.closest('.project-carousel-card__link');
                 startDrag(event.clientX, event.pointerId, event.clientY);
                 carousel.setPointerCapture?.(event.pointerId);
             });
@@ -455,12 +436,8 @@ class ProjectSpaceField {
                     return;
                 }
 
-                const shouldActivateLink = dragDistance <= 6 && Boolean(pressedLink);
                 carousel.releasePointerCapture?.(event.pointerId);
                 finishDrag();
-                if (shouldActivateLink) {
-                    activatePressedLink();
-                }
             };
 
             carousel.addEventListener('pointerup', endDrag);
@@ -472,7 +449,6 @@ class ProjectSpaceField {
                 }
 
                 const touch = event.touches[0];
-                pressedLink = event.target.closest('.project-carousel-card__link');
                 touchIdentifier = touch.identifier;
                 startDrag(touch.clientX, null, touch.clientY);
             }, { passive: true });
@@ -491,7 +467,7 @@ class ProjectSpaceField {
                 const deltaY = touch.clientY - touchStartY;
 
                 if (touchLock === null) {
-                    if (Math.abs(deltaX) > 5 || Math.abs(deltaY) > 5) {
+                    if (Math.abs(deltaX) > 8 || Math.abs(deltaY) > 8) {
                         touchLock = Math.abs(deltaX) > Math.abs(deltaY) ? 'horizontal' : 'vertical';
                     } else {
                         return;
@@ -499,7 +475,6 @@ class ProjectSpaceField {
                 }
 
                 if (touchLock === 'vertical') {
-                    pressedLink = null;
                     finishDrag();
                     return;
                 }
@@ -515,16 +490,11 @@ class ProjectSpaceField {
 
                 const ended = Array.from(event.changedTouches).some((item) => item.identifier === touchIdentifier);
                 if (ended) {
-                    const shouldActivateLink = dragDistance <= 6 && Boolean(pressedLink);
                     finishDrag();
-                    if (shouldActivateLink) {
-                        activatePressedLink();
-                    }
                 }
             });
 
             carousel.addEventListener('touchcancel', () => {
-                pressedLink = null;
                 finishDrag();
             });
 
@@ -587,62 +557,22 @@ class ProjectSpaceField {
                 });
             });
 
-            const mobileButton = document.getElementById('mobile-menu-button') || document.getElementById('menu-toggle');
+            const mobileButton = document.getElementById('mobile-menu-button');
             const mobileMenu = document.getElementById('mobile-menu');
-            const mobileMenuLinks = mobileMenu ? Array.from(mobileMenu.querySelectorAll('a')) : [];
-            const mobileWorkToggle = document.getElementById('mobile-work-toggle');
-            const mobileWorkProjects = document.getElementById('mobile-work-projects');
-
-            const closeMobileMenu = function () {
-                if (!mobileButton || !mobileMenu) {
-                    return;
-                }
-
-                mobileButton.classList.remove('is-open');
-                mobileButton.setAttribute('aria-expanded', 'false');
-                mobileButton.setAttribute('aria-label', 'Open navigation menu');
-                mobileMenu.classList.remove('is-open');
-                mobileMenu.setAttribute('aria-hidden', 'true');
-
-                if (mobileWorkToggle && mobileWorkProjects) {
-                    mobileWorkToggle.setAttribute('aria-expanded', 'false');
-                    mobileWorkProjects.classList.remove('is-open');
-                    mobileWorkProjects.setAttribute('aria-hidden', 'true');
-                }
-            };
-
             if (mobileButton && mobileMenu) {
                 mobileButton.addEventListener('click', function () {
                     const expanded = mobileButton.getAttribute('aria-expanded') === 'true';
-                    mobileButton.classList.toggle('is-open', !expanded);
                     mobileButton.setAttribute('aria-expanded', String(!expanded));
-                    mobileButton.setAttribute('aria-label', expanded ? 'Open navigation menu' : 'Close navigation menu');
-                    mobileMenu.classList.toggle('is-open', !expanded);
-                    mobileMenu.setAttribute('aria-hidden', String(expanded));
+                    mobileMenu.classList.toggle('hidden');
+                });
 
-                    if (expanded && mobileWorkToggle && mobileWorkProjects) {
-                        mobileWorkToggle.setAttribute('aria-expanded', 'false');
-                        mobileWorkProjects.classList.remove('is-open');
-                        mobileWorkProjects.setAttribute('aria-hidden', 'true');
-                    }
+                mobileMenu.querySelectorAll('a').forEach(function (link) {
+                    link.addEventListener('click', function () {
+                        mobileButton.setAttribute('aria-expanded', 'false');
+                        mobileMenu.classList.add('hidden');
+                    });
                 });
             }
-
-            if (mobileWorkToggle && mobileWorkProjects) {
-                mobileWorkToggle.addEventListener('click', function (event) {
-                    event.stopPropagation();
-                    const expanded = mobileWorkToggle.getAttribute('aria-expanded') === 'true';
-                    mobileWorkToggle.setAttribute('aria-expanded', String(!expanded));
-                    mobileWorkProjects.classList.toggle('is-open', !expanded);
-                    mobileWorkProjects.setAttribute('aria-hidden', String(expanded));
-                });
-            }
-
-            mobileMenuLinks.forEach(function (link) {
-                link.addEventListener('click', function () {
-                    closeMobileMenu();
-                });
-            });
 
             const navbarAnchorLinks = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
             const scrollToNavbarAnchor = function (hash) {
@@ -675,92 +605,6 @@ class ProjectSpaceField {
                     scrollToNavbarAnchor(hash);
                 });
             });
-
-            const sectionPillLinks = Array.from(document.querySelectorAll('.section-pill[data-section]'));
-            const pillSections = sectionPillLinks
-                .map(function (link) {
-                    const id = link.dataset.section;
-                    return id ? document.getElementById(id) : null;
-                })
-                .filter(Boolean);
-
-            const getSectionPillOffset = function () {
-                const navbar = document.querySelector('.navbar');
-                const pillsBar = document.getElementById('section-pills');
-                const navbarBottom = navbar ? navbar.getBoundingClientRect().bottom : 0;
-                const pillsBottom = pillsBar ? pillsBar.getBoundingClientRect().bottom : navbarBottom;
-                return Math.max(navbarBottom, pillsBottom, 0);
-            };
-
-            const updateSectionPills = function () {
-                if (!sectionPillLinks.length || !pillSections.length) {
-                    return;
-                }
-
-                const threshold = getSectionPillOffset() + 8;
-                let activeId = pillSections[0].id;
-                const lastSection = pillSections[pillSections.length - 1];
-                const viewportBottom = window.scrollY + window.innerHeight;
-                const pageBottom = document.documentElement.scrollHeight;
-
-                pillSections.forEach(function (section) {
-                    if (section.getBoundingClientRect().top <= threshold) {
-                        activeId = section.id;
-                    }
-                });
-
-                if (lastSection) {
-                    const lastSectionTop = lastSection.getBoundingClientRect().top + window.scrollY;
-                    const maxScrollTop = Math.max(0, pageBottom - window.innerHeight);
-                    const lastSectionNeedsBottomActivation = lastSectionTop - threshold > maxScrollTop;
-                    const isNearPageBottom = viewportBottom >= pageBottom - 8;
-
-                    if (lastSectionNeedsBottomActivation && isNearPageBottom) {
-                        activeId = lastSection.id;
-                    }
-                }
-
-                const activeIndex = sectionPillLinks.findIndex(function (link) {
-                    return link.dataset.section === activeId;
-                });
-
-                sectionPillLinks.forEach(function (link, index) {
-                    const isActive = index === activeIndex;
-                    const isComplete = activeIndex !== -1 && index < activeIndex;
-                    link.classList.toggle('is-active', isActive);
-                    link.classList.toggle('is-complete', isComplete);
-                    link.setAttribute('aria-current', isActive ? 'true' : 'false');
-                });
-            };
-
-            sectionPillLinks.forEach(function (link) {
-                link.addEventListener('click', function (event) {
-                    const sectionId = link.dataset.section;
-                    if (!sectionId) {
-                        return;
-                    }
-
-                    const target = document.getElementById(sectionId);
-                    if (!target) {
-                        return;
-                    }
-
-                    event.preventDefault();
-                    const offset = getSectionPillOffset();
-                    const targetTop = target.getBoundingClientRect().top + window.scrollY - offset + 1;
-                    const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
-                    const clampedTop = Math.max(0, Math.min(targetTop, maxScrollTop));
-                    window.scrollTo({ top: clampedTop, behavior: 'auto' });
-                    history.pushState(null, '', '#' + sectionId);
-                    updateSectionPills();
-                });
-            });
-
-            if (sectionPillLinks.length && pillSections.length) {
-                window.addEventListener('scroll', updateSectionPills, { passive: true });
-                window.addEventListener('resize', updateSectionPills);
-                updateSectionPills();
-            }
 
             const navLinks = Array.from(document.querySelectorAll('.nav-link'));
             const sections = navLinks
