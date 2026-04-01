@@ -12,6 +12,11 @@
             this.sphereCenter = new THREE.Vector3(0, 0, 0);
             this.sphereCenterTarget = new THREE.Vector3(0, 0, 0);
             this.hasPointer = false;
+            this.activeTouchPointerId = null;
+            this.touchTapStartX = 0;
+            this.touchTapStartY = 0;
+            this.touchTapTravel = 0;
+            this.suppressClickUntil = 0;
             this.scroll = 0;
             this.scrollTarget = 0;
             this.isVisible = !document.hidden;
@@ -32,10 +37,15 @@
             this.burstOrigin = new THREE.Vector3(0, 0, 0);
             this.tempColorA = new THREE.Color();
             this.tempColorB = new THREE.Color();
+            this.pointerProjectNdc = new THREE.Vector2();
+            this.pointerProjectPoint = new THREE.Vector3();
 
             this.animate = this.animate.bind(this);
             this.handleClick = this.handleClick.bind(this);
+            this.handlePointerDown = this.handlePointerDown.bind(this);
             this.handlePointerMove = this.handlePointerMove.bind(this);
+            this.handlePointerUp = this.handlePointerUp.bind(this);
+            this.handlePointerCancel = this.handlePointerCancel.bind(this);
             this.handlePointerLeave = this.handlePointerLeave.bind(this);
             this.handleResize = this.handleResize.bind(this);
             this.handleScroll = this.handleScroll.bind(this);
@@ -947,6 +957,82 @@
             this.sphereStage = 0;
         }
 
+        isInteractiveEventTarget(target) {
+            return Boolean(target?.closest('.navbar, .home-sidebar, .mobile-menu, .home-mobile-flockbar, footer, a, button, input, textarea, select, label, summary, details'));
+        }
+
+        setPointerFromClient(clientX, clientY, immediate = false) {
+            this.hasPointer = true;
+            this.pointerTarget.x = (clientX / window.innerWidth) * 2 - 1;
+            this.pointerTarget.y = -((clientY / window.innerHeight) * 2 - 1);
+
+            if (immediate) {
+                this.pointer.copy(this.pointerTarget);
+            }
+        }
+
+        projectClientPointToGrid(clientX, clientY, output = this.pointerProjectPoint) {
+            this.pointerProjectNdc.x = (clientX / window.innerWidth) * 2 - 1;
+            this.pointerProjectNdc.y = -((clientY / window.innerHeight) * 2 - 1);
+            this.raycaster.setFromCamera(this.pointerProjectNdc, this.camera);
+
+            if (!this.raycaster.ray.intersectPlane(this.gridPlane, output)) {
+                return false;
+            }
+
+            this.gridGroup.worldToLocal(output);
+            return true;
+        }
+
+        updateSphereTargetFromPoint(point, syncCenter = false) {
+            this.sphereCenterTarget.set(
+                point.x,
+                this.sphereRadius * 0.94,
+                point.z
+            );
+
+            if (syncCenter) {
+                this.sphereCenter.copy(this.sphereCenterTarget);
+            }
+        }
+
+        advanceSphereInteraction(clientX, clientY, target = null) {
+            if (this.sphereSizePreset === 'none') {
+                return;
+            }
+
+            if (this.isInteractiveEventTarget(target) || this.burstActive) {
+                return;
+            }
+
+            const hasGridPoint = this.projectClientPointToGrid(clientX, clientY, this.pointerProjectPoint);
+            const hasSphereTarget = hasGridPoint || this.sphereVisible > 0.05 || this.sphereStage > 0;
+
+            if (!hasSphereTarget) {
+                return;
+            }
+
+            if (hasGridPoint) {
+                this.hoverPoint.copy(this.pointerProjectPoint);
+                this.updateSphereTargetFromPoint(
+                    this.pointerProjectPoint,
+                    this.sphereVisible < 0.08 && this.sphereStage === 0
+                );
+            }
+
+            if (this.sphereStage === 0) {
+                this.sphereStage = 1;
+                return;
+            }
+
+            if (this.sphereStage === 1) {
+                this.sphereStage = 2;
+                return;
+            }
+
+            this.triggerBurst();
+        }
+
         updatePixelGrid(time, delta) {
             if (this.hasPointer) {
                 this.raycaster.setFromCamera(this.pointer, this.camera);
@@ -1472,14 +1558,73 @@
                 return;
             }
 
-            if (event.target?.closest('.navbar, .home-sidebar, .mobile-menu, footer')) {
+            if (this.activeTouchPointerId !== null && event.pointerId === this.activeTouchPointerId) {
+                this.touchTapTravel = Math.max(
+                    this.touchTapTravel,
+                    Math.hypot(event.clientX - this.touchTapStartX, event.clientY - this.touchTapStartY)
+                );
+                this.setPointerFromClient(event.clientX, event.clientY, true);
+                return;
+            }
+
+            if (event.target?.closest('.navbar, .home-sidebar, .mobile-menu, .home-mobile-flockbar, footer')) {
                 this.handlePointerLeave();
                 return;
             }
 
-            this.hasPointer = true;
-            this.pointerTarget.x = (event.clientX / window.innerWidth) * 2 - 1;
-            this.pointerTarget.y = -((event.clientY / window.innerHeight) * 2 - 1);
+            this.setPointerFromClient(event.clientX, event.clientY);
+        }
+
+        handlePointerDown(event) {
+            if (this.isControlDragActive || event.pointerType === 'mouse' || this.sphereSizePreset === 'none') {
+                return;
+            }
+
+            if (this.isInteractiveEventTarget(event.target)) {
+                return;
+            }
+
+            this.activeTouchPointerId = event.pointerId;
+            this.touchTapStartX = event.clientX;
+            this.touchTapStartY = event.clientY;
+            this.touchTapTravel = 0;
+            this.setPointerFromClient(event.clientX, event.clientY, true);
+
+            if (this.projectClientPointToGrid(event.clientX, event.clientY, this.pointerProjectPoint)) {
+                this.hoverPoint.copy(this.pointerProjectPoint);
+                this.updateSphereTargetFromPoint(
+                    this.pointerProjectPoint,
+                    this.sphereVisible < 0.08 && this.sphereStage === 0
+                );
+            }
+        }
+
+        handlePointerUp(event) {
+            if (this.activeTouchPointerId === null || event.pointerId !== this.activeTouchPointerId) {
+                return;
+            }
+
+            const wasTap = this.touchTapTravel < 12;
+            this.setPointerFromClient(event.clientX, event.clientY, true);
+
+            if (wasTap) {
+                this.suppressClickUntil = performance.now() + 450;
+                this.advanceSphereInteraction(event.clientX, event.clientY, event.target);
+            }
+
+            this.activeTouchPointerId = null;
+            this.touchTapTravel = 0;
+            this.handlePointerLeave();
+        }
+
+        handlePointerCancel(event) {
+            if (this.activeTouchPointerId === null || event.pointerId !== this.activeTouchPointerId) {
+                return;
+            }
+
+            this.activeTouchPointerId = null;
+            this.touchTapTravel = 0;
+            this.handlePointerLeave();
         }
 
         handlePointerLeave() {
@@ -1489,47 +1634,11 @@
         }
 
         handleClick(event) {
-            if (this.sphereSizePreset === 'none') {
+            if (this.sphereSizePreset === 'none' || performance.now() < this.suppressClickUntil) {
                 return;
             }
 
-            if (event.target?.closest('a, button, input, textarea, select, label, summary, details')) {
-                return;
-            }
-
-            if (this.burstActive) {
-                return;
-            }
-
-            const hasSphereTarget = (this.hasPointer && this.hoverPoint.x < 9000) || this.sphereVisible > 0.05 || this.sphereStage > 0;
-
-            if (!hasSphereTarget) {
-                return;
-            }
-
-            if (this.hasPointer && this.hoverPoint.x < 9000) {
-                this.sphereCenterTarget.set(
-                    this.hoverPoint.x,
-                    this.sphereRadius * 0.94,
-                    this.hoverPoint.z
-                );
-
-                if (this.sphereVisible < 0.08 && this.sphereStage === 0) {
-                    this.sphereCenter.copy(this.sphereCenterTarget);
-                }
-            }
-
-            if (this.sphereStage === 0) {
-                this.sphereStage = 1;
-                return;
-            }
-
-            if (this.sphereStage === 1) {
-                this.sphereStage = 2;
-                return;
-            }
-
-            this.triggerBurst();
+            this.advanceSphereInteraction(event.clientX, event.clientY, event.target);
         }
 
         handleScroll() {
@@ -1567,7 +1676,10 @@
         }
 
         addEventListeners() {
+            window.addEventListener('pointerdown', this.handlePointerDown);
             window.addEventListener('pointermove', this.handlePointerMove, { passive: true });
+            window.addEventListener('pointerup', this.handlePointerUp);
+            window.addEventListener('pointercancel', this.handlePointerCancel);
             window.addEventListener('pointerleave', this.handlePointerLeave, { passive: true });
             window.addEventListener('blur', this.handlePointerLeave);
             window.addEventListener('click', this.handleClick);
@@ -2207,10 +2319,10 @@
                 ]
             }
             : {
-                key: 'joe-walsh-rocky-mountain-way-128kbps',
+                key: 'country-rock-jazz-blues',
                 sources: [
                     {
-                        src: 'Assets/music/Joe_Walsh-_Rocky_Mountain_Way_128kbps.webm',
+                        src: 'Assets/music/country-rock-jazz-blues.webm',
                         type: 'audio/webm; codecs="opus"'
                     }
                 ]

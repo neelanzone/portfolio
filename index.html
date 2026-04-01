@@ -6,7 +6,8 @@
         (function () {
             try {
                 var storedTheme = localStorage.getItem('theme');
-                var themeClass = storedTheme === 'light' ? 'light-theme' : 'dark-theme';
+                var isCompactViewport = window.matchMedia('(max-width: 767px)').matches;
+                var themeClass = isCompactViewport ? 'light-theme' : (storedTheme === 'light' ? 'light-theme' : 'dark-theme');
                 document.documentElement.classList.remove('light-theme', 'dark-theme');
                 document.documentElement.classList.add(themeClass);
                 document.documentElement.dataset.homeTone = 'color';

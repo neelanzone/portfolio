@@ -315,7 +315,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    applyThemePreference(getStoredTheme() === 'light' ? 'light' : 'dark');
+    applyThemePreference(window.innerWidth < 768 ? 'light' : (getStoredTheme() === 'light' ? 'light' : 'dark'));
     applySidebarCollapsedPreference(getStoredSidebarCollapsed());
     applySceneOnlyPreference(getStoredSceneOnly());
     syncMobileFlockBar();
@@ -564,6 +564,12 @@ document.addEventListener('DOMContentLoaded', () => {
         let filingDxAccum = 0;
         let isDesktopCarousel = false;
         let mobileDots = [];
+        let touchCarouselPointerId = null;
+        let touchCarouselStartX = 0;
+        let touchCarouselStartY = 0;
+        let touchCarouselStartScrollLeft = 0;
+        let touchCarouselDragging = false;
+        let suppressCarouselClickUntil = 0;
 
         const setMobileActiveDot = (activeIdx) => {
             if (!mobileDots.length) {
@@ -631,6 +637,20 @@ document.addEventListener('DOMContentLoaded', () => {
             });
 
             updateMobileActiveDot();
+        };
+
+        const endTouchCarouselGesture = (pointerId = null) => {
+            if (pointerId !== null && touchCarouselPointerId !== pointerId) {
+                return;
+            }
+
+            if (touchCarouselDragging) {
+                suppressCarouselClickUntil = Date.now() + 350;
+            }
+
+            touchCarouselPointerId = null;
+            touchCarouselDragging = false;
+            carouselContainer.classList.remove('is-touch-dragging');
         };
 
         const applyFilingSpread = (hoveredIdx) => {
@@ -836,6 +856,55 @@ document.addEventListener('DOMContentLoaded', () => {
                 requestAnimationFrame(updateMobileActiveDot);
             }
         }, { passive: true });
+
+        carouselContainer.addEventListener('pointerdown', (event) => {
+            if (isDesktopCarousel || (event.pointerType !== 'touch' && event.pointerType !== 'pen')) {
+                return;
+            }
+
+            touchCarouselPointerId = event.pointerId;
+            touchCarouselStartX = event.clientX;
+            touchCarouselStartY = event.clientY;
+            touchCarouselStartScrollLeft = carouselContainer.scrollLeft;
+            touchCarouselDragging = false;
+        });
+
+        carouselContainer.addEventListener('pointermove', (event) => {
+            if (isDesktopCarousel || touchCarouselPointerId !== event.pointerId) {
+                return;
+            }
+
+            const deltaX = event.clientX - touchCarouselStartX;
+            const deltaY = event.clientY - touchCarouselStartY;
+
+            if (!touchCarouselDragging) {
+                if (Math.abs(deltaX) < 8 || Math.abs(deltaX) <= Math.abs(deltaY)) {
+                    return;
+                }
+
+                touchCarouselDragging = true;
+                carouselContainer.classList.add('is-touch-dragging');
+            }
+
+            carouselContainer.scrollLeft = touchCarouselStartScrollLeft - deltaX;
+            requestAnimationFrame(updateMobileActiveDot);
+            event.preventDefault();
+        });
+
+        carouselContainer.addEventListener('pointerup', (event) => {
+            endTouchCarouselGesture(event.pointerId);
+        });
+
+        carouselContainer.addEventListener('pointercancel', (event) => {
+            endTouchCarouselGesture(event.pointerId);
+        });
+
+        carouselContainer.addEventListener('click', (event) => {
+            if (!isDesktopCarousel && Date.now() < suppressCarouselClickUntil) {
+                event.preventDefault();
+                event.stopPropagation();
+            }
+        }, true);
 
         updateCarouselGeometry();
         requestAnimationFrame(updateCarouselGeometry);

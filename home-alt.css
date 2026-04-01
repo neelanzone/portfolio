@@ -2844,8 +2844,11 @@
         overflow-y: hidden;
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
+        overscroll-behavior-x: contain;
+        touch-action: pan-y;
         scrollbar-width: none;
         padding: 0;
+        cursor: auto;
     }
 
     .home-work-archive .carousel-container::-webkit-scrollbar {
@@ -2872,6 +2875,10 @@
         z-index: auto !important;
         transform: none !important;
         opacity: 1 !important;
+    }
+
+    .home-work-archive .work-card-link {
+        touch-action: pan-y;
     }
 
     .home-work-archive .work-card.is-filing-open,
