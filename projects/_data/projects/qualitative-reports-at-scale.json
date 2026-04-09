@@ -5,7 +5,7 @@
     "colorMode": "light",
     "seo": {
         "title": "Qualitative Reports at Scale | Neelanzone",
-        "description": "A placeholder case study for an internal StartupYou tool that helps qualitative reports become easier to review, reuse, and share at scale.",
+        "description": "A report generator that helps qualitative reports become easier to review, reuse, and share at scale.",
         "socialImage": "Assets/qualitative-reports-01.png"
     },
     "sections": [
@@ -74,28 +74,28 @@
                     {
                         "id": "problem",
                         "label": "Problem",
-                        "body": "For a learning program tracking creative capacity and growth - the reports need to be personalised and qualitative, highlighting glow and grow areas for each student with evidence of practice, across multiple simultaneous cohorts. It took 4 weeks to manually compile, condense, design and publish 400 reports between 4 faculty - scaling linearly. The workflow had to be optimised for growth. "
+                        "body": "For a learning program tracking creative growth, reports need to be personalised, qualitative and grounded in evidence of practice. Producing 400 reports manually took four faculty members four weeks to compile, condense, design, and publish. The challenge was not only to handle volume, but to do so in a way that gave faculty more bandwidth for meaningful student support. "
                     },
                     {
                         "id": "approach",
                         "label": "Approach",
-                        "body": "The current workflow had two distinct problems. 1. Input quality: faculty observations needed to be specific and evidence-backed for the reports to mean anything. 2. Output volume: even with good notes, transforming them into hundreds of coherent, well-toned, personalised documents with a limited workforce in record time, was a challenge. For input, faculty used a structured format with short, sharp observation notes during sessions, and a mix of pre-defined rubric led scoring and free form notes for submission evaluations. Live sessions for recorded for analysing later if needed. LLM handled the rest: expanding notes into full paragraphs, synthesising observations across multiple sessions into a coherent narrative, and maintaining a tone that was motivating but restrained across every single report. A custom script then pulled faculty inputs, student submission data, and programme-specific metrics through a Google Sheets and Slides template system, visualising the data and generating PDFs in bulk. Faculty has the option of revising a report manually within the system before the final pass is sent for batch conversion to PDF."
+                        "body": "Faculty captured sharp, evidence-backed notes through structured observations, rubrics, and recorded sessions. An LLM shaped them into warm, consistent narratives, while a custom Sheets–Slides system stitched together inputs, metrics, visuals, and review flows to generate personalised reports in bulk, turning a slow, linear process into a scalable one."
                     },
                     {
                         "id": "outcome",
                         "label": "Outcome",
-                        "body": "The reporting cycle dropped from 4 weeks to 1 week. Reports were more consistent in tone than the ones produced manually, and richer in qualitative depth. Faculty could focus entirely on observation quality without having to worry about writing paragraphs for hundreds of students being mindful of their tone. Each report contained a narrative summary, glow and grow sections with specific evidence, and a visual data layer showing individual progress metrics."
+                        "body": "The reporting cycle dropped from 4 weeks to 1 week. Reports were more consistent in tone and richer in qualitative depth than the ones produced manually. Faculty could focus on the quality of observation, without the burden of writing thoughtful paragraphs for hundreds of students. Each report combined a narrative summary, glow and grow sections with specific evidence, and a visual data layer showing individual progress metrics."
                     },
                     {
                         "id": "constraint",
                         "label": "Constraint",
-                        "body": "The tool is upstream-dependent in two directions. If student submissions were missing, there was nothing to report on. If faculty had little to observe because of disengaged sessions or low participation then the notes were too thin for even a well-prompted LLM to work with. The response was to redesign parts of the programme itself: lower-barrier quests to generate submission data, and modules like the sci-fi design challenge reworked for more active individual participation. The reporting tool helped us refine the curriculum and make it more accessible and engaging for a wider audience."
+                        "body": "The tool exposed weak links upstream. No submissions meant no story to tell; low participation meant thin observations even the best prompt could not rescue. That pushed us to redesign the programme itself. We added a few lower-barrier quests and reworked modules for more active individual participation. In the process, the reporting tool became a way to refine the curriculum itself."
                     }
                 ],
                 "paragraph": "This is a placeholder project page for an internal StartupYou tool. The current layout is wired for the same longform desktop and mobile pattern as the other newer project pages, with copy and media ready to be replaced as the real case study takes shape.",
                 "quotes": [
                     {
-                        "text": "My daughter finished your program 3 weeks ago, I still don't know how he did and what should we do next.",
+                        "text": "My daughter finished your program 3 weeks ago, I still don't know how she did and what should we do next.",
                         "attribution": "Shefali, Parent"
                     },
                     {

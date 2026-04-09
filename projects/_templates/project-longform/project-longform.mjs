@@ -1,4 +1,4 @@
-﻿import { renderFooterBlock, renderMetaTags, renderProjectSidebar } from '../layout.mjs';
+import { renderFooterBlock, renderMetaTags, renderProjectSidebar } from '../layout.mjs';
 import { escapeHtml, resolveAssetPath, resolveProjectLink } from '../template-utils.mjs';
 import { getArtifactPreset } from './presets.mjs';
 
@@ -17,12 +17,17 @@ function getLongformConfig(project) {
 
 function getSidebarCopy(project, config) {
     const hero = config.hero ?? {};
-    const tags = Array.isArray(hero.tags) ? hero.tags.filter(Boolean) : [];
+    const heroSection = Array.isArray(project.sections)
+        ? project.sections.find((section) => section?.type === 'hero')
+        : null;
+    const summaryBrief = Array.isArray(heroSection?.summary)
+        ? heroSection.summary.find((line) => typeof line === 'string' && line.trim()) || ''
+        : '';
     const tabs = Array.isArray(hero.tabs) ? hero.tabs.filter(Boolean) : [];
-    const brief = hero.paragraph || tabs[0]?.body || project.seo?.description || '';
+    const brief = summaryBrief || hero.paragraph || tabs[0]?.body || project.seo?.description || '';
 
     return {
-        roles: tags.slice(0, 3),
+        roles: ['Designer', 'UX', 'Graphic'],
         brief
     };
 }
@@ -938,7 +943,7 @@ ${renderProjectSidebar(project, site, toRoot, {
     sidebarCopy,
     sidebarNote,
     sidebarIntroOrder: ['portfolioSection', 'index', 'projectSection', 'birdsSection'],
-    footerLogoHref: '#project-topfold'
+    footerLogoHref: `${toRoot}index.html`
 })}
         <div class="project-page-layout__main">
             <main class="project-longform-stage">
@@ -979,5 +984,8 @@ ${extraScriptsMarkup ? `${extraScriptsMarkup}
 ` : ``}</body>
 </html>`;
 }
+
+
+
 
 

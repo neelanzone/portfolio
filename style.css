@@ -25,7 +25,7 @@
 }
 
 :root.light-theme {
-    --bg-color: #f7f2e8;
+    --bg-color: #fff7f1;
     --text-color: #111111;
     --text-muted: #666666;
     --accent: #000000;
@@ -1080,7 +1080,7 @@ a:hover {
 
 /* About Section */
 #about {
-    --bg-color: #f7f2e8;
+    --bg-color: #fff7f1;
     --text-color: #111111;
     --text-muted: #666666;
     --accent: #000000;
@@ -3120,3 +3120,4 @@ footer {
 html body.home-alt .work-reading-time {
     color: #6e6693 !important;
 }
+

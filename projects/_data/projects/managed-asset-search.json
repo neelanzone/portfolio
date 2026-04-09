@@ -77,7 +77,7 @@
                     {
                         "id": "problem",
                         "label": "Problem",
-                        "body": "Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests."
+                        "body": "Design assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. As a result, the marketing design team became the default retrieval desk, adding to an already heavy stream of service requests."
                     },
                     {
                         "id": "approach",
@@ -87,12 +87,12 @@
                     {
                         "id": "outcome",
                         "label": "Outcome",
-                        "body": "Teams across departments could find, mark as favourite, download and share assets independently without routing requests through the design team. New team members could orient themselves autonomously. Time spent hunting for files, and aligning with stakeholders on which asset to use, dropped significantly."
+                        "body": "Teams across departments could find, save, download, and share assets on their own, without routing requests through the design team. New team members could get oriented more independently, and the time spent hunting for files or aligning on the right asset dropped sharply."
                     },
                     {
                         "id": "constraint",
                         "label": "Constraint",
-                        "body": "The system is only as current as its last upload. New assets require manual uploading and tagging - making the model fragile. Rotational ownership introduces inconsistencies, hard to identify later. Single member ownership creates fatigue. The next natural step is to automate uploads with assisted smart tagging, hedging against bad entries."
+                        "body": "The system is only as current as its last upload. New assets require manual uploading and tagging - making the model fragile. Rotational ownership introduces inconsistencies that are hard to catch later while single-owner workflows create fatigue. The next natural step is assisted automation: streamlined uploads with smart tagging to reduce effort and improve consistency."
                     }
                 ],
                 "quotes": [

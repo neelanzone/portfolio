@@ -1291,7 +1291,11 @@
 /* Social icons: invert in dark theme */
 
 html.dark-theme .project-tail-footer img {
-    filter: invert(1) opacity(0.75);
+    filter: invert(1) brightness(1.06) contrast(1.06);
+}
+
+html.dark-theme .project-social-icon__img {
+    opacity: 0.95;
 }
 
 
@@ -1876,19 +1880,30 @@ html.light-theme body.project-page .moon-icon {
     --home-sidebar-gap: clamp(0.75rem, 1.5vw, 1.1rem);
     --home-sidebar-current-width: var(--home-sidebar-expanded-width);
     --home-james-gunn-gradient: linear-gradient(60deg, #432A90 0%, #667AFF 30.29%, #E72931 58.05%, #FF9E1F 100%);
-    --home-control-shell-dark: rgba(17, 17, 17, 0.045);
-    --home-control-shell-light: rgba(17, 17, 17, 0.06);
-    --home-control-shell-border-dark: rgba(255, 255, 255, 0.16);
-    --home-control-shell-border-light: rgba(28, 26, 22, 0.08);
-    --home-control-shell-shadow-dark: inset 0 1px 0 rgba(255, 255, 255, 0.35), inset 0 -2px 4px rgba(0, 0, 0, 0.12);
-    --home-control-shell-shadow-light: inset 0 1px 0 rgba(255, 255, 255, 0.8), inset 0 -2px 4px rgba(0, 0, 0, 0.08);
-    --home-control-cap-dark: linear-gradient(180deg, rgba(44, 42, 39, 0.96), rgba(24, 23, 22, 0.98));
-    --home-control-cap-light: linear-gradient(180deg, rgba(243, 236, 226, 0.98), rgba(223, 214, 203, 0.98));
-    --home-control-cap-shadow-dark: inset 0 1px 0 rgba(255, 255, 255, 0.08), inset 0 -2px 4px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.18);
-    --home-control-cap-shadow-light: inset 0 1px 0 rgba(255, 255, 255, 0.9), inset 0 -2px 4px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.08);
+    --home-control-shell-dark: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 81.74%, rgba(255, 215, 185, 0.32) 100%);
+    --home-control-shell-light: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 81.74%, rgba(255, 215, 185, 0.36) 100%);
+    --home-control-shell-border-dark: rgba(255, 255, 255, 0);
+    --home-control-shell-border-light: rgba(255, 255, 255, 0);
+    --home-control-shell-shadow-dark: 1px 1px 2px 0 rgba(255, 255, 255, 0.4) inset, -5px -5px 10px 0 rgba(255, 255, 255, 0.9), 5px 5px 24.4px 0 rgba(238, 161, 132, 0.4);
+    --home-control-shell-shadow-light: 1px 1px 2px 0 rgba(255, 255, 255, 0.46) inset, -5px -5px 10px 0 rgba(255, 255, 255, 0.92), 5px 5px 24.4px 0 rgba(238, 161, 132, 0.34);
+    --home-control-cap-dark: radial-gradient(circle at 50% 42%, #ffe6d3 0%, #fff2e8 60%, rgba(255, 242, 232, 0.96) 100%);
+    --home-control-cap-light: radial-gradient(circle at 50% 42%, #ffe6d3 0%, #fff2e8 60%, rgba(255, 242, 232, 0.98) 100%);
+    --home-control-cap-shadow-dark: inset 0 1px 0 rgba(255, 255, 255, 0.88), 0 10px 24px rgba(236, 159, 144, 0.22);
+    --home-control-cap-shadow-light: inset 0 1px 0 rgba(255, 255, 255, 0.9), 0 10px 24px rgba(236, 159, 144, 0.18);
     --home-control-cap-inset: 0.16rem;
+    --home-control-chip-dark: radial-gradient(circle at 50% 42%, #ffe2ce 0%, #fff0e5 72%, rgba(255, 240, 229, 0.96) 100%);
+    --home-control-chip-light: radial-gradient(circle at 50% 42%, #ffe2ce 0%, #fff0e5 72%, rgba(255, 240, 229, 0.98) 100%);
+    --home-control-chip-border-dark: rgba(255, 255, 255, 0);
+    --home-control-chip-border-light: rgba(255, 255, 255, 0);
     --text-color: rgb(var(--ink));
     --text-muted: rgb(var(--subtext));
+}
+
+:root.dark-theme .project-page--sidebar-layout {
+    --home-control-shell-dark: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 78%, rgba(236, 159, 144, 0.24) 100%);
+    --home-control-cap-dark: radial-gradient(circle at 50% 42%, rgba(58, 46, 41, 0.96) 0%, rgba(38, 30, 27, 0.98) 100%);
+    --home-control-cap-shadow-dark: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 8px 18px rgba(0, 0, 0, 0.22);
+    --home-control-chip-light: radial-gradient(circle at 50% 42%, rgba(58, 46, 41, 0.96) 0%, rgba(38, 30, 27, 0.98) 100%);
 }
 
 .project-page--sidebar-layout.project-page--sidebar-collapsed {
@@ -2204,7 +2219,7 @@ html.light-theme body.project-page .moon-icon {
         border: 1px solid var(--home-control-shell-border-dark);
         border-radius: 999px;
         background: var(--home-control-shell-dark);
-        box-shadow: var(--home-control-shell-shadow-dark);
+        box-shadow: none;
         color: var(--text-color);
         font: 700 0.82rem/1 'Instrument Sans', sans-serif;
         letter-spacing: -0.01em;
@@ -2221,7 +2236,7 @@ html.light-theme body.project-page .moon-icon {
         inset: var(--home-control-cap-inset);
         border-radius: inherit;
         background: var(--home-control-cap-dark);
-        box-shadow: var(--home-control-cap-shadow-dark);
+        box-shadow: none;
         z-index: 0;
         pointer-events: none;
     }
@@ -2231,9 +2246,17 @@ html.light-theme body.project-page .moon-icon {
         position: absolute;
         inset: 0;
         border-radius: inherit;
-        background: var(--home-james-gunn-gradient);
+        background:
+            radial-gradient(
+                circle at var(--cursor-highlight-x, 50%) var(--cursor-highlight-y, 50%),
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-strong, 0)) 0%,
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-mid, 0)) 18%,
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-soft, 0)) 34%,
+                rgba(255, 255, 255, 0) 58%
+            ),
+            var(--home-control-chip-light);
         transform: translateY(105%);
-        transition: transform 0.26s ease;
+        transition: transform 0.26s ease, background 0.18s ease;
         z-index: 1;
     }
 
@@ -2244,8 +2267,9 @@ html.light-theme body.project-page .moon-icon {
 
     .project-page--sidebar-layout .home-sidebar__contact:hover,
     .project-page--sidebar-layout .home-sidebar__contact:focus-visible {
-        color: #ffffff;
-        border-color: rgba(255, 255, 255, 0.28);
+        color: var(--text-color);
+        border-color: var(--home-control-shell-border-dark);
+        box-shadow: none;
         outline: none;
     }
 
@@ -2254,22 +2278,35 @@ html.light-theme body.project-page .moon-icon {
         transform: translateY(0);
     }
 
+    :root.dark-theme .project-page--sidebar-layout .home-sidebar__contact::before {
+        background:
+            radial-gradient(
+                circle at var(--cursor-highlight-x, 50%) var(--cursor-highlight-y, 50%),
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-strong, 0)) 0%,
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-mid, 0)) 18%,
+                rgba(255, 255, 255, var(--cursor-highlight-alpha-soft, 0)) 34%,
+                rgba(255, 255, 255, 0) 58%
+            ),
+            linear-gradient(180deg, #090909 0%, #1a1a1a 42%, #2a2a2a 100%);
+    }
+
     :root.light-theme .project-page--sidebar-layout .home-sidebar__contact {
         border-color: var(--home-control-shell-border-light);
         background: var(--home-control-shell-light);
-        box-shadow: var(--home-control-shell-shadow-light);
+        box-shadow: none;
     }
 
     :root.light-theme .project-page--sidebar-layout .home-sidebar__contact::after {
         background: var(--home-control-cap-light);
-        box-shadow: var(--home-control-cap-shadow-light);
+        box-shadow: none;
     }
 
     :root.light-theme .project-page--sidebar-layout .home-sidebar__contact:hover,
     :root.light-theme .project-page--sidebar-layout .home-sidebar__contact:focus-visible {
-        color: #ffffff;
-        border-color: rgba(28, 26, 22, 0.18);
+        color: var(--text-color);
+        border-color: var(--home-control-shell-border-light);
         background: var(--home-control-shell-light);
+        box-shadow: none;
     }
 
     .project-page--sidebar-layout .home-sidebar__meta {
@@ -2385,10 +2422,11 @@ html.light-theme body.project-page .moon-icon {
     display: block;
     width: 100%;
     height: 1px;
-    margin: 0.18rem 0 0.1rem;
+    margin: 0.8rem 0;
     background: rgba(255, 255, 255, 0.14);
     opacity: 0.9;
 }
+
 
 .project-page--sidebar-layout .home-sidebar__index-link--secondary {
     font-size: 0.82rem;
@@ -2884,6 +2922,18 @@ html.light-theme body.project-page .moon-icon {
     pointer-events: none;
 }
 
+:root.dark-theme .project-social-icon {
+    box-shadow:
+        inset 0 1px 0 rgba(0, 0, 0, 0.36),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.14);
+}
+
+:root.dark-theme .project-social-icon::after {
+    box-shadow:
+        inset 0 1px 0 rgba(0, 0, 0, 0.4),
+        inset 0 -2px 4px rgba(255, 255, 255, 0.06),
+        0 1px 2px rgba(255, 255, 255, 0.08);
+}
 :root.light-theme .project-social-icon {
     border-color: var(--home-control-shell-border-light);
     background: var(--home-control-shell-light);
@@ -2905,3 +2955,4 @@ html.light-theme body.project-page .moon-icon {
         padding-top: 1.25rem;
     }
 }
+

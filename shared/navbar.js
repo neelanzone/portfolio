@@ -46,7 +46,7 @@
                     <span class="home-sidebar__dot" aria-hidden="true">&bull;</span>
                     <span>UX</span>
                     <span class="home-sidebar__dot" aria-hidden="true">&bull;</span>
-                    <span>Systems</span>
+                    <span>Graphic</span>
                 </p>
                 <details class="home-sidebar__page home-sidebar__page--portfolio home-sidebar__page-group" data-home-home-group data-home-accordion-item="home" open>
                     <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Cabinet of Curiosities</summary>
@@ -93,7 +93,7 @@
                     <p class="home-sidebar__tagline">Drawn to systems,<br>obsessed with play</p>
                 </div>
                 <div class="home-sidebar__actions">
-                    <a class="home-sidebar__logo" href="#hero" aria-label="Back to top">
+                    <a class="home-sidebar__logo" href="index.html" aria-label="Back to homepage">
                         <img src="Assets/identity-motion-active-sidebar.gif" alt="neel Logo">
                     </a>
                     <a class="home-sidebar__contact" href="mailto:neelanzone@gmail.com"><span class="home-sidebar__contact-label">Get in touch</span></a>

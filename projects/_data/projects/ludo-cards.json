@@ -76,17 +76,17 @@
                     {
                         "id": "problem",
                         "label": "Problem",
-                        "body": "Classic ludo leaves too much to chance. Your ability to exit the base, move, attack, defend - all comes down to a single dice roll. The only real choice a player makes is which pawn to move. In an age of Catan, Monopoly Deal, D&D - a tabletop legend has taken a backseat."
+                        "body": "Classic ludo leaves too much to chance. Exiting the base, moving, attacking, defending—almost everything depends on a single dice roll. The only real decision is which pawn to move. In an age of Catan, Monopoly Deal, D&D - a tabletop legend has taken a backseat."
                     },
                     {
                         "id": "approach",
                         "label": "Approach",
-                        "body": "The goal was to introduce meaningful choices without dismantling the game. RPG mechanics, narrative framing, and deck-based abilities rewards foresight and planning instead of a single lucky throw. Lore was added to make players care about the lives of pawns they otherwise so casually sacrificed at the altar of chance."
+                        "body": "The goal was to introduce meaningful choices without dismantling the game. RPG mechanics, narrative framing, and deck-based abilities rewards foresight and planning instead of a single lucky throw. Lore was crafted to nudge players to care about the lives of pawns they otherwise so casually sacrificed at the altar of chance."
                     },
                     {
                         "id": "outcome",
                         "label": "Outcome",
-                        "body": "Players think beyond their dice rolls and reconsider moves based on what cards others might be holding. Metagame manipulators shift the social texture of the game. Suddenly you're not just playing the board, you're playing the table."
+                        "body": "Players think beyond their dice rolls and reconsider moves based on what cards others might be holding. Certain abilities shift the social texture of the game. Suddenly you're not just playing the board, you're playing the table."
                     },
                     {
                         "id": "constraint",

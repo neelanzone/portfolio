@@ -332,7 +332,7 @@
 }
 
 .home-alt footer .container {
-    padding-left: calc(var(--home-sidebar-current-width) + var(--home-sidebar-gap) + 2rem);
+    padding-left: calc(var(--home-sidebar-content-offset) + 2rem);
     transition:
         padding-left 0.28s ease,
         opacity 0.46s ease,
@@ -1605,13 +1605,15 @@
     --home-sidebar-expanded-width: clamp(13.5rem, 16vw, 15.75rem);
     --home-sidebar-collapsed-width: calc(4.5rem * 0.85);
     --home-sidebar-gap: clamp(0.75rem, 1.5vw, 1.1rem);
+    --home-sidebar-overlay-width: var(--home-sidebar-collapsed-width);
+    --home-sidebar-content-offset: calc(var(--home-sidebar-overlay-width) + var(--home-sidebar-gap));
     --home-sidebar-current-width: var(--home-sidebar-expanded-width);
     --home-tone-toggle-width: 9.25rem;
     --home-tone-toggle-gap: 0.6rem;
     --home-topbar-height: calc(var(--nav-height) + 0.75rem);
     --home-top-control-height: 2.5rem;
     --home-top-control-top: calc(env(safe-area-inset-top, 0px) + ((var(--home-topbar-height) - var(--home-top-control-height)) / 2));
-    --home-tone-toggle-left: calc(env(safe-area-inset-left, 0px) + var(--home-sidebar-current-width) + 0.85rem);
+    --home-tone-toggle-left: calc(env(safe-area-inset-left, 0px) + var(--home-sidebar-content-offset) + 0.85rem);
     --home-entropy-left: calc(var(--home-tone-toggle-left) + var(--home-tone-toggle-width) + var(--home-tone-toggle-gap));
     --home-control-shell-dark: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 81.74%, rgba(255, 215, 185, 0.32) 100%);
     --home-control-shell-light: radial-gradient(50% 50% at 50% 50%, rgba(255, 255, 255, 0) 81.74%, rgba(255, 215, 185, 0.36) 100%);
@@ -1763,7 +1765,7 @@
 .home-alt .navbar--home {
     justify-content: space-between;
     height: var(--home-topbar-height);
-    padding-left: calc(var(--home-sidebar-current-width) + var(--home-sidebar-gap));
+    padding-left: var(--home-sidebar-content-offset);
     padding-right: clamp(1rem, 3vw, 3rem);
     overflow: visible;
     transition:
@@ -1779,7 +1781,7 @@
 }
 
 .home-alt .home-shell {
-    padding-left: calc(var(--home-sidebar-current-width) + var(--home-sidebar-gap) + clamp(0.75rem, 2vw, 1.5rem));
+    padding-left: calc(var(--home-sidebar-content-offset) + clamp(0.75rem, 2vw, 1.5rem));
     transition:
         padding-left 0.28s ease,
         opacity 0.46s ease,
@@ -2347,15 +2349,15 @@
 
 @media (max-width: 960px) {
     .home-alt .navbar--home {
-        padding-left: calc(var(--home-sidebar-current-width) + 0.75rem);
+        padding-left: calc(var(--home-sidebar-content-offset) - var(--home-sidebar-gap) + 0.75rem);
     }
 
     .home-alt .home-shell {
-        padding-left: calc(var(--home-sidebar-current-width) + 0.75rem);
+        padding-left: calc(var(--home-sidebar-content-offset) - var(--home-sidebar-gap) + 0.75rem);
     }
 
     .home-alt footer .container {
-        padding-left: calc(var(--home-sidebar-current-width) + 2rem + 0.75rem);
+        padding-left: calc(var(--home-sidebar-content-offset) - var(--home-sidebar-gap) + 2rem + 0.75rem);
     }
 }
 
@@ -2416,6 +2418,7 @@
 @media (max-width: 767px) {
     .home-alt {
         --home-sidebar-current-width: 0px;
+        --home-sidebar-overlay-width: 0px;
         --home-sidebar-gap: 0px;
         --home-mobile-top-offset: calc(env(safe-area-inset-top, 0px) + 0.8rem);
         --home-mobile-side-gap: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));

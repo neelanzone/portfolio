@@ -42,9 +42,7 @@ function getProjectNavItems(project, options = {}) {
 
 function getProjectSidebarCopy(project) {
     const heroSection = project.sections.find((section) => section.type === 'hero');
-    const roles = Array.isArray(heroSection?.tags) && heroSection.tags.length
-        ? heroSection.tags.slice(0, 3)
-        : ['Project'];
+    const roles = ['Designer', 'UX', 'Graphic'];
     const summaryLines = Array.isArray(heroSection?.summary)
         ? heroSection.summary.map((line) => String(line).trim()).filter(Boolean)
         : [];
@@ -123,7 +121,8 @@ export function renderProjectSidebar(project, site, toRoot, options = {}) {
         footer: {
             title: 'Neel Banerjee',
             taglineHtml: options.footerTaglineHtml || 'Drawn to systems,<br>obsessed with play',
-            logoHref: options.footerLogoHref || '#overview',
+            logoHref: options.footerLogoHref || `${toRoot}index.html`,
+            logoLabel: 'Back to homepage',
             logoSrc: resolveAssetPath('Assets/identity-motion-active-sidebar.gif', toRoot),
             logoAlt: 'neel Logo',
             emailHref: emailLink,
@@ -241,6 +240,7 @@ export function renderFooterBlock(site, toRoot, options = {}) {
 }
 
 export { getProjectNavItems, renderMetaTags };
+
 
 
 

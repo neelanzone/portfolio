@@ -68,6 +68,47 @@
         });
     }
 
+    function initTopbarPillCursorHighlight() {
+        var pills = Array.prototype.slice.call(document.querySelectorAll('[data-project-topbar-pill]'));
+
+        if (!pills.length) {
+            return;
+        }
+
+        var resetPill = function (pill) {
+            pill.style.setProperty('--project-pill-x', '50%');
+            pill.style.setProperty('--project-pill-y', '50%');
+        };
+
+        var updatePill = function (pill, clientX, clientY) {
+            var rect = pill.getBoundingClientRect();
+            if (!rect.width || !rect.height) {
+                return;
+            }
+
+            var x = ((clientX - rect.left) / rect.width) * 100;
+            var y = ((clientY - rect.top) / rect.height) * 100;
+            var clampedX = Math.max(0, Math.min(100, x));
+            var clampedY = Math.max(0, Math.min(100, y));
+
+            pill.style.setProperty('--project-pill-x', clampedX.toFixed(2) + '%');
+            pill.style.setProperty('--project-pill-y', clampedY.toFixed(2) + '%');
+        };
+
+        pills.forEach(function (pill) {
+            resetPill(pill);
+
+            pill.addEventListener('pointerenter', function (event) {
+                updatePill(pill, event.clientX, event.clientY);
+            });
+
+            pill.addEventListener('pointermove', function (event) {
+                updatePill(pill, event.clientX, event.clientY);
+            });
+
+
+        });
+    }
     function initProjectLongform() {
         if (!document.body || !document.body.classList.contains('template-project-longform')) {
             return;
@@ -86,6 +127,7 @@
         };
 
         initFeatureCarousels();
+        initTopbarPillCursorHighlight();
         requestSync();
         window.addEventListener('resize', requestSync);
         window.addEventListener('load', requestSync);
