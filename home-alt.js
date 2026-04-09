@@ -21,7 +21,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeSidebarLinks = homeSidebar ? Array.from(homeSidebar.querySelectorAll('a[href]')) : [];
     const mobileBirdsDrawer = document.querySelector('[data-mobile-birds-drawer]');
     const mobileBirdsDrawerToggle = document.querySelector('[data-mobile-birds-drawer-toggle]');
+    const cursorHighlightTargets = Array.from(document.querySelectorAll('.murmuration-control__button, .murmuration-mode-toggle, .scene-only-toggle, .music-toggle, .home-sidebar__contact'));
     const footer = document.querySelector('footer');
+    const homeTopbar = document.querySelector('.home-topbar');
+    const desktopTopbarRevealMedia = window.matchMedia('(min-width: 768px)');
 
     const getStoredTheme = () => {
         try {
@@ -66,6 +69,57 @@ document.addEventListener('DOMContentLoaded', () => {
         window.dispatchEvent(new CustomEvent('home-layout-refresh', {
             detail: { source }
         }));
+    };
+
+    const setHomeTopbarRevealed = (revealed) => {
+        if (!homeTopbar) {
+            return;
+        }
+
+        homeTopbar.classList.toggle('is-revealed', desktopTopbarRevealMedia.matches && revealed);
+    };
+
+    const syncHomeTopbarReveal = () => {
+        if (!homeTopbar) {
+            return;
+        }
+
+        if (!desktopTopbarRevealMedia.matches) {
+            setHomeTopbarRevealed(false);
+            return;
+        }
+
+        setHomeTopbarRevealed(homeTopbar.matches(':hover') || homeTopbar.matches(':focus-within'));
+    };
+
+    const updateCursorHighlight = (target, event) => {
+        const rect = target.getBoundingClientRect();
+
+        if (!rect.width || !rect.height) {
+            return;
+        }
+
+        const x = ((event.clientX - rect.left) / rect.width) * 100;
+        const y = ((event.clientY - rect.top) / rect.height) * 100;
+        const clampedX = Math.max(0, Math.min(100, x));
+        const clampedY = Math.max(0, Math.min(100, y));
+
+        target.style.setProperty('--cursor-highlight-x', `${clampedX.toFixed(2)}%`);
+        target.style.setProperty('--cursor-highlight-y', `${clampedY.toFixed(2)}%`);
+    };
+
+    const activateCursorHighlight = (target) => {
+        target.style.setProperty('--cursor-highlight-alpha-strong', '0.72');
+        target.style.setProperty('--cursor-highlight-alpha-mid', '0.36');
+        target.style.setProperty('--cursor-highlight-alpha-soft', '0.12');
+    };
+
+    const resetCursorHighlight = (target) => {
+        target.style.setProperty('--cursor-highlight-x', '50%');
+        target.style.setProperty('--cursor-highlight-y', '50%');
+        target.style.setProperty('--cursor-highlight-alpha-strong', '0');
+        target.style.setProperty('--cursor-highlight-alpha-mid', '0');
+        target.style.setProperty('--cursor-highlight-alpha-soft', '0');
     };
 
     const finishBootSequence = () => {
@@ -319,12 +373,61 @@ document.addEventListener('DOMContentLoaded', () => {
     applySidebarCollapsedPreference(getStoredSidebarCollapsed());
     applySceneOnlyPreference(getStoredSceneOnly());
     syncMobileFlockBar();
+    syncHomeTopbarReveal();
     finishBootSequence();
 
     themeToggleButtons.forEach((button) => {
         button.addEventListener('click', () => {
             const isLight = root.classList.contains('light-theme');
             applyThemePreference(isLight ? 'dark' : 'light');
+        });
+    });
+
+    if (homeTopbar) {
+        homeTopbar.addEventListener('mouseenter', () => {
+            setHomeTopbarRevealed(true);
+        });
+
+        homeTopbar.addEventListener('mouseleave', () => {
+            if (!homeTopbar.matches(':focus-within')) {
+                setHomeTopbarRevealed(false);
+            }
+        });
+
+        homeTopbar.addEventListener('focusin', () => {
+            setHomeTopbarRevealed(true);
+        });
+
+        homeTopbar.addEventListener('focusout', () => {
+            requestAnimationFrame(syncHomeTopbarReveal);
+        });
+
+        if (typeof desktopTopbarRevealMedia.addEventListener === 'function') {
+            desktopTopbarRevealMedia.addEventListener('change', syncHomeTopbarReveal);
+        } else if (typeof desktopTopbarRevealMedia.addListener === 'function') {
+            desktopTopbarRevealMedia.addListener(syncHomeTopbarReveal);
+        }
+    }
+
+    cursorHighlightTargets.forEach((target) => {
+        resetCursorHighlight(target);
+
+        target.addEventListener('pointerenter', (event) => {
+            activateCursorHighlight(target);
+            updateCursorHighlight(target, event);
+        });
+
+        target.addEventListener('pointermove', (event) => {
+            activateCursorHighlight(target);
+            updateCursorHighlight(target, event);
+        });
+
+        target.addEventListener('pointerleave', () => {
+            resetCursorHighlight(target);
+        });
+
+        target.addEventListener('blur', () => {
+            resetCursorHighlight(target);
         });
     });
 
@@ -441,6 +544,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         syncMobileFlockBar();
+        syncHomeTopbarReveal();
     });
 
     window.addEventListener('scroll', syncMobileFlockBar, { passive: true });

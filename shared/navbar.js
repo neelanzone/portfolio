@@ -78,9 +78,10 @@
                         <details class="home-sidebar__index-group" data-home-work-group data-home-accordion-item="work">
                             <summary class="home-sidebar__index-link home-sidebar__index-link--toggle" data-home-work-summary>Work</summary>
                             <div class="home-sidebar__index-submenu">
-                                <a class="home-sidebar__index-sublink" href="../ludo-cards/index.html">Ludo Cards</a>
-                                <a class="home-sidebar__index-sublink" href="../managed-asset-search/index.html">Managed Asset Search</a>
-                                <a class="home-sidebar__index-sublink" href="../venture-hub/index.html">Venture Hub</a>
+                                <a class="home-sidebar__index-sublink" href="projects/ludo-cards/index.html">Ludo Cards</a>
+                                <a class="home-sidebar__index-sublink" href="projects/managed-asset-search/index.html">Asset Manager</a>
+                                <a class="home-sidebar__index-sublink" href="projects/venture-hub/index.html">Venture Hub</a>
+                                <a class="home-sidebar__index-sublink" href="projects/qualitative-reports-at-scale/index.html">Qualitative Reports at Scale</a>
                             </div>
                         </details>
                     </nav>
@@ -113,124 +114,13 @@
                 <span class="home-topbar__menu-icon" aria-hidden="true"></span>
             </button>
             <div class="navbar-spacer" aria-hidden="true"></div>
-            <div class="nav-actions nav-actions--home">
-            <label class="entropy-control" aria-label="Adjust background order and chaos">
-                <span class="entropy-control__label">Order</span>
-                <input
-                    class="entropy-control__slider"
-                    type="range"
-                    min="0"
-                    max="3"
-                    step="0.01"
-                    value="0"
-                    data-entropy-slider
-                    aria-label="Adjust background order and chaos"
-                >
-                <span class="entropy-control__value" data-entropy-value>Chaos</span>
-            </label>
-            <div class="density-control" role="group" aria-label="Adjust bird density">
-                <span class="density-control__label">Birds</span>
-                <button
-                    class="density-control__knob"
-                    type="button"
-                    data-density-knob
-                    aria-label="Adjust bird density"
-                >
-                    <span class="density-control__surface" aria-hidden="true"></span>
-                    <span class="density-control__indicator" aria-hidden="true"></span>
-                </button>
-                <span class="density-control__value" data-density-value>Lots</span>
-            </div>
-            <div class="sphere-control" role="group" aria-label="Adjust sun size">
-                <span class="sphere-control__label">Sun</span>
-                <button
-                    class="sphere-control__knob"
-                    type="button"
-                    data-sphere-size-knob
-                    aria-label="Adjust sun size"
-                >
-                    <span class="sphere-control__surface" aria-hidden="true"></span>
-                    <span class="sphere-control__indicator" aria-hidden="true"></span>
-                </button>
-                <span class="sphere-control__value" data-sphere-size-value>Neutron</span>
-            </div>
-            <div class="murmuration-control" role="group" aria-label="Bird formation patterns">
-                                <button class="murmuration-control__button" type="button" data-murmuration-style="halo" aria-pressed="false">Halo</button>
-                <button class="murmuration-control__button" type="button" data-murmuration-style="ribbon" aria-pressed="false">Ribbon</button>
-                <button class="murmuration-control__button" type="button" data-murmuration-style="split" aria-pressed="false">Flock</button>
-            </div>
-            <div class="home-topbar__center">
-                <button
-                    class="scene-only-toggle"
-                type="button"
-                data-scene-only-toggle
-                aria-label="See the Birds"
-                aria-pressed="false"
-            >
-                <span class="scene-only-toggle__switch" aria-hidden="true">
-                    <span class="scene-only-toggle__switch-thumb"></span>
-                    <span class="scene-only-toggle__option scene-only-toggle__option--birds">
-                        <img
-                            class="scene-only-toggle__switch-icon"
-                            src="Assets/button-icons/skylark.png"
-                            alt=""
-                            width="18"
-                            height="18"
-                        >
-                    </span>
-                    <span class="scene-only-toggle__option scene-only-toggle__option--portfolio">
-                        <img
-                            class="scene-only-toggle__switch-icon"
-                            src="Assets/button-icons/id-card.png"
-                            alt=""
-                            width="18"
-                            height="18"
-                        >
-                    </span>
-                </span>
-                <img
-                    class="scene-only-toggle__icon"
-                    src="Assets/button-icons/skylark.png"
-                    alt=""
-                    width="20"
-                    height="20"
-                    aria-hidden="true"
-                    data-scene-only-toggle-icon
-                >
-                <span class="scene-only-toggle__label" data-scene-only-toggle-label>See the Birds</span>
-            </button>
-            </div>
-            <div class="home-topbar__end">
-                <button
-                    class="music-toggle"
-                type="button"
-                data-music-toggle
-                aria-label="Play soundtrack"
-                aria-pressed="false"
-            >
-                <span class="music-toggle__cap" aria-hidden="true">
-                    <img
-                        class="music-toggle__icon music-toggle__icon--on"
-                        src="Assets/Icons/volume.png"
-                        alt=""
-                        width="18"
-                        height="18"
-                    >
-                    <img
-                        class="music-toggle__icon music-toggle__icon--off"
-                        src="Assets/Icons/mute.png"
-                        alt=""
-                        width="18"
-                        height="18"
-                    >
-                </span>
-            </button>
+            <div class="home-topbar__tone">
                 <button
                     class="murmuration-mode-toggle"
                     type="button"
                     data-murmuration-tone-toggle
                     data-tone-target="kurosawa"
-                    aria-label="Toggle flock colour mode"
+                    aria-label="Turn Kurosawa mode on"
                     aria-pressed="false"
                 >
                     <span class="murmuration-mode-toggle__icon" aria-hidden="true">
@@ -240,6 +130,119 @@
                     <span class="murmuration-mode-toggle__label" data-murmuration-tone-label>Kurosawa</span>
                 </button>
             </div>
+            <div class="nav-actions nav-actions--home">
+                <label class="entropy-control" aria-label="Adjust background order and chaos">
+                    <span class="entropy-control__label">Order</span>
+                    <input
+                        class="entropy-control__slider"
+                        type="range"
+                        min="0"
+                        max="3"
+                        step="0.01"
+                        value="0"
+                        data-entropy-slider
+                        aria-label="Adjust background order and chaos"
+                    >
+                    <span class="entropy-control__value" data-entropy-value>Chaos</span>
+                </label>
+                <div class="density-control" role="group" aria-label="Adjust bird density">
+                    <span class="density-control__label">Birds</span>
+                    <button
+                        class="density-control__knob"
+                        type="button"
+                        data-density-knob
+                        aria-label="Adjust bird density"
+                    >
+                        <span class="density-control__surface" aria-hidden="true"></span>
+                        <span class="density-control__indicator" aria-hidden="true"></span>
+                    </button>
+                    <span class="density-control__value" data-density-value>Lots</span>
+                </div>
+                <div class="sphere-control" role="group" aria-label="Adjust sun size">
+                    <span class="sphere-control__label">Sun</span>
+                    <button
+                        class="sphere-control__knob"
+                        type="button"
+                        data-sphere-size-knob
+                        aria-label="Adjust sun size"
+                    >
+                        <span class="sphere-control__surface" aria-hidden="true"></span>
+                        <span class="sphere-control__indicator" aria-hidden="true"></span>
+                    </button>
+                    <span class="sphere-control__value" data-sphere-size-value>Neutron</span>
+                </div>
+                <div class="murmuration-control" role="group" aria-label="Bird formation patterns">
+                    <button class="murmuration-control__button" type="button" data-murmuration-style="halo" aria-pressed="false">Halo</button>
+                    <button class="murmuration-control__button" type="button" data-murmuration-style="ribbon" aria-pressed="false">Ribbon</button>
+                    <button class="murmuration-control__button" type="button" data-murmuration-style="split" aria-pressed="false">Flock</button>
+                </div>
+            </div>
+            <div class="home-topbar__center">
+                <button
+                    class="scene-only-toggle"
+                    type="button"
+                    data-scene-only-toggle
+                    aria-label="See the Birds"
+                    aria-pressed="false"
+                >
+                    <span class="scene-only-toggle__switch" aria-hidden="true">
+                        <span class="scene-only-toggle__switch-thumb"></span>
+                        <span class="scene-only-toggle__option scene-only-toggle__option--birds">
+                            <img
+                                class="scene-only-toggle__switch-icon"
+                                src="Assets/button-icons/skylark.png"
+                                alt=""
+                                width="18"
+                                height="18"
+                            >
+                        </span>
+                        <span class="scene-only-toggle__option scene-only-toggle__option--portfolio">
+                            <img
+                                class="scene-only-toggle__switch-icon"
+                                src="Assets/button-icons/id-card.png"
+                                alt=""
+                                width="18"
+                                height="18"
+                            >
+                        </span>
+                    </span>
+                    <img
+                        class="scene-only-toggle__icon"
+                        src="Assets/button-icons/skylark.png"
+                        alt=""
+                        width="20"
+                        height="20"
+                        aria-hidden="true"
+                        data-scene-only-toggle-icon
+                    >
+                    <span class="scene-only-toggle__label" data-scene-only-toggle-label>See the Birds</span>
+                </button>
+            </div>
+            <div class="home-topbar__end">
+                <button
+                    class="music-toggle"
+                    type="button"
+                    data-music-toggle
+                    aria-label="Play soundtrack"
+                    aria-pressed="false"
+                >
+                    <span class="music-toggle__cap" aria-hidden="true">
+                        <img
+                            class="music-toggle__icon music-toggle__icon--on"
+                            src="Assets/Icons/volume.png"
+                            alt=""
+                            width="18"
+                            height="18"
+                        >
+                        <img
+                            class="music-toggle__icon music-toggle__icon--off"
+                            src="Assets/Icons/mute.png"
+                            alt=""
+                            width="18"
+                            height="18"
+                        >
+                    </span>
+                </button>
             </div>
         </div>
     </nav>
@@ -330,15 +333,19 @@ ${themeToggleButton('mobile-theme-toggle')}
             <div class="mobile-submenu" id="mobile-work-projects" aria-hidden="true">
                 <a href="../ludo-cards/index.html" class="mobile-submenu-link">
                     <span class="mobile-submenu-title">Ludo Cards</span>
-                    <span class="mobile-submenu-type">Game Design</span>
+                    <span class="mobile-submenu-type">Game Design / Personal</span>
                 </a>
                 <a href="../managed-asset-search/index.html" class="mobile-submenu-link">
-                    <span class="mobile-submenu-title">Managed Asset Search</span>
-                    <span class="mobile-submenu-type">Information Architecture</span>
+                    <span class="mobile-submenu-title">Asset Manager</span>
+                    <span class="mobile-submenu-type">UX / Internal Tool / Total Environment</span>
                 </a>
                 <a href="../venture-hub/index.html" class="mobile-submenu-link">
                     <span class="mobile-submenu-title">Venture Hub</span>
-                    <span class="mobile-submenu-type">UX/UI &amp; System Design</span>
+                    <span class="mobile-submenu-type">UX / Product Design / Concept</span>
+                </a>
+                <a href="../qualitative-reports-at-scale/index.html" class="mobile-submenu-link">
+                    <span class="mobile-submenu-title">Qualitative Reports at Scale</span>
+                    <span class="mobile-submenu-type">UX / Internal Tool / StartupYou</span>
                 </a>
             </div>
         </div>
@@ -353,6 +360,10 @@ ${themeToggleButton('mobile-theme-toggle')}
         mount.outerHTML = variant === 'project' ? renderProjectNavbar(toRoot) : renderHomeNavbar();
     });
 })();
+
+
+
+
 
 
 

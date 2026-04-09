@@ -1,4 +1,4 @@
-﻿:root {
+:root {
     --bg-color: #050505;
     --text-color: #f0f0f0;
     --text-muted: #888888;
@@ -508,11 +508,15 @@ a:hover {
     color: var(--text-color);
 }
 
+:root.light-theme .work-reading-time {
+    color: #d44000;
+}
+
 :root.light-theme .work-info h4 {
     color: rgba(0, 0, 0, 0.7);
 }
 
-:root.light-theme .work-info p {
+:root.light-theme .work-info p:not(.work-reading-time) {
     color: rgba(0, 0, 0, 0.7);
 }
 
@@ -1709,6 +1713,15 @@ a:hover {
     color: #fff;
 }
 
+.work-reading-time {
+    margin: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    color: #ffffff;
+}
+
 .work-info h4 {
     font-family: 'Nunito Sans', sans-serif;
     font-size: 1rem;
@@ -1717,7 +1730,7 @@ a:hover {
     font-weight: 400;
 }
 
-.work-info p {
+.work-info p:not(.work-reading-time) {
     margin: 0;
     font-family: 'Nunito Sans', sans-serif;
     font-size: 0.9rem;
@@ -2718,6 +2731,15 @@ footer {
     color: #fff;
 }
 
+.work-reading-time {
+    margin: 0;
+    font-family: 'Space Mono', monospace;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    letter-spacing: 0.02em;
+    color: #d44000;
+}
+
 .work-info h4 {
     font-family: 'Nunito Sans', sans-serif;
     font-size: 1rem;
@@ -2726,7 +2748,7 @@ footer {
     font-weight: 400;
 }
 
-.work-info p {
+.work-info p:not(.work-reading-time) {
     margin: 0;
     font-family: 'Nunito Sans', sans-serif;
     font-size: 0.9rem;
@@ -3093,4 +3115,8 @@ footer {
     video[autoplay] {
         animation: none !important;
     }
+}
+/* Final override for homepage project-card reading-time color */
+html body.home-alt .work-reading-time {
+    color: #6e6693 !important;
 }

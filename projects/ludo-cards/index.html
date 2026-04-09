@@ -1,43 +1,169 @@
-﻿<!DOCTYPE html>
-<html lang="en" class="dark-theme">
+<!DOCTYPE html>
+<html lang="en" class="light-theme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ludo Cards | Neel</title>
+    <title>Ludo Cards | Neelanzone</title>
     <meta name="description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Ludo Cards | Neel">
+    <meta property="og:title" content="Ludo Cards | Neelanzone">
     <meta property="og:description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Ludo Cards | Neel">
+    <meta name="twitter:title" content="Ludo Cards | Neelanzone">
     <meta name="twitter:description" content="A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@400;500;600;700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
-    <script>(function(){try{var storedTheme=localStorage.getItem('theme');var themeClass=storedTheme==='light'?'light-theme':'dark-theme';document.documentElement.classList.remove('light-theme','dark-theme');document.documentElement.classList.add(themeClass);}catch(error){document.documentElement.classList.add('dark-theme');}})();</script>
+    <script>(function(){try{var storedTheme=localStorage.getItem('theme');var themeClass=storedTheme==='dark'?'dark-theme':'light-theme';document.documentElement.classList.remove('light-theme','dark-theme');document.documentElement.classList.add(themeClass);}catch(error){document.documentElement.classList.add('light-theme');}})();</script>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
     <link rel="stylesheet" href="../_shared/project-system.css">
-    <link rel="stylesheet" href="../../shared/project-navbar.css">
+    <link rel="stylesheet" href="../_shared/project-sidebar-mobile-component.css">
     <link rel="stylesheet" href="../_templates/template-replication/ludo-bento.css">
+    <link rel="stylesheet" href="../_templates/project-longform/project-longform.css">
 </head>
-<body class="project-page template-ludo-bento theme-art overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
-    <div data-navbar-mount data-navbar-variant="project" data-to-root="../../"></div>
-    <main class="ludo-bento-stage">
-        <div class="ludo-bento" aria-label="Ludo Cards bento layout">
-            <section class="ludo-bento__topfold">
-                <article class="ludo-bento__hero-card">
-                    <div class="ludo-bento__hero-content">
-                        <header class="ludo-bento__hero-header">
-                            <h1>Ludo Cards</h1>
-                            <div class="ludo-bento__hero-tags">
-                                <span>UX-UI</span>
-                                <span>Game Design</span>
+<body class="project-page project-page--sidebar-layout template-project-longform theme-art overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
+    <div class="project-page-layout">
+    <aside class="home-sidebar project-sidebar" id="project-sidebar" data-project-sidebar aria-label="Ludo Cards section navigation">
+        <div class="home-sidebar__top">
+            <button
+                class="home-sidebar__toggle"
+                type="button" data-project-sidebar-toggle
+                aria-controls="project-sidebar"
+                aria-expanded="true"
+                aria-label="Collapse sidebar"
+            >
+                <span class="home-sidebar__toggle-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="home-sidebar__body">
+            <div class="home-sidebar__intro">
+                <p class="home-sidebar__roles"><span>Game Design</span><span class="home-sidebar__dot" aria-hidden="true">&bull;</span><span>Personal</span></p>
+                <details class="home-sidebar__page home-sidebar__page-group home-sidebar__page--portfolio">
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Cabinet of Curiosities</summary>
+                    <p class="home-sidebar__page-brief">A home for projects, musings, and a little soul.</p>
+                    <span class="home-sidebar__index-divider" aria-hidden="true"></span>
+                    
+                <div class="home-sidebar__index-block">
+                    <nav class="home-sidebar__index" aria-label="Portfolio navigation">
+                        <a class="home-sidebar__index-link" href="../../index.html#about">About</a>
+                        <details class="home-sidebar__index-group">
+                            <summary class="home-sidebar__index-link home-sidebar__index-link--toggle">Work</summary>
+                            <div class="home-sidebar__index-submenu">
+                                <a class="home-sidebar__index-sublink" href="./index.html" aria-current="page">Ludo Cards</a>
+                                <a class="home-sidebar__index-sublink" href="../managed-asset-search/index.html">Asset Manager</a>
+                                <a class="home-sidebar__index-sublink" href="../venture-hub/index.html">Venture Hub</a>
+                                <a class="home-sidebar__index-sublink" href="../qualitative-reports-at-scale/index.html">Qualitative Reports at Scale</a>
                             </div>
-                        </header>
+                        </details>
+                    </nav>
+                </div>
+                </details>
+                <details class="home-sidebar__page home-sidebar__page-group" open>
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Ludo Cards</summary>
+                    <p class="home-sidebar__page-brief">Card based redesign of classic ludo, immersed in lore, rewarding player agency and strategic gameplay.</p>
+                </details>
+                <details class="home-sidebar__page home-sidebar__page--birds home-sidebar__page-group" open>
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Navigation</summary>
+                    <nav class="home-sidebar__index-submenu home-sidebar__page-nav" aria-label="Ludo Cards section navigation">
+                        <a class="home-sidebar__index-sublink" href="#project-brief" data-section-nav-link>Project Brief</a>
+                        <a class="home-sidebar__index-sublink" href="#process" data-section-nav-link>Process</a>
+                        <a class="home-sidebar__index-sublink" href="#artifact-rail" data-section-nav-link>Artifacts</a>
+                        <a class="home-sidebar__index-sublink" href="#prototype" data-section-nav-link>Prototype</a>
+                    </nav>
+                </details>
+            </div>
+            <div class="home-sidebar__bottom">
+                <div class="home-sidebar__meta">
+                    <span class="home-sidebar__title">Neel Banerjee</span>
+                    <p class="home-sidebar__tagline">Drawn to systems,<br>obsessed with play</p>
+                </div>
+                <div class="home-sidebar__actions">
+                    <a class="home-sidebar__logo" href="#project-topfold" aria-label="Back to top">
+                        <img src="../../Assets/identity-motion-active-sidebar.gif" alt="neel Logo">
+                    </a>
+                    <a class="home-sidebar__contact" href="mailto:neelanzone@gmail.com"><span class="home-sidebar__contact-label">Get in touch</span></a>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <button
+        class="home-topbar__menu project-sidebar-mobile-menu"
+        type="button" data-project-sidebar-toggle
+        aria-controls="project-sidebar"
+        aria-expanded="false"
+        aria-label="Expand sidebar"
+    >
+        <span class="home-topbar__menu-icon" aria-hidden="true"></span>
+    </button>
+        <div class="project-page-layout__main">
+            <main class="project-longform-stage">
+                
+        <div class="project-longform__topbar" data-project-topbar>
+            <div class="project-longform__topbar-inner">
+                
+                    <div class="project-longform__topbar-affordance" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <nav class="project-longform__project-pillbar" aria-label="Project page navigation">
                         
-        <div class="ludo-bento__hero-tabs" role="tablist" aria-label="Ludo Cards project summary tabs">
+            <a class="project-longform__project-pill" href="../../index.html" aria-label="Open home page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Home</span>
+            </a>
+            <a class="project-longform__project-pill" href="../managed-asset-search/index.html" aria-label="Open Asset Manager project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Asset Manager</span>
+            </a>
+            <a class="project-longform__project-pill" href="../venture-hub/index.html" aria-label="Open Venture Hub project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Venture Hub</span>
+            </a>
+            <a class="project-longform__project-pill" href="../qualitative-reports-at-scale/index.html" aria-label="Open Qualitative Reports at Scale project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Qualitative Reports at Scale</span>
+            </a>
+                    </nav>
+                
+        <button class="project-theme-toggle project-longform__theme-toggle" data-theme-toggle aria-label="Toggle theme">
+            <span class="project-theme-toggle__cap" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </span>
+        </button>
+            </div>
+        </div>
+                <div class="project-longform__shell">
+                    <section class="project-longform__topfold" id="project-topfold" aria-label="Ludo Cards top fold">
+                        
+        <a class="project-longform__visual project-longform__visual--left" href="#artifact-rail" aria-label="Jump to the cards section">
+            <img src="../../Assets/ludo-rpg-cards/character group cards.png" alt="Stacked character group cards from the Ludo RPG concept." loading="lazy" decoding="async">
+        </a>
+                        
+        <a class="project-longform__visual project-longform__visual--right" href="#artifact-rail" aria-label="Jump to the cards section">
+            <img src="../../Assets/ludo-rpg-cards/action group cards.png" alt="Fan of action group cards from the Ludo RPG concept." loading="lazy" decoding="async">
+        </a>
+                        <section class="project-longform__hero" id="project-brief">
+                            <div class="ludo-bento__hero-content project-longform__hero-content">
+                                <header class="project-longform__hero-header">
+                                    <h1>Ludo Cards</h1>
+                                    <div class="project-longform__hero-tags">
+                                        <span>Game Design</span><span>Personal</span>
+                                    </div>
+                                </header>
+                                
+        <div class="ludo-bento__hero-tabs" role="tablist" aria-label="Project summary tabs">
         <button
             class="ludo-bento__hero-tab is-active"
             type="button"
@@ -65,6 +191,15 @@
             id="ludo-hero-tab-outcome"
             data-ludo-hero-tab="outcome"
         >Outcome</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-constraint"
+            id="ludo-hero-tab-constraint"
+            data-ludo-hero-tab="constraint"
+        >Constraint</button>
         </div>
         <div class="ludo-bento__hero-panels">
         <div
@@ -75,7 +210,7 @@
             
             data-ludo-hero-panel="problem"
         >
-            <p class="ludo-bento__hero-summary">Classic Ludo often leaves too much to chance, which elevates tension before the dice roll but limits tactical depth and player agency.</p>
+            <p class="ludo-bento__hero-summary">Classic ludo leaves too much to chance. Your ability to exit the base, move, attack, defend - all comes down to a single dice roll. The only real choice a player makes is which pawn to move. In an age of Catan, Monopoly Deal, D&amp;D - a tabletop legend has taken a backseat.</p>
         </div>
         <div
             class="ludo-bento__hero-panel-body"
@@ -85,7 +220,7 @@
             hidden
             data-ludo-hero-panel="approach"
         >
-            <p class="ludo-bento__hero-summary">RPG mechanics, narrative framing, and deck-based abilities were layered onto the familiar loop so each turn could reward foresight instead of a single lucky throw.</p>
+            <p class="ludo-bento__hero-summary">The goal was to introduce meaningful choices without dismantling the game. RPG mechanics, narrative framing, and deck-based abilities rewards foresight and planning instead of a single lucky throw. Lore was added to make players care about the lives of pawns they otherwise so casually sacrificed at the altar of chance.</p>
         </div>
         <div
             class="ludo-bento__hero-panel-body"
@@ -95,16 +230,26 @@
             hidden
             data-ludo-hero-panel="outcome"
         >
-            <p class="ludo-bento__hero-summary">Intentional, immersive play rooted in decision making, tradeoff acknowledgement, and player agency.</p>
+            <p class="ludo-bento__hero-summary">Players think beyond their dice rolls and reconsider moves based on what cards others might be holding. Metagame manipulators shift the social texture of the game. Suddenly you&#39;re not just playing the board, you&#39;re playing the table.</p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-constraint"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-constraint"
+            hidden
+            data-ludo-hero-panel="constraint"
+        >
+            <p class="ludo-bento__hero-summary">The question that kept the project grounded - If you have to explain more than two minutes, is it still ludo? Engineering the feeling that your choices mattered, even when the dice disagrees, while keeping it casual - is the challenge.</p>
         </div>
         </div>
-                        
-        <button class="ludo-bento__quote-stack" type="button" data-ludo-quote-stack data-active-quote="0" aria-label="Show next playtester quote">
+                                
+        <button class="ludo-bento__quote-stack project-longform__quote-stack" type="button" data-ludo-quote-stack data-active-quote="0" aria-label="Show next user story">
             
                 <span hidden data-ludo-quote-source data-ludo-quote-index="0" data-ludo-quote-source-text="I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all." data-ludo-quote-source-meta="anonymous - 28 years old"></span>
                 <span hidden data-ludo-quote-source data-ludo-quote-index="1" data-ludo-quote-source-text="It&#39;s frustrating to wait for a 1 or 6 to get my pawn out, feels like I&#39;m losing before the game even begins." data-ludo-quote-source-meta="playtester, age 12"></span>
-                <span hidden data-ludo-quote-source data-ludo-quote-index="2" data-ludo-quote-source-text="when someone takes out my token right before the safe passage to the finish, I&#39;m helpless." data-ludo-quote-source-meta="anonymous, age 11"></span>
-                <span hidden data-ludo-quote-source data-ludo-quote-index="3" data-ludo-quote-source-text="I&#39;d love a reason to care about which pawn to move, not just which one is safest" data-ludo-quote-source-meta="playtester, age 29"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="2" data-ludo-quote-source-text="When someone takes out my token right before the safe passage to the finish, I&#39;m helpless." data-ludo-quote-source-meta="anonymous - 11 years old"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="3" data-ludo-quote-source-text="I&#39;d love a reason to care about which pawn to move, not just which one is safest." data-ludo-quote-source-meta="playtester - 29 years old"></span>
             <span class="ludo-bento__quote-deck">
                 <span class="ludo-bento__quote-layer ludo-bento__quote-layer--third" aria-hidden="true"></span>
                 <span class="ludo-bento__quote-layer ludo-bento__quote-layer--second" aria-hidden="true"></span>
@@ -117,16 +262,26 @@
                 </span>
             </span>
         </button>
-                    </div>
-                </article>
-                <div class="ludo-bento__top-grid" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
-                    
-        <article class="ludo-bento__info-card" data-ludo-info-card data-ludo-info-origin="left" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Narrative Design">
+                            </div>
+                        </section>
+                        
+        <figure class="project-longform__feature has-caption">
+            <img src="../../Assets/ludo-rpg-cards/temporary screen png.png" alt="Temporary gameplay screen placeholder for the Ludo Cards prototype." loading="lazy" decoding="async">
+            <figcaption class="project-longform__feature-caption">screengrab of a gameplay in progress - under development</figcaption>
+        </figure>
+                    </section>
+                    <div class="project-longform__body">
+                        
+        <section class="project-longform__section project-longform__section--panels" id="details">
+            
+            <section class="ludo-bento__top-grid project-longform__expansion-grid" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
+                
+        <article class="ludo-bento__info-card" id="process" data-ludo-info-card data-ludo-info-origin="left" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Narrative Design">
             <div class="ludo-bento__info-card-shell">
                 <div class="ludo-bento__info-card-main">
                     <div class="ludo-bento__info-card-copy">
-                        <h2>Narrative<br>Design</h2>
-                        <p>The building blocks of a basic story - the hero&#39;s journey, factions, spatial context - already exist in Classic Ludo. We just never saw it that way. We rolled dice, raced pawns, and took out competition when the dice gods let us. It is nostalgic, and I felt something was missing - lore.</p>
+                        <h2>Narrative Design</h2>
+                        <p>The building blocks of a story were already hiding in Classic Ludo: a journey, factions, contested ground, and moments of reversal. Naming the board as a world made movement feel less abstract and more like traversal.</p>
                         
             <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__legend-grid">
                 
@@ -174,8 +329,8 @@
             <div class="ludo-bento__info-card-shell">
                 <div class="ludo-bento__info-card-main">
                     <div class="ludo-bento__info-card-copy">
-                        <h2>Board Game<br>Design</h2>
-                        <p>Ludo Cards was born from the idea of adding RPG elements to Classic Ludo. A familiar game gets more interesting when players can plan instead of only react.</p>
+                        <h2>Board Game Design</h2>
+                        <p>Ludo Cards adds planning, role identity, and risk-reward decisions to a loop that is usually resolved by pure probability. The aim was not to replace Ludo, but to reveal a more tactical version inside it.</p>
                         
             <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__stat-grid">
                 
@@ -204,12 +359,12 @@
         <div class="ludo-bento__info-card-expanded">
             
                 <div class="ludo-bento__info-column">
-                    <h3>Placeholder 01</h3>
-                    <p>Placeholder copy for balancing combat loops, reward pacing, and how defensive tools should offset aggressive play.</p>
+                    <h3>Decision Density</h3>
+                    <p>Cards and character classes create reasons to commit to one move over another, so a turn feels authored rather than merely resolved.</p>
                 </div>
                 <div class="ludo-bento__info-column">
-                    <h3>Placeholder 02</h3>
-                    <p>Placeholder copy for encounter tuning, item economy, and how player decisions stay legible across longer matches.</p>
+                    <h3>Readable Tradeoffs</h3>
+                    <p>Abilities had to stay legible at a glance. The system works best when aggression, defense, and mobility each create a visible cost.</p>
                 </div>
         </div>
             </div>
@@ -225,12 +380,12 @@
             <div class="ludo-bento__info-card-shell">
                 <div class="ludo-bento__info-card-main">
                     <div class="ludo-bento__info-card-copy">
-                        <h2>Digital<br>Development</h2>
-                        <p>By playtesting the physical game, I realised that the characters, action cards, traps, and board events were too complex for players to keep track of. There was now a need for a digital game.</p>
+                        <h2>Digital Development</h2>
+                        <p>Playtesting the physical version revealed a bookkeeping problem. Once characters, action cards, traps, and board events layered together, players needed a digital surface to hold the complexity cleanly.</p>
                         
             <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__development-support">
                 <div class="ludo-bento__development-block">
-                    <h3 class="ludo-bento__support-heading">Vibe Coded Prototype</h3>
+                    <h3 class="ludo-bento__support-heading">Prototype roadmap</h3>
                     
         <div class="ludo-bento__timeline">
             
@@ -273,6 +428,17 @@
                     </div>
                 </div>
                 
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Why Go Digital</h3>
+                    <p>The digital surface reduces rules friction, keeps board state visible, and makes richer systems easier to test with real players.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>What Comes Next</h3>
+                    <p>The web prototype becomes the proving ground for class balance, pacing, and how multiplayer coordination should feel when the system scales.</p>
+                </div>
+        </div>
             </div>
             
         <span class="ludo-bento__expand-button" aria-hidden="true">
@@ -282,12 +448,14 @@
             <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
         </span>
         </article>
-                </div>
             </section>
-            <section class="ludo-bento__rail-card" id="artifacts">
-                
-        <div class="ludo-bento__rail-header">
-            <div class="ludo-bento__rail-tabs" role="tablist" aria-label="Ludo RPG asset groups">
+        </section>
+
+        <section class="project-longform__section project-longform__section--artifact" id="artifact-rail">
+            <div class="project-longform__section-heading"><p>Artifacts</p></div>
+            <div class="ludo-bento__rail-card">
+                <div class="ludo-bento__rail-header">
+                    <div class="ludo-bento__rail-tabs" role="tablist" aria-label="Ludo Cards artifact groups">
         <button
             class="ludo-bento__rail-tab is-active"
             type="button"
@@ -324,19 +492,19 @@
             id="ludo-card-tab-action-cards"
             data-ludo-card-tab="action-cards"
         >Action Cards</button>
-            </div>
-        </div>
-        <div class="ludo-bento__rail-panels">
-        <div
-            class="ludo-bento__card-group is-active"
-            id="ludo-card-group-characters-01"
-            role="tabpanel"
-            aria-labelledby="ludo-card-tab-characters-01"
-            
-            data-ludo-card-panel="characters-01"
-        >
-            <div class="ludo-bento__card-strip" tabindex="0" aria-label="Characters Iteration 01 image strip">
+                    </div>
+                </div>
+                <div class="ludo-bento__rail-panels">
+            <div
+                class="ludo-bento__card-group is-active"
+                id="ludo-card-group-characters-01"
+                role="tabpanel"
+                aria-labelledby="ludo-card-tab-characters-01"
                 
+                data-ludo-card-panel="characters-01"
+            >
+                <div class="ludo-bento__card-strip" tabindex="0" aria-label="Characters Iteration 01 image strip">
+                    
         <button
             class="ludo-bento__card-frame"
             type="button"
@@ -677,95 +845,184 @@
         >
             <img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-rafi-mystic.jpg" alt="Ludo RPG flat character card Rafi Mystic" loading="lazy" decoding="async" draggable="false">
         </button>
+                </div>
             </div>
-        </div>
-        <div
-            class="ludo-bento__card-group"
-            id="ludo-card-group-characters-02"
-            role="tabpanel"
-            aria-labelledby="ludo-card-tab-characters-02"
-            hidden
-            data-ludo-card-panel="characters-02"
-        >
-            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Characters Iteration 02 image strip">
-                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            <div
+                class="ludo-bento__card-group"
+                id="ludo-card-group-characters-02"
+                role="tabpanel"
+                aria-labelledby="ludo-card-tab-characters-02"
+                hidden
+                data-ludo-card-panel="characters-02"
+            >
+                <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Characters Iteration 02 image strip">
+                    <p class="ludo-bento__card-empty">The second character pass will land here once the next visual batch is ready.</p>
+                </div>
             </div>
-        </div>
-        <div
-            class="ludo-bento__card-group"
-            id="ludo-card-group-trap-cards"
-            role="tabpanel"
-            aria-labelledby="ludo-card-tab-trap-cards"
-            hidden
-            data-ludo-card-panel="trap-cards"
-        >
-            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Trap Cards image strip">
-                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            <div
+                class="ludo-bento__card-group"
+                id="ludo-card-group-trap-cards"
+                role="tabpanel"
+                aria-labelledby="ludo-card-tab-trap-cards"
+                hidden
+                data-ludo-card-panel="trap-cards"
+            >
+                <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Trap Cards image strip">
+                    <p class="ludo-bento__card-empty">Trap card variants will plug into this rail lane next.</p>
+                </div>
             </div>
-        </div>
-        <div
-            class="ludo-bento__card-group"
-            id="ludo-card-group-action-cards"
-            role="tabpanel"
-            aria-labelledby="ludo-card-tab-action-cards"
-            hidden
-            data-ludo-card-panel="action-cards"
-        >
-            <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Action Cards image strip">
-                <p class="ludo-bento__card-empty">Artifacts in this lane are still being wired in.</p>
+            <div
+                class="ludo-bento__card-group"
+                id="ludo-card-group-action-cards"
+                role="tabpanel"
+                aria-labelledby="ludo-card-tab-action-cards"
+                hidden
+                data-ludo-card-panel="action-cards"
+            >
+                <div class="ludo-bento__card-strip is-empty" tabindex="0" aria-label="Action Cards image strip">
+                    <p class="ludo-bento__card-empty">Action card explorations will appear here as the deck gets formalised.</p>
+                </div>
             </div>
-        </div>
-        </div>
-            </section>
-            <section class="ludo-bento__actions-row" id="project-links">
-                
-        <a class="ludo-bento__nav-arrow" href="../venture-hub/index.html" aria-label="Prev. Project: Venture Hub">
-            <span class="ludo-bento__nav-arrow-ring" aria-hidden="true">
-                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
-                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
-            </span>
-            <span class="ludo-bento__nav-arrow-label">Prev. Project</span>
-            <span class="ludo-bento__nav-arrow-title">Venture Hub</span>
-        </a>
-                <div class="ludo-bento__actions-grid">
-                    
-        <article class="ludo-bento__cta-card">
-            <h3>Web App Prototype</h3>
-            <p>Interactive prototype with remote multiplayer live.</p>
-            <span class="ludo-bento__cta-pill" aria-hidden="true">Play</span>
-        </article>
-        <article class="ludo-bento__cta-card">
-            <h3>Reflections</h3>
-            <p>Notes accumulated through the journey. Challenges, constraints, workarounds.</p>
-            <span class="ludo-bento__cta-pill" aria-hidden="true">Read</span>
-        </article>
-        <article class="ludo-bento__cta-card">
-            <h3>Expansion Pack</h3>
-            <p>A card expansion pack that you can download, print, and play.</p>
-            <span class="ludo-bento__cta-pill" aria-hidden="true">Download</span>
-        </article>
+                </div>
+            </div>
+        </section>
+
+        <section class="project-longform__section project-longform__section--snackbars" id="prototype">
+            
+            <div class="project-longform__snackbar-stack">
+                <a class="project-longform__snackbar" href="#artifact-rail">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Expansion Pack</h3>
+                            <p>A printable add-on deck that lets the concept move off the screen and back onto the table.</p>
+                        </div>
+                        <span class="project-longform__snackbar-pill">Download</span>
+                    </a><a class="project-longform__snackbar" href="#details">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Web App Prototype</h3>
+                            <p>A multiplayer-friendly prototype where card logic, character states, and board events can all live in one readable system.</p>
+                        </div>
+                        <span class="project-longform__snackbar-pill">Open</span>
+                    </a><a class="project-longform__snackbar" href="#project-topfold">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Reflections</h3>
+                            <p>Notes on constraints, tradeoffs, and the moments where the system got more complicated than the board could comfortably hold.</p>
+                        </div>
+                        <span class="project-longform__snackbar-pill">Read</span>
+                    </a>
+            </div>
+        </section>
+                    </div>
                 </div>
                 
-        <a class="ludo-bento__nav-arrow" href="../managed-asset-search/index.html" aria-label="Next Project: Managed Asset Search">
-            <span class="ludo-bento__nav-arrow-ring" aria-hidden="true">
-                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
-                <img class="ludo-bento__nav-arrow-icon ludo-bento__nav-arrow-icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
-            </span>
-            <span class="ludo-bento__nav-arrow-label">Next Project</span>
-            <span class="ludo-bento__nav-arrow-title">Managed Asset Search</span>
-        </a>
-            </section>
+                <div class="ludo-mobile">
+                    <div class="ludo-mobile__video-frame">
+            <video autoplay muted loop playsinline>
+                <source src="../../Assets/ludo-cards.mp4" type="video/mp4">
+            </video></div>
+                    <div class="ludo-mobile__body">
+                        <header class="ludo-mobile__header">
+                            <h1 class="ludo-mobile__title">Ludo Cards</h1>
+                            <div class="ludo-mobile__tags"><span class="ludo-mobile__tag">Game Design</span><span class="ludo-mobile__tag">Personal</span></div>
+                        </header>
+                        
+                            <div class="ludo-mobile__pao">
+                                <div class="ludo-mobile__pao-tablist" role="tablist" aria-label="Project summary">
+                                    <button class="ludo-mobile__pao-tab is-active" type="button" role="tab" aria-selected="true" data-ludo-mobile-pao="problem" data-ludo-mobile-summary="Classic ludo leaves too much to chance. Your ability to exit the base, move, attack, defend - all comes down to a single dice roll. The only real choice a player makes is which pawn to move. In an age of Catan, Monopoly Deal, D&amp;D - a tabletop legend has taken a backseat.">Problem</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="approach" data-ludo-mobile-summary="The goal was to introduce meaningful choices without dismantling the game. RPG mechanics, narrative framing, and deck-based abilities rewards foresight and planning instead of a single lucky throw. Lore was added to make players care about the lives of pawns they otherwise so casually sacrificed at the altar of chance.">Approach</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="outcome" data-ludo-mobile-summary="Players think beyond their dice rolls and reconsider moves based on what cards others might be holding. Metagame manipulators shift the social texture of the game. Suddenly you&#39;re not just playing the board, you&#39;re playing the table.">Outcome</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="constraint" data-ludo-mobile-summary="The question that kept the project grounded - If you have to explain more than two minutes, is it still ludo? Engineering the feeling that your choices mattered, even when the dice disagrees, while keeping it casual - is the challenge.">Constraint</button>
+                                </div>
+                                <p class="ludo-mobile__pao-text" data-ludo-mobile-pao-text>Classic ludo leaves too much to chance. Your ability to exit the base, move, attack, defend - all comes down to a single dice roll. The only real choice a player makes is which pawn to move. In an age of Catan, Monopoly Deal, D&amp;D - a tabletop legend has taken a backseat.</p>
+                            </div>
+                        
+                            <button class="ludo-mobile__quote" type="button" data-ludo-mobile-quote data-active-quote="0" aria-label="Show next user story">
+                                <span hidden data-ludo-mobile-quote-source data-m-quote-text="I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all." data-m-quote-meta="anonymous - 28 years old"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="It&#39;s frustrating to wait for a 1 or 6 to get my pawn out, feels like I&#39;m losing before the game even begins." data-m-quote-meta="playtester, age 12"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="When someone takes out my token right before the safe passage to the finish, I&#39;m helpless." data-m-quote-meta="anonymous - 11 years old"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="I&#39;d love a reason to care about which pawn to move, not just which one is safest." data-m-quote-meta="playtester - 29 years old"></span>
+                                <span class="ludo-mobile__quote-deck">
+                                    <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--third" aria-hidden="true"></span>
+                                    <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--second" aria-hidden="true"></span>
+                                    <span class="ludo-mobile__quote-card">
+                                        <span class="ludo-mobile__quote-text" data-ludo-mobile-quote-text>I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all.</span>
+                                        <span class="ludo-mobile__quote-footer">
+                                            <span class="ludo-mobile__quote-meta" data-ludo-mobile-quote-meta>anonymous - 28 years old</span>
+                                            <span class="ludo-mobile__quote-count" data-ludo-mobile-quote-count>1/4</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </button>
+                        
+        <div class="ludo-mobile__artifacts">
+            <div class="ludo-mobile__artifacts-tabs" role="tablist" aria-label="Project artifact groups">
+                
+        <button class="ludo-mobile__artifacts-tab is-active" type="button" role="tab" aria-selected="true" data-ludo-mobile-artifact-tab="characters-01">Characters Iteration 01</button>
+        <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="characters-02">Characters Iteration 02</button>
+        <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="trap-cards">Trap Cards</button>
+        <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="action-cards">Action Cards</button>
+            </div>
+            <div class="ludo-mobile__artifacts-panels">
+                
+            <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="characters-01">
+                <div class="ludo-mobile__card-strip" aria-label="Characters Iteration 01"><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="0" aria-label="Open Gulbahar"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gulbahar-speed.jpg" alt="Ludo RPG flat character card Gulbahar Speedster" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="1" aria-label="Open Tariq"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-tariq-speed.jpg" alt="Ludo RPG flat character card Tariq Speedster" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="2" aria-label="Open Veera"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-veera-speed.jpg" alt="Ludo RPG flat character card Veera Speedster" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="3" aria-label="Open Velan"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-velan-speed.jpg" alt="Ludo RPG flat character card Velan Speedster" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="4" aria-label="Open Chemban"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-chemban-tank.jpg" alt="Ludo RPG flat character card Chemban Tank" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="5" aria-label="Open Maari"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maari-tank.jpg" alt="Ludo RPG flat character card Maari Tank" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="6" aria-label="Open Noorjehan"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-noorjehan-tank.jpg" alt="Ludo RPG flat character card Noorjehan Tank" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="7" aria-label="Open Pratima"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-pratima-tank.jpg" alt="Ludo RPG flat character card Pratima Tank" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="8" aria-label="Open Kali"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kali-assassin.jpg" alt="Ludo RPG flat character card Kali Assassin" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="9" aria-label="Open Kalya"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kalya-assassin.jpg" alt="Ludo RPG flat character card Kalya Assassin" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="10" aria-label="Open Maya"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-maya-assassin.jpg" alt="Ludo RPG flat character card Maya Assassin" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="11" aria-label="Open Raktim"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-raktim-assassin.jpg" alt="Ludo RPG flat character card Raktim Assassin" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="12" aria-label="Open Kaveri"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kaveri-cleric.jpg" alt="Ludo RPG flat character card Kaveri Cleric" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="13" aria-label="Open Prasanna"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-prasanna-cleric.jpg" alt="Ludo RPG flat character card Prasanna Cleric" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="14" aria-label="Open Bhairava"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-bhairava-necromancer.jpg" alt="Ludo RPG flat character card Bhairava Necromancer" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="15" aria-label="Open Nishi"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-nishi-necromancer.jpg" alt="Ludo RPG flat character card Nishi Necromancer" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="16" aria-label="Open Gargi"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-gargi-mystic.jpg" alt="Ludo RPG flat character card Gargi Mystic" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="17" aria-label="Open Ilango"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-ilango-mystic.jpg" alt="Ludo RPG flat character card Ilango Mystic" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="18" aria-label="Open Kabir"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-kabir-mystic.jpg" alt="Ludo RPG flat character card Kabir Mystic" loading="lazy" decoding="async" draggable="false"></button><button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="19" aria-label="Open Rafi"><img src="../../Assets/ludo-rpg-cards/characters-iteration-01-flat/character-flat-rafi-mystic.jpg" alt="Ludo RPG flat character card Rafi Mystic" loading="lazy" decoding="async" draggable="false"></button></div>
+            </div>
+            <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="characters-02" hidden>
+                <p class="ludo-mobile__card-empty">The second character pass will land here once the next visual batch is ready.</p>
+            </div>
+            <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="trap-cards" hidden>
+                <p class="ludo-mobile__card-empty">Trap card variants will plug into this rail lane next.</p>
+            </div>
+            <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="action-cards" hidden>
+                <p class="ludo-mobile__card-empty">Action card explorations will appear here as the deck gets formalised.</p>
+            </div>
+            </div>
         </div>
-    </main>
+                        
+                            <div class="ludo-mobile__journey">
+                                <p class="ludo-mobile__section-label">How it was made</p>
+                                <div class="ludo-mobile__pills">
+                                    <button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="0" data-m-pill-phase="01" data-m-pill-title="Narrative Design" data-m-pill-body="The building blocks of a story were already hiding in Classic Ludo: a journey, factions, contested ground, and moments of reversal. Naming the board as a world made movement feel less abstract and more like traversal.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">01</span><span class="ludo-mobile__pill-title">Narrative Design</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="1" data-m-pill-phase="02" data-m-pill-title="Board Game Design" data-m-pill-body="Ludo Cards adds planning, role identity, and risk-reward decisions to a loop that is usually resolved by pure probability. The aim was not to replace Ludo, but to reveal a more tactical version inside it.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">02</span><span class="ludo-mobile__pill-title">Board Game Design</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="2" data-m-pill-phase="03" data-m-pill-title="Digital Development" data-m-pill-body="Playtesting the physical version revealed a bookkeeping problem. Once characters, action cards, traps, and board events layered together, players needed a digital surface to hold the complexity cleanly.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">03</span><span class="ludo-mobile__pill-title">Digital Development</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button>
+                                </div>
+                            </div>
+                    </div>
+                    
+                        <div class="ludo-mobile__drawer-overlay" data-ludo-mobile-overlay hidden>
+                            <div class="ludo-mobile__drawer" role="dialog" aria-modal="true" aria-label="Section detail">
+                                <div class="ludo-mobile__drawer-handle" data-ludo-mobile-close role="button" aria-label="Close" tabindex="0"></div>
+                                <p class="ludo-mobile__drawer-phase" data-ludo-mobile-drawer-phase></p>
+                                <h2 class="ludo-mobile__drawer-title" data-ludo-mobile-drawer-title></h2>
+                                <p class="ludo-mobile__drawer-body" data-ludo-mobile-drawer-body></p>
+                            </div>
+                        </div>
+                </div>
+                
+        <footer class="project-tail-footer">
+            <div class="project-tail-footer__inner">
+                
+                <div class="project-tail-footer__icons">
+                    <a href="https://x.com/Neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="https://github.com/neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="project-social-icon" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="project-social-icon__img"></a>
+                </div>
+            </div>
+        </footer>
+            </main>
+        </div>
+    </div>
     
     <div class="ludo-bento__lightbox" data-ludo-lightbox hidden aria-hidden="true">
         <section class="ludo-bento__lightbox-shell" role="dialog" aria-modal="true" aria-label="Fullscreen character viewer">
-            <button class="ludo-bento__lightbox-close" type="button" data-ludo-lightbox-close aria-label="Close fullscreen character viewer">X</button>
-            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--prev" type="button" data-ludo-lightbox-prev aria-label="View previous character card">
+            <div class="ludo-bento__lightbox-handle" data-ludo-lightbox-handle aria-hidden="true"></div>
+            <button class="ludo-bento__lightbox-close" type="button" data-ludo-lightbox-close aria-label="Close fullscreen artifact viewer">X</button>
+            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--prev" type="button" data-ludo-lightbox-prev aria-label="View previous artifact">
                 <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
                 <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
             </button>
-            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--next" type="button" data-ludo-lightbox-next aria-label="View next character card">
+            <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--next" type="button" data-ludo-lightbox-next aria-label="View next artifact">
                 <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
                 <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
             </button>
@@ -781,35 +1038,24 @@
                 <aside class="ludo-bento__lightbox-side ludo-bento__lightbox-side--right" aria-live="polite">
                     <div class="ludo-bento__lightbox-side-row">
                         <h3 class="ludo-bento__lightbox-side-title" data-ludo-lightbox-detail-name-title>Character name</h3>
-                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-name-body>Placeholder copy for this character will go here.</p>
+                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-name-body></p>
                     </div>
                     <div class="ludo-bento__lightbox-side-row">
                         <h3 class="ludo-bento__lightbox-side-title" data-ludo-lightbox-detail-class-title>Character class</h3>
-                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-class-body>Placeholder copy for this class will go here.</p>
+                        <p class="ludo-bento__lightbox-side-copy" data-ludo-lightbox-detail-class-body></p>
                     </div>
                 </aside>
                 <div class="ludo-bento__lightbox-canvas" data-ludo-lightbox-canvas></div>
-                <div class="ludo-bento__lightbox-versions" role="tablist" aria-label="Card render styles">
+                <div class="ludo-bento__lightbox-versions" role="tablist" aria-label="Artifact versions">
                     <button class="ludo-bento__lightbox-version is-active" type="button" data-ludo-lightbox-version="flat" aria-pressed="true">Flat</button>
                     <button class="ludo-bento__lightbox-version" type="button" data-ludo-lightbox-version="stylised" aria-pressed="false">Stylised</button>
                 </div>
             </div>
         </section>
     </div>
-    
-        <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
-                <div class="flex items-center gap-[1.15rem]">
-                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                </div>
-            </div>
-        </footer>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="../../shared/navbar.js" defer></script>
     <script src="../_shared/project-page.js" defer></script>
+    <script src="../_templates/project-longform/project-longform.js" defer></script>
     <script src="../_templates/template-replication/ludo-bento.js" defer></script>
 </body>
 </html>

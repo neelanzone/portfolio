@@ -1,3 +1,11 @@
+html:has(body.project-page.template-ludo-bento) {
+    background: rgb(16 16 16);
+}
+
+html.light-theme:has(body.project-page.template-ludo-bento) {
+    background: rgb(245 239 229);
+}
+
 body.project-page.template-ludo-bento {
     --canvas: 16 16 16;
     --surface: 25 25 25;
@@ -33,21 +41,87 @@ body.project-page.template-ludo-bento .nav-links a {
     letter-spacing: 0.28em;
 }
 
+/* ── Mobile: hide top chrome, restyle burger ── */
+@media (max-width: 640px) {
+    body.project-page.template-ludo-bento .navbar,
+    body.project-page.template-ludo-bento .section-pill-bar {
+        display: none;
+    }
+
+    body.project-page.template-ludo-bento .project-sidebar-mobile-trigger {
+        width: 2.75rem;
+        height: 2.75rem;
+        background: linear-gradient(180deg, rgb(var(--surface) / 0.96), rgb(var(--canvas) / 0.99));
+        border: 1px solid rgb(var(--rule) / 0.62);
+        border-radius: 10px;
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.08),
+            0 4px 16px rgba(0, 0, 0, 0.36);
+        backdrop-filter: blur(16px);
+        -webkit-backdrop-filter: blur(16px);
+        color: rgb(var(--ink));
+    }
+
+    html.light-theme body.project-page.template-ludo-bento .project-sidebar-mobile-trigger {
+        background: linear-gradient(180deg, rgb(var(--surface) / 0.97), rgb(var(--canvas) / 0.99));
+        border-color: rgb(var(--rule) / 0.5);
+        box-shadow:
+            inset 0 1px 0 rgba(255, 255, 255, 0.6),
+            0 4px 16px rgba(0, 0, 0, 0.12);
+    }
+
+    body.project-page.template-ludo-bento .project-sidebar-mobile-trigger:hover {
+        border-color: rgb(var(--rule) / 0.9);
+    }
+}
+
 .ludo-bento-stage {
-    padding: calc(var(--nav-height) + 2px) 15px 30px;
+    padding: 0.5rem 0 0 0;
+    position: relative;
+}
+
+.ludo-bento__theme-toggle {
+    position: fixed;
+    top: 1rem;
+    right: 1rem;
+    z-index: 150;
 }
 
 .ludo-bento {
-    width: min(1410px, calc(100vw - 30px));
+    width: 99%;
     margin: 0 auto;
     display: grid;
     gap: 8px;
+    container-type: inline-size;
 }
 
 .ludo-bento__topfold {
     display: grid;
     grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.8fr);
     gap: 8px;
+}
+
+.ludo-bento__video-row {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+}
+
+.ludo-bento__video-frame {
+    position: relative;
+    aspect-ratio: 16 / 9;
+    border: 1px solid rgba(var(--rule), 0.78);
+    border-radius: 4px;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(14, 11, 11, 0.98) 80.965%, rgba(23, 17, 17, 0.98));
+    box-shadow: 0 22px 42px -32px rgba(0, 0, 0, 0.72);
+}
+
+.ludo-bento__video-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
 }
 
 .ludo-bento__hero-card,
@@ -89,7 +163,7 @@ html.light-theme .ludo-bento__nav-arrow {
 .ludo-bento__hero-header h1 {
     margin: 0;
     font-family: 'Merriweather', serif;
-    font-size: clamp(2.4rem, 3.4vw, 3rem);
+    font-size: clamp(2.4rem, 4.3cqi, 3rem);
     font-weight: 400;
     line-height: 0.92;
     letter-spacing: -0.03em;
@@ -151,6 +225,19 @@ html.light-theme .ludo-bento__hero-tags span {
 }
 
 .ludo-bento__hero-tab:hover {
+    color: rgb(var(--ink));
+}
+
+html.light-theme .ludo-bento__hero-tab {
+    color: rgb(var(--subtext) / 0.38);
+}
+
+html.light-theme .ludo-bento__hero-tab.is-active,
+html.light-theme .ludo-bento__hero-tab:focus-visible {
+    color: rgb(var(--ink));
+}
+
+html.light-theme .ludo-bento__hero-tab:hover {
     color: rgb(var(--ink));
 }
 
@@ -347,11 +434,19 @@ html.light-theme .ludo-bento__hero-tags span {
 .ludo-bento__cta-card h3 {
     margin: 0;
     font-family: 'Instrument Sans', sans-serif;
-    font-size: clamp(1.9rem, 2.2vw, 2rem);
     font-weight: 400;
     line-height: 0.98;
     letter-spacing: -0.03em;
     color: rgb(var(--ink));
+}
+
+.ludo-bento__info-card h2 {
+    font-size: clamp(1.2rem, 2.1cqi, 1.5rem);
+}
+
+.ludo-bento__cta-card h3 {
+    font-size: clamp(0.8rem, 1.4cqi, 1rem);
+    font-weight: 700;
 }
 
 .ludo-bento__info-card-copy p,
@@ -797,26 +892,38 @@ html.light-theme .ludo-bento__rail-card {
 }
 
 .ludo-bento__rail-tab {
+    appearance: none;
+    -webkit-appearance: none;
     display: inline-flex;
     align-items: center;
     justify-content: center;
     min-height: 24px;
     padding: 0.3rem 0.8rem;
+    border: 1px solid transparent;
     border-radius: 20px;
-    border: 0.5px solid rgba(255, 255, 255, 0.12);
     background: transparent;
     font: 400 0.68rem/1 'Instrument Sans', sans-serif;
     letter-spacing: 0.04em;
     text-transform: uppercase;
     color: rgb(var(--ink));
     cursor: pointer;
-    transition: border-color 0.18s ease, background-color 0.18s ease;
+    transition: border-color 0.18s ease, background-color 0.18s ease, outline-color 0.18s ease;
 }
 
-.ludo-bento__rail-tab.is-active,
-.ludo-bento__rail-tab:hover,
-.ludo-bento__rail-tab:focus-visible {
+.ludo-bento__rail-tab.is-active {
     border-color: rgba(255, 255, 255, 0.85);
+}
+
+.ludo-bento__rail-tab:focus-visible {
+    outline: 2px solid rgba(var(--ink), 0.24);
+    outline-offset: 2px;
+}
+
+.ludo-bento__rail-tab:hover {
+    outline: none;
+}
+
+.ludo-bento__rail-tab.is-active:focus-visible {
     outline: none;
 }
 
@@ -975,7 +1082,7 @@ html.light-theme .ludo-bento__lightbox {
 }
 
 html.light-theme .ludo-bento__lightbox-shell {
-    background: linear-gradient(180deg, rgba(249, 243, 234, 0.98), rgba(235, 226, 214, 0.98));
+    background: linear-gradient(180deg, rgba(253, 250, 245, 0.99), rgba(247, 241, 233, 0.99));
 }
 
 .ludo-bento__lightbox-nav {
@@ -1044,6 +1151,10 @@ html.light-theme .ludo-bento__lightbox-nav-icon--light {
     background: rgba(255, 255, 255, 0.1);
     color: rgb(var(--ink));
     outline: none;
+}
+
+.ludo-bento__lightbox-handle {
+    display: none;
 }
 
 .ludo-bento__lightbox-stage {
@@ -1130,23 +1241,7 @@ html.light-theme .ludo-bento__lightbox-side {
 .ludo-bento__lightbox-side-copy,
 .ludo-bento__lightbox-side-row {
     opacity: 1;
-    transform: translateY(0);
-    transition: opacity 400ms ease, transform 400ms cubic-bezier(0.2, 0.9, 0.2, 1);
-    will-change: opacity, transform;
-}
-
-.ludo-bento__lightbox-side-title.is-reveal-hidden,
-.ludo-bento__lightbox-side-copy.is-reveal-hidden,
-.ludo-bento__lightbox-side-row.is-reveal-hidden {
-    opacity: 0;
-    transform: translateY(14px);
-}
-
-.ludo-bento__lightbox-side-title.is-reveal-visible,
-.ludo-bento__lightbox-side-copy.is-reveal-visible,
-.ludo-bento__lightbox-side-row.is-reveal-visible {
-    opacity: 1;
-    transform: translateY(0);
+    transform: none;
 }
 .ludo-bento__lightbox-side-title {
     margin: 0;
@@ -1171,7 +1266,7 @@ html.light-theme .ludo-bento__lightbox-side {
 }
 
 html.light-theme .ludo-bento__lightbox-canvas {
-    background: radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.4), transparent 42%), linear-gradient(180deg, rgba(239, 231, 223, 0.98), rgba(220, 210, 198, 0.98));
+    background: radial-gradient(circle at 50% 14%, rgba(255, 255, 255, 0.72), transparent 44%), linear-gradient(180deg, rgba(252, 248, 242, 0.99), rgba(244, 237, 228, 0.99));
 }
 
 .ludo-bento__lightbox-canvas canvas {
@@ -1234,6 +1329,11 @@ html.light-theme .ludo-bento__lightbox-canvas {
     background: #191616;
 }
 
+html.light-theme .ludo-bento__viewer-card-face {
+    border-color: rgba(var(--rule), 0.38);
+    background: linear-gradient(180deg, rgba(250, 246, 240, 0.98), rgba(239, 231, 222, 0.98));
+}
+
 .ludo-bento__viewer-card-face--front {
     transform: translateZ(7px);
 }
@@ -1249,7 +1349,6 @@ html.light-theme .ludo-bento__lightbox-canvas {
     z-index: 5;
     display: inline-flex;
     align-items: center;
-    justify-content: center;
     gap: 1.4rem;
     transform: translateX(-50%);
 }
@@ -1296,8 +1395,9 @@ html.light-theme .ludo-bento__lightbox-canvas {
 .ludo-bento__cta-card {
     min-height: 161px;
     padding: 1.3rem 1.6rem;
-    display: grid;
-    align-content: start;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
 }
 
 .ludo-bento__cta-card p {
@@ -1312,7 +1412,7 @@ html.light-theme .ludo-bento__lightbox-canvas {
     width: fit-content;
     min-width: 136px;
     min-height: 34px;
-    margin-top: 1rem;
+    margin-top: auto;
     padding: 0.55rem 1rem;
     border-radius: 4px;
     overflow: hidden;
@@ -1529,9 +1629,7 @@ body.project-page.template-ludo-bento .project-tail-footer {
         line-height: 1.42;
     }
 
-    .ludo-bento__lightbox-versions {
-        bottom: 1.15rem;
-    }
+
 
     .ludo-bento__lightbox-nav {
         width: 52px;
@@ -1589,59 +1687,60 @@ body.project-page.template-ludo-bento .project-tail-footer {
 @media (max-width: 760px) {
     .ludo-bento__lightbox {
         padding: 0;
+        align-items: end;
     }
 
     .ludo-bento__lightbox-shell {
         height: min(86vh, 700px);
         padding: 0;
-        border-radius: 20px;
+        border-radius: 20px 20px 0 0;
+    }
+
+    .ludo-bento__lightbox-close {
+        display: none;
+    }
+
+    .ludo-bento__lightbox-handle {
+        display: block;
+        position: absolute;
+        top: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 38px;
+        height: 4px;
+        border-radius: 2px;
+        background: rgb(var(--ink) / 0.52);
+        z-index: 10;
+        cursor: grab;
+        touch-action: none;
     }
 
     .ludo-bento__lightbox-stage {
-        --ludo-lightbox-card-top: 42%;
-        --ludo-lightbox-card-width: clamp(152px, 44.8vw, 240px);
+        --ludo-lightbox-card-top: calc(var(--ludo-lightbox-card-width) * 0.6731 + 5rem);
+        --ludo-lightbox-card-width: clamp(142px, 41.89vw, 224px);
         --ludo-lightbox-pill-offset: 2.1rem;
+        position: relative;
+        width: 100%;
+        height: 100%;
     }
 
     .ludo-bento__lightbox-side {
-        top: auto;
-        bottom: 3.5rem;
-        width: calc(50% - 1rem);
+        top: calc(var(--ludo-lightbox-card-top) + (var(--ludo-lightbox-card-width) * 0.6731) + 4rem);
+        bottom: auto;
         padding: 0.75rem 0.78rem;
         transform: none;
     }
 
-    .ludo-bento__lightbox-side--left {
-        left: 0.75rem;
-    }
-
-    .ludo-bento__lightbox-side--right {
-        right: 0.75rem;
-    }
-
-    .ludo-bento__lightbox-side-title {
-        font-size: 0.92rem;
-    }
-
-    .ludo-bento__lightbox-side-copy {
-        font-size: 0.72rem;
-        line-height: 1.34;
-    }
-
     .ludo-bento__lightbox-side {
-        top: auto;
-        bottom: 3.5rem;
-        width: calc(50% - 1rem);
-        padding: 0.75rem 0.78rem;
-        transform: none;
-    }
-
-    .ludo-bento__lightbox-side--left {
-        left: 0.75rem;
+        gap: 0.35rem;
     }
 
     .ludo-bento__lightbox-side--right {
-        right: 0.75rem;
+        gap: 0.6rem;
+    }
+
+    .ludo-bento__lightbox-side-row {
+        gap: 0.35rem;
     }
 
     .ludo-bento__lightbox-side-title {
@@ -1662,7 +1761,8 @@ body.project-page.template-ludo-bento .project-tail-footer {
 
     .ludo-bento__lightbox-versions {
         gap: 1rem;
-        bottom: 0.95rem;
+        top: calc(var(--ludo-lightbox-card-top) + (var(--ludo-lightbox-card-width) * 0.6731) + 0.6rem);
+        bottom: auto;
     }
 
     .ludo-bento__lightbox-version {
@@ -1672,6 +1772,7 @@ body.project-page.template-ludo-bento .project-tail-footer {
     .ludo-bento__lightbox-nav {
         width: 46px;
         height: 46px;
+        top: 33%;
     }
     .ludo-bento__hero-content,
     .ludo-bento__info-card,
@@ -1685,7 +1786,7 @@ body.project-page.template-ludo-bento .project-tail-footer {
     }
 
     .ludo-bento__hero-header h1 {
-        font-size: clamp(2.1rem, 11vw, 2.6rem);
+        font-size: clamp(2.1rem, 11cqi, 2.6rem);
     }
 
     .ludo-bento__card-strip {
@@ -1704,7 +1805,7 @@ body.project-page.template-ludo-bento .project-tail-footer {
 
 @media (max-width: 640px) {
     .ludo-bento-stage {
-        padding-top: calc(var(--nav-height) + 6px);
+        padding-top: 0.5rem;
     }
 
     .ludo-bento__rail-card {
@@ -1729,6 +1830,519 @@ body.project-page.template-ludo-bento .project-tail-footer {
     body.project-page.template-ludo-bento .project-tail-footer {
         width: calc(100vw - 24px);
     }
+}
+
+/* ─── Mobile layout (< 640px) ─── */
+
+.ludo-mobile {
+    display: none;
+}
+
+@media (max-width: 640px) {
+    .ludo-bento {
+        display: none;
+    }
+
+    .ludo-mobile {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+    }
+}
+
+.ludo-mobile__video-frame {
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    flex-shrink: 0;
+    overflow: hidden;
+    background: linear-gradient(180deg, rgba(14, 11, 11, 0.98) 80.965%, rgba(23, 17, 17, 0.98));
+}
+
+.ludo-mobile__video-frame video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+}
+
+.ludo-mobile__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.85rem;
+    padding: 1rem 0.85rem 1rem;
+}
+
+/* Header */
+.ludo-mobile__title {
+    margin: 0 0 0.5rem;
+    font-family: 'Merriweather', serif;
+    font-size: 2rem;
+    font-weight: 400;
+    line-height: 0.92;
+    letter-spacing: -0.03em;
+    color: rgb(var(--ink));
+}
+
+.ludo-mobile__tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+}
+
+.ludo-mobile__tag {
+    display: inline-flex;
+    align-items: center;
+    min-height: 22px;
+    padding: 0.25rem 0.72rem;
+    border-radius: 40px;
+    background: rgba(25, 22, 22, 0.5);
+    font-family: 'Space Mono', monospace;
+    font-size: 0.58rem;
+    font-weight: 700;
+    letter-spacing: 0.19em;
+    text-transform: uppercase;
+    color: rgb(var(--ink));
+}
+
+html.light-theme .ludo-mobile__tag {
+    background: rgba(25, 22, 22, 0.12);
+}
+
+/* PAO block */
+.ludo-mobile__pao {
+    border: none;
+    border-radius: 0;
+    background: none;
+    padding: 1rem 1rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.72rem;
+}
+
+html.light-theme .ludo-mobile__pao {
+    background: none;
+}
+
+.ludo-mobile__pao-tablist {
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 0.55rem;
+    border-bottom: 1px solid rgb(var(--rule) / 0.55);
+}
+
+.ludo-mobile__pao-tab {
+    appearance: none;
+    -webkit-appearance: none;
+    border: 0;
+    border-bottom: 1.5px solid transparent;
+    padding: 0 0 0.28rem;
+    background: none;
+    font: 500 12px/1 'Instrument Sans', sans-serif;
+    color: #2c2929;
+    cursor: pointer;
+    white-space: nowrap;
+    transition: color 0.15s ease, border-color 0.15s ease;
+}
+
+.ludo-mobile__pao-tab.is-active {
+    color: rgb(var(--ink));
+    border-bottom-color: rgb(var(--ink));
+}
+
+.ludo-mobile__pao-tab:hover {
+    color: rgb(var(--ink));
+}
+
+html.light-theme .ludo-mobile__pao-tab {
+    color: rgb(var(--subtext) / 0.38);
+}
+
+html.light-theme .ludo-mobile__pao-tab.is-active,
+html.light-theme .ludo-mobile__pao-tab:hover {
+    color: rgb(var(--ink));
+}
+
+.ludo-mobile__pao-text {
+    margin: 0;
+    font: 400 0.74rem/1.38 'Instrument Sans', sans-serif;
+    letter-spacing: 0.1em;
+    color: rgb(var(--ink));
+    min-height: 3.5rem;
+    transition: opacity 0.18s ease;
+}
+
+.ludo-mobile__pao-text.is-fading {
+    opacity: 0;
+}
+
+/* Quote stack */
+.ludo-mobile__quote {
+    position: relative;
+    display: block;
+    width: 100%;
+    padding: 0;
+    border: 0;
+    background: none;
+    text-align: left;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+}
+
+.ludo-mobile__quote-deck {
+    position: relative;
+    display: block;
+    min-height: 120px;
+}
+
+.ludo-mobile__quote-layer,
+.ludo-mobile__quote-card {
+    position: absolute;
+    border-radius: 4px;
+    transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+}
+
+.ludo-mobile__quote-layer--third {
+    left: 20px;
+    right: -4px;
+    top: 5px;
+    bottom: 12px;
+    background: #ef7c57;
+    transform: rotate(1.2deg);
+    transform-origin: bottom left;
+    z-index: 0;
+}
+
+.ludo-mobile__quote-layer--second {
+    left: 10px;
+    right: 4px;
+    top: 2px;
+    bottom: 12px;
+    background: #f89779;
+    transform: rotate(0.65deg);
+    transform-origin: bottom left;
+    z-index: 1;
+}
+
+.ludo-mobile__quote-card {
+    left: 0;
+    right: 10px;
+    top: 0;
+    bottom: 12px;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    padding: 0.78rem 0.9rem 0.9rem;
+    background: #ffb6a0;
+    box-shadow: 0 12px 28px -22px rgba(0, 0, 0, 0.55);
+}
+
+.ludo-mobile__quote-text {
+    display: block;
+    margin: 0;
+    font: 400 15px/1.28 'Merriweather', serif;
+    color: #d44000;
+    transition: opacity 0.2s ease;
+}
+
+.ludo-mobile__quote-footer {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-top: auto;
+    padding-top: 0.35rem;
+}
+
+.ludo-mobile__quote-meta,
+.ludo-mobile__quote-count {
+    display: block;
+    margin: 0;
+    font: 400 0.58rem/1.1 'Instrument Sans', sans-serif;
+    letter-spacing: 0.02em;
+    color: rgba(199, 106, 77, 0.96);
+    transition: opacity 0.2s ease;
+}
+
+.ludo-mobile__quote-count {
+    text-align: right;
+    white-space: nowrap;
+}
+
+.ludo-mobile__quote:hover .ludo-mobile__quote-card,
+.ludo-mobile__quote:focus-visible .ludo-mobile__quote-card {
+    transform: translate(-2px, -3px) scale(1.02);
+    box-shadow: 0 18px 34px -20px rgba(212, 64, 0, 0.38);
+    filter: brightness(1.02);
+}
+
+.ludo-mobile__quote:hover .ludo-mobile__quote-layer--second,
+.ludo-mobile__quote:focus-visible .ludo-mobile__quote-layer--second {
+    transform: translate(1px, 1px) rotate(0.85deg);
+}
+
+.ludo-mobile__quote:hover .ludo-mobile__quote-layer--third,
+.ludo-mobile__quote:focus-visible .ludo-mobile__quote-layer--third {
+    transform: translate(2px, 2px) rotate(1.45deg);
+}
+
+/* Artifacts */
+.ludo-mobile__artifacts {
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+}
+
+.ludo-mobile__artifacts-tabs {
+    display: flex;
+    gap: 0.35rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.1rem;
+}
+
+.ludo-mobile__artifacts-tabs::-webkit-scrollbar {
+    display: none;
+}
+
+.ludo-mobile__artifacts-tab {
+    appearance: none;
+    -webkit-appearance: none;
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    min-height: 24px;
+    padding: 0.28rem 0.72rem;
+    border: 1px solid transparent;
+    border-radius: 20px;
+    background: transparent;
+    font: 400 0.65rem/1 'Instrument Sans', sans-serif;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: rgb(var(--ink));
+    cursor: pointer;
+    transition: border-color 0.15s ease;
+}
+
+.ludo-mobile__artifacts-tab.is-active {
+    border-color: rgba(255, 255, 255, 0.85);
+}
+
+html.light-theme .ludo-mobile__artifacts-tab.is-active {
+    border-color: rgb(var(--ink) / 0.72);
+}
+
+.ludo-mobile__card-strip {
+    display: flex;
+    gap: 6px;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 2px;
+}
+
+.ludo-mobile__card-strip::-webkit-scrollbar {
+    display: none;
+}
+
+.ludo-mobile__card-thumb {
+    flex: 0 0 auto;
+    width: 110px;
+    border: none;
+    padding: 0;
+    background: none;
+    border-radius: 4px;
+    overflow: hidden;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    transition: transform 0.18s ease;
+}
+
+.ludo-mobile__card-thumb:active {
+    transform: scale(0.96);
+}
+
+.ludo-mobile__card-thumb img {
+    width: 100%;
+    display: block;
+    border-radius: 4px;
+    pointer-events: none;
+    user-select: none;
+}
+
+.ludo-mobile__card-empty {
+    margin: 0;
+    padding: 0.5rem 0;
+    font: 400 0.7rem/1.4 'Instrument Sans', sans-serif;
+    letter-spacing: 0.08em;
+    color: rgb(var(--subtext) / 0.6);
+}
+
+/* Journey pills */
+.ludo-mobile__journey {
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+}
+
+.ludo-mobile__section-label {
+    margin: 0;
+    font: 700 0.58rem/1 'Space Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--subtext) / 0.72);
+}
+
+.ludo-mobile__pills {
+    display: flex;
+    flex-direction: column;
+    gap: 0.45rem;
+}
+
+.ludo-mobile__pill {
+    appearance: none;
+    -webkit-appearance: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 0.85rem 0.95rem;
+    border: 1px solid rgb(var(--rule) / 0.78);
+    border-radius: 4px;
+    background: linear-gradient(180deg, rgba(14, 11, 11, 0.98) 80.965%, rgba(23, 17, 17, 0.98));
+    cursor: pointer;
+    text-align: left;
+    transition: border-color 0.18s ease;
+}
+
+html.light-theme .ludo-mobile__pill {
+    background: linear-gradient(180deg, rgba(247, 242, 232, 0.98), rgba(233, 223, 211, 0.98));
+}
+
+.ludo-mobile__pill:hover {
+    border-color: rgb(var(--ink) / 0.34);
+}
+
+.ludo-mobile__pill-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.ludo-mobile__pill-num {
+    font: 400 0.6rem/1 'Space Mono', monospace;
+    letter-spacing: 0.1em;
+    color: rgb(var(--subtext) / 0.62);
+}
+
+.ludo-mobile__pill-title {
+    font: 500 0.9rem/1.2 'Instrument Sans', sans-serif;
+    color: rgb(var(--ink));
+}
+
+.ludo-mobile__pill-arrow {
+    font-size: 0.88rem;
+    color: rgb(var(--subtext) / 0.6);
+}
+
+/* Drawer */
+.ludo-mobile__drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.52);
+    z-index: 210;
+    display: flex;
+    align-items: flex-end;
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    animation: ludo-mobile-overlay-in 0.22s ease;
+}
+
+.ludo-mobile__drawer-overlay[hidden] {
+    display: none;
+}
+
+@keyframes ludo-mobile-overlay-in {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.ludo-mobile__drawer {
+    width: 100%;
+    padding: 1rem 1.1rem 2.5rem;
+    border: 1px solid rgb(var(--rule) / 0.78);
+    border-bottom: none;
+    border-radius: 12px 12px 0 0;
+    background: linear-gradient(180deg, rgba(22, 22, 22, 0.99), rgba(18, 18, 18, 0.99));
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 0.55rem;
+    animation: ludo-mobile-drawer-in 0.28s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+html.light-theme .ludo-mobile__drawer {
+    background: linear-gradient(180deg, rgba(250, 246, 240, 0.99), rgba(242, 236, 226, 0.99));
+}
+
+@keyframes ludo-mobile-drawer-in {
+    from { transform: translateY(100%); }
+    to { transform: translateY(0); }
+}
+
+.ludo-mobile__drawer-handle {
+    width: 32px;
+    height: 3px;
+    border-radius: 2px;
+    background: rgb(var(--rule) / 0.8);
+    margin: 0 auto 0.5rem;
+    flex-shrink: 0;
+}
+
+.ludo-mobile__drawer-close {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: none;
+    border: none;
+    color: rgb(var(--subtext) / 0.7);
+    cursor: pointer;
+    padding: 0;
+}
+
+.ludo-mobile__drawer-phase {
+    margin: 0;
+    font: 700 0.58rem/1 'Space Mono', monospace;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: rgb(var(--subtext) / 0.62);
+}
+
+.ludo-mobile__drawer-title {
+    margin: 0;
+    font-family: 'Merriweather', serif;
+    font-size: 1.35rem;
+    font-weight: 400;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: rgb(var(--ink));
+}
+
+.ludo-mobile__drawer-body {
+    margin: 0;
+    font: 400 0.76rem/1.5 'Instrument Sans', sans-serif;
+    letter-spacing: 0.06em;
+    color: rgb(var(--ink) / 0.82);
+    padding-top: 0.2rem;
+    border-top: 1px solid rgb(var(--rule) / 0.38);
 }
 
 
@@ -1918,7 +2532,15 @@ html.light-theme .ludo-bento__lightbox-side {
 
 @media (max-width: 760px) {
     .ludo-bento__lightbox-side {
-        width: calc(50% - 1rem);
+        width: calc(50% - 1.25rem);
+    }
+
+    .ludo-bento__lightbox-side--left {
+        left: 0.75rem;
+    }
+
+    .ludo-bento__lightbox-side--right {
+        right: 0.75rem;
     }
 
     .ludo-bento__lightbox-side--left.is-flipping-out {
@@ -1963,3 +2585,12 @@ html.light-theme .ludo-bento__lightbox-side {
 .ludo-bento__lightbox-copy-line + .ludo-bento__lightbox-copy-line {
     margin-top: 0.55rem;
 }
+
+html.light-theme .ludo-bento__rail-tab {
+    border-color: transparent;
+}
+
+html.light-theme .ludo-bento__rail-tab.is-active {
+    border-color: rgba(var(--ink), 0.42);
+}
+

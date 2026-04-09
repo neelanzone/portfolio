@@ -1,4 +1,4 @@
-import { renderFooterBlock, renderMetaTags } from '../layout.mjs';
+import { renderFooterBlock, renderHeader, renderMetaTags, renderProjectSidebar } from '../layout.mjs';
 import { escapeHtml, resolveAssetPath, resolveProjectLink } from '../template-utils.mjs';
 
 const expansionIconDark = 'Assets/Icons/expansion-arrow-button-dark.svg';
@@ -77,7 +77,7 @@ const infoCards = [
         id: 'narrative-design',
         origin: 'left',
         ariaLabel: 'Narrative Design',
-        titleHtml: 'Narrative<br>Design',
+        titleHtml: 'Narrative Design',
         body: 'The building blocks of a basic story - the hero\'s journey, factions, spatial context - already exist in Classic Ludo. We just never saw it that way. We rolled dice, raced pawns, and took out competition when the dice gods let us. It is nostalgic, and I felt something was missing - lore.',
         compactKind: 'legend',
         compactPlacement: 'flow',
@@ -96,7 +96,7 @@ const infoCards = [
         id: 'board-game-design',
         origin: 'center',
         ariaLabel: 'Board Game Design',
-        titleHtml: 'Board Game<br>Design',
+        titleHtml: 'Board Game Design',
         body: 'Ludo Cards was born from the idea of adding RPG elements to Classic Ludo. A familiar game gets more interesting when players can plan instead of only react.',
         compactKind: 'stats',
         compactPlacement: 'flow',
@@ -115,7 +115,7 @@ const infoCards = [
         id: 'digital-development',
         origin: 'right',
         ariaLabel: 'Digital Development',
-        titleHtml: 'Digital<br>Development',
+        titleHtml: 'Digital Development',
         body: 'By playtesting the physical game, I realised that the characters, action cards, traps, and board events were too complex for players to keep track of. There was now a need for a digital game.',
         compactKind: 'development',
         compactPlacement: 'flow',
@@ -501,6 +501,7 @@ function renderCardLightbox() {
     return `
     <div class="ludo-bento__lightbox" data-ludo-lightbox hidden aria-hidden="true">
         <section class="ludo-bento__lightbox-shell" role="dialog" aria-modal="true" aria-label="Fullscreen character viewer">
+            <div class="ludo-bento__lightbox-handle" data-ludo-lightbox-handle aria-hidden="true"></div>
             <button class="ludo-bento__lightbox-close" type="button" data-ludo-lightbox-close aria-label="Close fullscreen character viewer">X</button>
             <button class="ludo-bento__lightbox-nav ludo-bento__lightbox-nav--prev" type="button" data-ludo-lightbox-prev aria-label="View previous character card">
                 <img class="ludo-bento__lightbox-nav-icon ludo-bento__lightbox-nav-icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
@@ -538,6 +539,94 @@ function renderCardLightbox() {
         </section>
     </div>`;
 }
+function renderMobileLayout(toRoot) {
+    const firstQuote = quoteCards[0];
+    const mobilePillData = infoCards.map((card, i) => ({
+        num: String(i + 1).padStart(2, '0'),
+        title: card.titleHtml,
+        body: card.body
+    }));
+
+    return `
+                <div class="ludo-mobile">
+                    <div class="ludo-mobile__video-frame">
+                        <video autoplay muted loop playsinline>
+                            <source src="${escapeHtml(resolveAssetPath('Assets/ludo-cards.mp4', toRoot))}" type="video/mp4">
+                        </video>
+                    </div>
+                    <div class="ludo-mobile__body">
+                        <header class="ludo-mobile__header">
+                            <h1 class="ludo-mobile__title">Ludo Cards</h1>
+                            <div class="ludo-mobile__tags">
+                                <span class="ludo-mobile__tag">UX-UI</span>
+                                <span class="ludo-mobile__tag">Game Design</span>
+                            </div>
+                        </header>
+                        <div class="ludo-mobile__pao">
+                            <div class="ludo-mobile__pao-tablist" role="tablist" aria-label="Project summary">
+                                ${heroTabs.map((tab, i) => `<button class="ludo-mobile__pao-tab${i === 0 ? ' is-active' : ''}" type="button" role="tab" aria-selected="${i === 0 ? 'true' : 'false'}" data-ludo-mobile-pao="${escapeHtml(tab.id)}" data-ludo-mobile-summary="${escapeHtml(tab.summary)}">${escapeHtml(tab.label)}</button>`).join('')}
+                            </div>
+                            <p class="ludo-mobile__pao-text" data-ludo-mobile-pao-text>${escapeHtml(heroTabs[0].summary)}</p>
+                        </div>
+                        <button class="ludo-mobile__quote" type="button" data-ludo-mobile-quote data-active-quote="0" aria-label="Show next playtester quote">
+                            ${quoteCards.map((q) => `<span hidden data-ludo-mobile-quote-source data-m-quote-text="${escapeHtml(q.text)}" data-m-quote-meta="${escapeHtml(q.attribution)}"></span>`).join('')}
+                            <span class="ludo-mobile__quote-deck">
+                                <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--third" aria-hidden="true"></span>
+                                <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--second" aria-hidden="true"></span>
+                                <span class="ludo-mobile__quote-card">
+                                    <span class="ludo-mobile__quote-text" data-ludo-mobile-quote-text>${escapeHtml(firstQuote.text)}</span>
+                                    <span class="ludo-mobile__quote-footer">
+                                        <span class="ludo-mobile__quote-meta" data-ludo-mobile-quote-meta>${escapeHtml(firstQuote.attribution)}</span>
+                                        <span class="ludo-mobile__quote-count" data-ludo-mobile-quote-count>1/${quoteCards.length}</span>
+                                    </span>
+                                </span>
+                            </span>
+                        </button>
+                        <div class="ludo-mobile__artifacts">
+                            <div class="ludo-mobile__artifacts-tabs" role="tablist" aria-label="Card groups">
+                                <button class="ludo-mobile__artifacts-tab is-active" type="button" role="tab" aria-selected="true" data-ludo-mobile-artifact-tab="characters-01">Characters V1</button>
+                                <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="characters-02">Characters V2</button>
+                                <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="trap-cards">Trap Cards</button>
+                                <button class="ludo-mobile__artifacts-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-artifact-tab="action-cards">Action Cards</button>
+                            </div>
+                            <div class="ludo-mobile__artifacts-panels">
+                                <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="characters-01">
+                                    <div class="ludo-mobile__card-strip" aria-label="Characters V1">
+                                        ${characterIteration01FlatCards.map((card, i) => `<button class="ludo-mobile__card-thumb" type="button" data-ludo-mobile-card-trigger data-ludo-card-group="characters-01" data-ludo-card-index="${i}" aria-label="Open ${escapeHtml(card.name)}"><img src="${escapeHtml(resolveAssetPath(card.src, toRoot))}" alt="${escapeHtml(card.alt)}" loading="lazy" decoding="async" draggable="false"></button>`).join('')}
+                                    </div>
+                                </div>
+                                <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="characters-02" hidden>
+                                    <p class="ludo-mobile__card-empty">Artifacts in this lane are still being wired in.</p>
+                                </div>
+                                <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="trap-cards" hidden>
+                                    <p class="ludo-mobile__card-empty">Artifacts in this lane are still being wired in.</p>
+                                </div>
+                                <div class="ludo-mobile__artifacts-panel" data-ludo-mobile-artifact-panel="action-cards" hidden>
+                                    <p class="ludo-mobile__card-empty">Artifacts in this lane are still being wired in.</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="ludo-mobile__journey">
+                            <p class="ludo-mobile__section-label">how it was made</p>
+                            <div class="ludo-mobile__pills">
+                                ${mobilePillData.map((item, i) => `<button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="${i}" data-m-pill-phase="${escapeHtml(item.num)}" data-m-pill-title="${escapeHtml(item.title)}" data-m-pill-body="${escapeHtml(item.body)}">
+                                    <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">${escapeHtml(item.num)}</span><span class="ludo-mobile__pill-title">${escapeHtml(item.title)}</span></span>
+                                    <span class="ludo-mobile__pill-arrow" aria-hidden="true">↗</span>
+                                </button>`).join('')}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="ludo-mobile__drawer-overlay" data-ludo-mobile-overlay hidden>
+                        <div class="ludo-mobile__drawer" role="dialog" aria-modal="true" aria-label="Section detail">
+                            <div class="ludo-mobile__drawer-handle" data-ludo-mobile-close role="button" aria-label="Close" tabindex="0"></div>
+                            <p class="ludo-mobile__drawer-phase" data-ludo-mobile-drawer-phase></p>
+                            <h2 class="ludo-mobile__drawer-title" data-ludo-mobile-drawer-title></h2>
+                            <p class="ludo-mobile__drawer-body" data-ludo-mobile-drawer-body></p>
+                        </div>
+                    </div>
+                </div>`;
+}
+
 function renderActionCards() {
     return actionCards.map((card) => `
         <article class="ludo-bento__cta-card">
@@ -568,52 +657,96 @@ export function renderLudoBentoPage(project, site) {
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
     <link rel="stylesheet" href="../_shared/project-system.css">
-    <link rel="stylesheet" href="../../shared/project-navbar.css">
+    <link rel="stylesheet" href="../_shared/project-sidebar-mobile-component.css">
     <link rel="stylesheet" href="../_templates/template-replication/ludo-bento.css">
 </head>
-<body class="project-page template-ludo-bento ${escapeHtml(themeClass)} overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
-    <div data-navbar-mount data-navbar-variant="project" data-to-root="${escapeHtml(toRoot)}"></div>
-    <main class="ludo-bento-stage">
-        <div class="ludo-bento" aria-label="Ludo Cards bento layout">
-            <section class="ludo-bento__topfold">
-                <article class="ludo-bento__hero-card">
-                    <div class="ludo-bento__hero-content">
-                        <header class="ludo-bento__hero-header">
-                            <h1>Ludo Cards</h1>
-                            <div class="ludo-bento__hero-tags">
-                                <span>UX-UI</span>
-                                <span>Game Design</span>
-                            </div>
-                        </header>
-                        ${renderHeroTabs()}
-                        ${renderQuoteStack()}
+<body class="project-page project-page--sidebar-layout template-ludo-bento ${escapeHtml(themeClass)} overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
+${renderHeader(project, site, toRoot)}
+    <div class="project-page-layout">
+${renderProjectSidebar(project, site, toRoot, { includeTail: false })}
+        <div class="project-page-layout__main">
+            <main class="ludo-bento-stage">
+                <button class="ludo-bento__theme-toggle project-theme-toggle" data-theme-toggle aria-label="Toggle theme">
+                    <span class="project-theme-toggle__cap" aria-hidden="true">
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                        </svg>
+                        <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                            <circle cx="12" cy="12" r="5"></circle>
+                            <line x1="12" y1="1" x2="12" y2="3"></line>
+                            <line x1="12" y1="21" x2="12" y2="23"></line>
+                            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                            <line x1="1" y1="12" x2="3" y2="12"></line>
+                            <line x1="21" y1="12" x2="23" y2="12"></line>
+                            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                        </svg>
+                    </span>
+                </button>
+                <div class="ludo-bento" aria-label="Ludo Cards bento layout">
+                    <div class="ludo-bento__video-row">
+                        <div class="ludo-bento__video-frame">
+                            <video autoplay muted loop playsinline>
+                                <source src="${escapeHtml(resolveAssetPath('Assets/ludo-cards.mp4', toRoot))}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="ludo-bento__video-frame">
+                            <video autoplay muted loop playsinline>
+                                <source src="${escapeHtml(resolveAssetPath('Assets/ludo-cards.mp4', toRoot))}" type="video/mp4">
+                            </video>
+                        </div>
+                        <div class="ludo-bento__video-frame">
+                            <video autoplay muted loop playsinline>
+                                <source src="${escapeHtml(resolveAssetPath('Assets/ludo-cards.mp4', toRoot))}" type="video/mp4">
+                            </video>
+                        </div>
                     </div>
-                </article>
-                <div class="ludo-bento__top-grid" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
-                    ${infoCards.map((card) => renderInfoCard(card, toRoot)).join('')}
+                    <div class="ludo-bento__topfold">
+                        <section class="ludo-bento__hero-card" id="overview">
+                            <div class="ludo-bento__hero-content">
+                                <header class="ludo-bento__hero-header">
+                                    <h1>Ludo Cards</h1>
+                                    <div class="ludo-bento__hero-tags">
+                                        <span>UX-UI</span>
+                                        <span>Game Design</span>
+                                    </div>
+                                </header>
+                                ${renderHeroTabs()}
+                                ${renderQuoteStack()}
+                            </div>
+                        </section>
+                        <section class="ludo-bento__top-grid" id="context" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
+                            ${infoCards.map((card) => renderInfoCard(card, toRoot)).join('')}
+                        </section>
+                    </div>
+                    <section class="ludo-bento__rail-card" id="process">
+                        ${renderCardGroups(toRoot)}
+                    </section>
+                    <section class="ludo-bento__actions-row" id="outcomes">
+                        ${renderProjectArrow(previous, 'previous', project.slug, toRoot)}
+                        <div class="ludo-bento__actions-grid">
+                            ${renderActionCards()}
+                        </div>
+                        ${renderProjectArrow(next, 'next', project.slug, toRoot)}
+                    </section>
                 </div>
-            </section>
-            <section class="ludo-bento__rail-card" id="artifacts">
-                ${renderCardGroups(toRoot)}
-            </section>
-            <section class="ludo-bento__actions-row" id="project-links">
-                ${renderProjectArrow(previous, 'previous', project.slug, toRoot)}
-                <div class="ludo-bento__actions-grid">
-                    ${renderActionCards()}
-                </div>
-                ${renderProjectArrow(next, 'next', project.slug, toRoot)}
-            </section>
+                ${renderMobileLayout(toRoot)}
+            </main>
+            ${renderFooterBlock(site, toRoot)}
         </div>
-    </main>
+    </div>
     ${renderCardLightbox()}
-    ${renderFooterBlock(site, toRoot)}
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="../../shared/navbar.js" defer></script>
     <script src="../_shared/project-page.js" defer></script>
     <script src="../_templates/template-replication/ludo-bento.js" defer></script>
 </body>
 </html>`;
 }
+
+
+
+
 
 
 

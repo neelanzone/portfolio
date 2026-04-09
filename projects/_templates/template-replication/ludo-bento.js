@@ -173,14 +173,18 @@ document.addEventListener('DOMContentLoaded', function () {
                             ? defaultPositions.right - expandedOverflow
                             : defaultPositions.left;
                     metrics.y = 0;
+                    metrics.rotate = 0;
                     metrics.z = 6;
                     metrics.opacity = 1;
                     metrics.saturation = 1.02;
                 } else {
                     var activeOrigin = infoCards[activeInfoIndex].dataset.ludoInfoOrigin || 'center';
                     var centerOverlap = Math.min(84, columnWidth * 0.28);
+                    metrics.width = columnWidth;
+                    metrics.mainWidth = columnContentWidth;
                     metrics.height = collapsedHeight;
                     metrics.y = 0;
+                    metrics.rotate = 0;
                     metrics.opacity = 0.72;
                     metrics.z = 3;
                     metrics.saturation = 0.9;
@@ -303,6 +307,31 @@ document.addEventListener('DOMContentLoaded', function () {
         });
         var stars = new THREE.Points(starGeometry, starMaterial);
         scene.add(stars);
+
+        var applyViewerTheme = function () {
+            var isLightTheme = document.documentElement.classList.contains('light-theme');
+
+            scene.fog.color.setHex(isLightTheme ? 0xf1e9dd : 0x09090a);
+            backPlane.material.color.setHex(isLightTheme ? 0xf5ede1 : 0x111217);
+            backPlane.material.opacity = isLightTheme ? 0.9 : 0.34;
+            starMaterial.color.setHex(isLightTheme ? 0xd6c8b5 : 0xffffff);
+            starMaterial.opacity = isLightTheme ? 0.08 : 0.22;
+
+            backPlane.material.needsUpdate = true;
+            starMaterial.needsUpdate = true;
+        };
+
+        applyViewerTheme();
+
+        if (window.MutationObserver) {
+            var themeObserver = new MutationObserver(function () {
+                applyViewerTheme();
+            });
+            themeObserver.observe(document.documentElement, {
+                attributes: true,
+                attributeFilter: ['class']
+            });
+        }
 
         var active = false;
         var rafId = 0;
@@ -523,6 +552,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 pointerY = 0;
 
                 if (active) {
+                    applyViewerTheme();
                     handleResize();
                     updateDomCardTransform();
                     if (!rafId) {
@@ -816,6 +846,73 @@ document.addEventListener('DOMContentLoaded', function () {
         if (closeButton) {
             closeButton.addEventListener('click', function () {
                 closeLightbox();
+            });
+        }
+
+        var handle = lightbox.querySelector('[data-ludo-lightbox-handle]');
+        var shell = lightbox.querySelector('.ludo-bento__lightbox-shell');
+
+        if (handle && shell) {
+            var dragStartY = 0;
+            var dragCurrentY = 0;
+            var isDragging = false;
+            var CLOSE_THRESHOLD = 80;
+
+            var startDrag = function (clientY) {
+                if (window.innerWidth > 760) { return; }
+                isDragging = true;
+                dragStartY = clientY;
+                dragCurrentY = 0;
+                shell.style.transition = 'none';
+            };
+
+            var moveDrag = function (clientY) {
+                if (!isDragging) { return; }
+                var delta = clientY - dragStartY;
+                if (delta > 0) {
+                    dragCurrentY = delta;
+                    shell.style.transform = 'translateY(' + delta + 'px)';
+                }
+            };
+
+            var endDrag = function () {
+                if (!isDragging) { return; }
+                isDragging = false;
+                if (dragCurrentY > CLOSE_THRESHOLD) {
+                    shell.style.transform = '';
+                    shell.style.transition = '';
+                    closeLightbox();
+                } else {
+                    shell.style.transition = 'transform 0.22s ease';
+                    shell.style.transform = '';
+                    setTimeout(function () { shell.style.transition = ''; }, 240);
+                }
+            };
+
+            handle.addEventListener('touchstart', function (e) {
+                startDrag(e.touches[0].clientY);
+            }, { passive: true });
+
+            handle.addEventListener('touchmove', function (e) {
+                moveDrag(e.touches[0].clientY);
+            }, { passive: true });
+
+            handle.addEventListener('touchend', endDrag);
+
+            handle.addEventListener('mousedown', function (e) {
+                startDrag(e.clientY);
+                var onMove = function (me) { moveDrag(me.clientY); };
+                var onUp = function () {
+                    endDrag();
+                    document.removeEventListener('mousemove', onMove);
+                    document.removeEventListener('mouseup', onUp);
+                };
+                document.addEventListener('mousemove', onMove);
+                document.addEventListener('mouseup', onUp);
+            });
+
+            handle.addEventListener('click', function () {
+                if (window.innerWidth <= 760) { closeLightbox(); }
             });
         }
 
@@ -1175,7 +1272,160 @@ document.addEventListener('DOMContentLoaded', function () {
     bindPointerGlow('.ludo-bento__nav-arrow', '.ludo-bento__nav-arrow-ring');
 
     initCharacterLightbox();
+
+    // ─── Mobile layout handlers ───
+    var mobileArtifactTabs = Array.prototype.slice.call(document.querySelectorAll('[data-ludo-mobile-artifact-tab]'));
+    var mobileArtifactPanels = Array.prototype.slice.call(document.querySelectorAll('[data-ludo-mobile-artifact-panel]'));
+
+    if (mobileArtifactTabs.length) {
+        mobileArtifactTabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                var tabId = tab.dataset.ludoMobileArtifactTab;
+                mobileArtifactTabs.forEach(function (t) {
+                    t.classList.remove('is-active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                mobileArtifactPanels.forEach(function (p) { p.hidden = true; });
+                tab.classList.add('is-active');
+                tab.setAttribute('aria-selected', 'true');
+                var target = document.querySelector('[data-ludo-mobile-artifact-panel="' + tabId + '"]');
+                if (target) { target.hidden = false; }
+            });
+        });
+    }
+
+    var mobileCardStrips = Array.prototype.slice.call(document.querySelectorAll('.ludo-mobile__card-strip'));
+    mobileCardStrips.forEach(function (strip) {
+        var pointerStartX = 0;
+        var scrollStart = 0;
+        var dragging = false;
+        strip._wasDragged = false;
+
+        strip.addEventListener('pointerdown', function (e) {
+            if (e.pointerType === 'touch') { return; }
+            dragging = true;
+            strip._wasDragged = false;
+            pointerStartX = e.clientX;
+            scrollStart = strip.scrollLeft;
+            strip.style.cursor = 'grabbing';
+        });
+
+        strip.addEventListener('pointermove', function (e) {
+            if (!dragging || e.pointerType === 'touch') { return; }
+            var dx = e.clientX - pointerStartX;
+            if (Math.abs(dx) > 4) {
+                strip._wasDragged = true;
+                strip.scrollLeft = scrollStart - dx;
+            }
+        });
+
+        strip.addEventListener('pointerup', function (e) {
+            if (e.pointerType === 'touch') { return; }
+            dragging = false;
+            strip.style.cursor = '';
+        });
+
+        strip.addEventListener('pointercancel', function (e) {
+            if (e.pointerType === 'touch') { return; }
+            dragging = false;
+            strip.style.cursor = '';
+        });
+    });
+
+    var mobileCardTriggers = Array.prototype.slice.call(document.querySelectorAll('[data-ludo-mobile-card-trigger]'));
+    mobileCardTriggers.forEach(function (mTrigger) {
+        mTrigger.addEventListener('click', function () {
+            var parentStrip = mTrigger.closest('.ludo-mobile__card-strip');
+            if (parentStrip && parentStrip._wasDragged) { return; }
+            var groupId = mTrigger.dataset.ludoCardGroup;
+            var cardIndex = mTrigger.dataset.ludoCardIndex;
+            var desktop = document.querySelector(
+                '[data-ludo-card-trigger][data-ludo-card-group="' + groupId + '"][data-ludo-card-index="' + cardIndex + '"]'
+            );
+            if (desktop) { desktop.click(); }
+        });
+    });
+
+    var mobilePaoTabs = Array.prototype.slice.call(document.querySelectorAll('[data-ludo-mobile-pao]'));
+    var mobilePaoText = document.querySelector('[data-ludo-mobile-pao-text]');
+    var mobileQuote = document.querySelector('[data-ludo-mobile-quote]');
+    var mobilePills = Array.prototype.slice.call(document.querySelectorAll('[data-ludo-mobile-pill]'));
+    var mobileOverlay = document.querySelector('[data-ludo-mobile-overlay]');
+    var mobileDrawerClose = document.querySelector('[data-ludo-mobile-close]');
+
+    if (mobilePaoTabs.length && mobilePaoText) {
+        mobilePaoTabs.forEach(function (tab) {
+            tab.addEventListener('click', function () {
+                mobilePaoTabs.forEach(function (t) {
+                    t.classList.remove('is-active');
+                    t.setAttribute('aria-selected', 'false');
+                });
+                tab.classList.add('is-active');
+                tab.setAttribute('aria-selected', 'true');
+                mobilePaoText.classList.add('is-fading');
+                setTimeout(function () {
+                    mobilePaoText.textContent = tab.dataset.ludoMobileSummary || '';
+                    mobilePaoText.classList.remove('is-fading');
+                }, 180);
+            });
+        });
+    }
+
+    if (mobileQuote) {
+        mobileQuote.addEventListener('click', function () {
+            var sources = Array.prototype.slice.call(mobileQuote.querySelectorAll('[data-ludo-mobile-quote-source]'));
+            if (sources.length < 2) { return; }
+            var active = Number(mobileQuote.getAttribute('data-active-quote') || '0');
+            var next = (active + 1) % sources.length;
+            var textEl = mobileQuote.querySelector('[data-ludo-mobile-quote-text]');
+            var metaEl = mobileQuote.querySelector('[data-ludo-mobile-quote-meta]');
+            var countEl = mobileQuote.querySelector('[data-ludo-mobile-quote-count]');
+            if (!textEl || !metaEl || !countEl) { return; }
+            textEl.style.opacity = '0';
+            metaEl.style.opacity = '0';
+            setTimeout(function () {
+                textEl.textContent = sources[next].dataset.mQuoteText || '';
+                metaEl.textContent = sources[next].dataset.mQuoteMeta || '';
+                countEl.textContent = String(next + 1) + '/' + String(sources.length);
+                mobileQuote.setAttribute('data-active-quote', String(next));
+                textEl.style.opacity = '';
+                metaEl.style.opacity = '';
+            }, 200);
+        });
+    }
+
+    if (mobileOverlay) {
+        var openMobileDrawer = function (pill) {
+            var drawerPhase = mobileOverlay.querySelector('[data-ludo-mobile-drawer-phase]');
+            var drawerTitle = mobileOverlay.querySelector('[data-ludo-mobile-drawer-title]');
+            var drawerBody = mobileOverlay.querySelector('[data-ludo-mobile-drawer-body]');
+            if (drawerPhase) { drawerPhase.textContent = pill.dataset.mPillPhase || ''; }
+            if (drawerTitle) { drawerTitle.textContent = pill.dataset.mPillTitle || ''; }
+            if (drawerBody) { drawerBody.textContent = pill.dataset.mPillBody || ''; }
+            mobileOverlay.hidden = false;
+        };
+
+        var closeMobileDrawer = function () {
+            mobileOverlay.hidden = true;
+        };
+
+        mobilePills.forEach(function (pill) {
+            pill.addEventListener('click', function () { openMobileDrawer(pill); });
+        });
+
+        if (mobileDrawerClose) {
+            mobileDrawerClose.addEventListener('click', closeMobileDrawer);
+            mobileDrawerClose.addEventListener('keydown', function (e) {
+                if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); closeMobileDrawer(); }
+            });
+        }
+
+        mobileOverlay.addEventListener('click', function (e) {
+            if (e.target === mobileOverlay) { closeMobileDrawer(); }
+        });
+    }
 });
+
 
 
 

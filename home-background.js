@@ -37,6 +37,7 @@
             this.burstOrigin = new THREE.Vector3(0, 0, 0);
             this.tempColorA = new THREE.Color();
             this.tempColorB = new THREE.Color();
+            this.tempColorC = new THREE.Color();
             this.pointerProjectNdc = new THREE.Vector2();
             this.pointerProjectPoint = new THREE.Vector3();
 
@@ -85,14 +86,14 @@
             this.densityKnobDisplayAngle = 135;
             this.murmurationStyle = 'none';
             this.murmurationButtons = [];
-            this.murmurationTone = 'color';
+            this.murmurationTone = 'default';
             this.murmurationToneButton = null;
             this.isControlDragActive = false;
             this.sceneOnlyView = false;
             this.flockLeaderIndices = [];
             this.flockLeaderOrigins = [];
             this.flockLeaderPhases = [0];
-            this.root.dataset.homeTone = this.murmurationTone;
+            this.root.removeAttribute('data-home-tone');
             this.sphereKnobDisplayAngle = 315;
 
             this.backgroundGroup = new THREE.Group();
@@ -119,6 +120,15 @@
                     [0, 'rgba(255, 255, 255, 0.8)'],
                     [0.16, 'rgba(255, 255, 255, 0.62)'],
                     [0.58, 'rgba(255, 255, 255, 0.08)'],
+                    [1, 'rgba(255, 255, 255, 0)']
+                ]
+            });
+            this.pixelShadowTexture = this.createPointTexture({
+                size: 72,
+                stops: [
+                    [0, 'rgba(255, 255, 255, 0.52)'],
+                    [0.34, 'rgba(255, 255, 255, 0.28)'],
+                    [0.68, 'rgba(255, 255, 255, 0.08)'],
                     [1, 'rgba(255, 255, 255, 0)']
                 ]
             });
@@ -223,6 +233,8 @@
                     gridLightnessRange: 0.18,
                     gridAccent: new THREE.Color(0x2f66ff),
                     gridHighlight: new THREE.Color(0xffc349),
+                    gridShadowColor: new THREE.Color(0x8b7060),
+                    gridShadowOpacity: 0.26,
                     gridMonoAccent: new THREE.Color(0x171717),
                     gridMonoHighlight: new THREE.Color(0x525252)
                 };
@@ -250,6 +262,8 @@
                     palette.gridMonoHighlight = new THREE.Color(0x5f5f5f);
                     palette.gridAccent = new THREE.Color(0x111111);
                     palette.gridHighlight = new THREE.Color(0x6b6b6b);
+                    palette.gridShadowColor = new THREE.Color(0x1a1a1a);
+                    palette.gridShadowOpacity = 0.22;
                 }
 
                 return palette;
@@ -280,6 +294,8 @@
                 gridLightnessRange: 0.2,
                 gridAccent: new THREE.Color(0x2d63ff),
                 gridHighlight: new THREE.Color(0xff4a2c),
+                gridShadowColor: new THREE.Color(0x010207),
+                gridShadowOpacity: 0.46,
                 gridMonoAccent: new THREE.Color(0x0d0d0d),
                 gridMonoHighlight: new THREE.Color(0x434343)
             };
@@ -307,6 +323,8 @@
                 palette.gridMonoHighlight = new THREE.Color(0x5f5f5f);
                 palette.gridAccent = new THREE.Color(0x111111);
                 palette.gridHighlight = new THREE.Color(0x6b6b6b);
+                palette.gridShadowColor = new THREE.Color(0x1a1a1a);
+                palette.gridShadowOpacity = 0.24;
             }
 
             return palette;
@@ -441,6 +459,13 @@
         }
 
         buildPixelGrid() {
+            if (this.shadowGridInstances?.length) {
+                this.shadowGridInstances.forEach((instance) => {
+                    this.gridGroup.remove(instance);
+                });
+                this.shadowGridInstances = [];
+            }
+
             if (this.gridInstances?.length) {
                 this.gridInstances.forEach((instance) => {
                     this.gridGroup.remove(instance);
@@ -454,6 +479,10 @@
 
             if (this.pixelGridMaterial) {
                 this.pixelGridMaterial.dispose();
+            }
+
+            if (this.pixelShadowMaterial) {
+                this.pixelShadowMaterial.dispose();
             }
 
             const isCompact = window.innerWidth < 768;
@@ -487,6 +516,7 @@
             this.pixelBasePositions = new Float32Array(this.pixelCount * 3);
             this.pixelColors = new Float32Array(this.pixelCount * 3);
             this.pixelBaseColors = new Float32Array(this.pixelCount * 3);
+            this.pixelPaletteColors = new Float32Array(this.pixelCount * 3);
             this.pixelSeeds = new Float32Array(this.pixelCount * 3);
             this.pixelVelocities = new Float32Array(this.pixelCount * 3);
             this.pixelNeighborIndices = new Int32Array(this.pixelCount * 7);
@@ -592,14 +622,37 @@
                 opacity: 1,
                 blending: THREE.AdditiveBlending
             });
+            this.pixelShadowMaterial = new THREE.PointsMaterial({
+                size: isCompact ? 0.22 : 0.15,
+                map: this.pixelShadowTexture,
+                transparent: true,
+                depthWrite: false,
+                depthTest: false,
+                sizeAttenuation: true,
+                opacity: 0,
+                blending: THREE.NormalBlending
+            });
 
             this.gridInstances = [];
+            this.shadowGridInstances = [];
             const stackOffset = ((this.gridStackCount - 1) * this.gridStackSpacing) * 0.5;
+            const shadowOffsetX = isCompact ? 0.018 : 0.012;
+            const shadowOffsetY = isCompact ? -0.055 : -0.035;
+            const shadowOffsetZ = isCompact ? 0.018 : 0.012;
 
             for (let layer = 0; layer < this.gridStackCount; layer += 1) {
+                const shadowGrid = new THREE.Points(this.pixelGridGeometry, this.pixelShadowMaterial);
+                shadowGrid.position.x = shadowOffsetX;
+                shadowGrid.position.y = layer * this.gridStackSpacing - stackOffset + shadowOffsetY;
+                shadowGrid.position.z = layer * 0.02 - shadowOffsetZ;
+                shadowGrid.renderOrder = 0;
+                this.gridGroup.add(shadowGrid);
+                this.shadowGridInstances.push(shadowGrid);
+
                 const pixelGrid = new THREE.Points(this.pixelGridGeometry, this.pixelGridMaterial);
                 pixelGrid.position.y = layer * this.gridStackSpacing - stackOffset;
                 pixelGrid.position.z = layer * 0.02;
+                pixelGrid.renderOrder = 1;
                 this.gridGroup.add(pixelGrid);
                 this.gridInstances.push(pixelGrid);
             }
@@ -742,6 +795,7 @@
             this.pixelGridMaterial.opacity = palette.gridOpacity;
             this.pixelGridMaterial.blending = palette.gridBlending;
             this.pixelGridMaterial.needsUpdate = true;
+            this.refreshPixelShadowAppearance();
 
             this.sphereFill.material.color.copy(palette.gridAccent);
             this.sphereFill.material.blending = palette.gridBlending;
@@ -810,14 +864,12 @@
                     this.tempColorA.lerp(this.tempColorB, 0.22 + seedMix * 0.18);
                 }
 
-                this.pixelBaseColors[colorIndex] = this.tempColorA.r;
-                this.pixelBaseColors[colorIndex + 1] = this.tempColorA.g;
-                this.pixelBaseColors[colorIndex + 2] = this.tempColorA.b;
-
-                this.pixelColors[colorIndex] = this.tempColorA.r;
-                this.pixelColors[colorIndex + 1] = this.tempColorA.g;
-                this.pixelColors[colorIndex + 2] = this.tempColorA.b;
+                this.pixelPaletteColors[colorIndex] = this.tempColorA.r;
+                this.pixelPaletteColors[colorIndex + 1] = this.tempColorA.g;
+                this.pixelPaletteColors[colorIndex + 2] = this.tempColorA.b;
             }
+
+            this.refreshPixelBaseColors(true);
 
             this.starfieldGeometry.attributes.color.needsUpdate = true;
             this.milkyWayGeometry.attributes.color.needsUpdate = true;
@@ -1727,6 +1779,83 @@
         }
     };
 
+    HomeBackgroundScene.prototype.getGridEntropyColorMix = function () {
+        const revealStart = 0.2;
+        const revealFull = 1.2;
+        const normalized = THREE.MathUtils.clamp((this.gridEntropy - revealStart) / (revealFull - revealStart), 0, 1);
+        return Math.pow(normalized, 0.7);
+    };
+
+    HomeBackgroundScene.prototype.getLowEntropyShadowMix = function () {
+        const fadeEnd = 0.2;
+        const normalized = 1 - THREE.MathUtils.clamp(this.gridEntropy / fadeEnd, 0, 1);
+        return normalized * normalized * (3 - 2 * normalized);
+    };
+
+    HomeBackgroundScene.prototype.getSceneBackgroundColor = function () {
+        const backgroundColor = window.getComputedStyle(document.body).backgroundColor;
+
+        if (backgroundColor) {
+            try {
+                this.tempColorC.setStyle(backgroundColor);
+                return this.tempColorC;
+            } catch (error) {
+                // Fall through to theme defaults if the computed style cannot be parsed.
+            }
+        }
+
+        if (this.murmurationTone === 'mono') {
+            this.tempColorC.set(0xffffff);
+            return this.tempColorC;
+        }
+
+        this.tempColorC.set(this.root.classList.contains('light-theme') ? 0xf7f2e8 : 0x070d1d);
+        return this.tempColorC;
+    };
+
+    HomeBackgroundScene.prototype.refreshPixelBaseColors = function (syncVisibleColors = false) {
+        if (!this.pixelPaletteColors || !this.pixelBaseColors || !this.pixelColors || !this.pixelGridGeometry) {
+            return;
+        }
+
+        const revealMix = this.getGridEntropyColorMix();
+        const backgroundColor = this.getSceneBackgroundColor();
+
+        for (let index = 0; index < this.pixelCount; index += 1) {
+            const colorIndex = index * 3;
+            this.tempColorA.setRGB(
+                this.pixelPaletteColors[colorIndex],
+                this.pixelPaletteColors[colorIndex + 1],
+                this.pixelPaletteColors[colorIndex + 2]
+            );
+            this.tempColorB.lerpColors(backgroundColor, this.tempColorA, revealMix);
+
+            this.pixelBaseColors[colorIndex] = this.tempColorB.r;
+            this.pixelBaseColors[colorIndex + 1] = this.tempColorB.g;
+            this.pixelBaseColors[colorIndex + 2] = this.tempColorB.b;
+
+            if (syncVisibleColors) {
+                this.pixelColors[colorIndex] = this.tempColorB.r;
+                this.pixelColors[colorIndex + 1] = this.tempColorB.g;
+                this.pixelColors[colorIndex + 2] = this.tempColorB.b;
+            }
+        }
+
+        if (syncVisibleColors && this.pixelGridGeometry.attributes.color) {
+            this.pixelGridGeometry.attributes.color.needsUpdate = true;
+        }
+    };
+
+    HomeBackgroundScene.prototype.refreshPixelShadowAppearance = function () {
+        if (!this.pixelShadowMaterial || !this.activePalette) {
+            return;
+        }
+
+        this.pixelShadowMaterial.color.copy(this.activePalette.gridShadowColor);
+        this.pixelShadowMaterial.opacity = this.activePalette.gridShadowOpacity * this.getLowEntropyShadowMix();
+        this.pixelShadowMaterial.needsUpdate = true;
+    };
+
     HomeBackgroundScene.prototype.getEntropyLabel = function (value) {
         const entropy = THREE.MathUtils.clamp(Number(value) || 0, 0, 3);
 
@@ -1984,6 +2113,8 @@
         this.gridEntropy = nextEntropy;
         this.updateGridMotionProfile(window.innerWidth < 768);
         this.syncEntropyControl();
+        this.refreshPixelBaseColors(true);
+        this.refreshPixelShadowAppearance();
     };
 
     HomeBackgroundScene.prototype.setGridDensityPreset = function (preset, options = {}) {
@@ -2249,21 +2380,23 @@
         }
 
         const isMono = this.murmurationTone === 'mono';
-        const nextLabel = isMono ? 'James Gunn' : 'Kurosawa';
-        const nextToneTarget = isMono ? 'james-gunn' : 'kurosawa';
-        this.root.dataset.homeTone = isMono ? 'mono' : 'color';
-        this.murmurationToneButton.classList.remove('is-active');
-        this.murmurationToneButton.setAttribute('aria-pressed', 'false');
-        this.murmurationToneButton.setAttribute('aria-label', `Switch flock tone to ${nextLabel}`);
-        this.murmurationToneButton.dataset.toneTarget = nextToneTarget;
+        if (isMono) {
+            this.root.dataset.homeTone = 'mono';
+        } else {
+            this.root.removeAttribute('data-home-tone');
+        }
+        this.murmurationToneButton.classList.toggle('is-active', isMono);
+        this.murmurationToneButton.setAttribute('aria-pressed', String(isMono));
+        this.murmurationToneButton.setAttribute('aria-label', isMono ? 'Turn Kurosawa mode off' : 'Turn Kurosawa mode on');
+        this.murmurationToneButton.dataset.toneTarget = isMono ? 'off' : 'kurosawa';
         if (this.murmurationToneLabel) {
-            this.murmurationToneLabel.textContent = nextLabel;
+            this.murmurationToneLabel.textContent = 'Kurosawa';
         }
     };
 
     HomeBackgroundScene.prototype.setMurmurationTone = function (tone, options = {}) {
         const shouldApplyEntropyPreset = options.applyEntropyPreset !== false && !this.sceneOnlyView;
-        this.murmurationTone = tone === 'mono' ? 'mono' : 'color';
+        this.murmurationTone = tone === 'mono' ? 'mono' : 'default';
 
         if (shouldApplyEntropyPreset) {
             this.setGridEntropy(this.murmurationTone === 'mono' ? 3 : 0);
@@ -2273,7 +2406,7 @@
         this.applyTheme();
 
         if (this.musicEnabled) {
-            this.syncMusicSource({ forceRestart: true });
+            this.syncMusicSource();
         }
     };
 
@@ -2287,7 +2420,7 @@
         this.murmurationToneLabel = this.murmurationToneButton.querySelector('[data-murmuration-tone-label]');
         this.syncMurmurationToneControl();
         this.murmurationToneButton.addEventListener('click', () => {
-            this.setMurmurationTone(this.murmurationTone === 'mono' ? 'color' : 'mono');
+            this.setMurmurationTone(this.murmurationTone === 'mono' ? 'default' : 'mono');
         });
     };
 
@@ -2304,29 +2437,19 @@
             };
         }
 
-        return tone === 'mono'
-            ? {
-                key: 'yojimbo-theme-portfolio-128k',
-                sources: [
-                    {
-                        src: 'Assets/music/yojimbo-theme-portfolio-128k.webm',
-                        type: 'audio/webm; codecs="opus"'
-                    },
-                    {
-                        src: 'Assets/music/yojimbo-theme-portfolio-128k.mp4',
-                        type: 'audio/mp4'
-                    }
-                ]
-            }
-            : {
-                key: 'country-rock-jazz-blues',
-                sources: [
-                    {
-                        src: 'Assets/music/country-rock-jazz-blues.webm',
-                        type: 'audio/webm; codecs="opus"'
-                    }
-                ]
-            };
+        return {
+            key: 'yojimbo-theme-portfolio-128k',
+            sources: [
+                {
+                    src: 'Assets/music/yojimbo-theme-portfolio-128k.webm',
+                    type: 'audio/webm; codecs="opus"'
+                },
+                {
+                    src: 'Assets/music/yojimbo-theme-portfolio-128k.mp4',
+                    type: 'audio/mp4'
+                }
+            ]
+        };
     };
 
     HomeBackgroundScene.prototype.resolveMusicTrackSource = function (audio, track) {
@@ -2459,7 +2582,7 @@
         this.setGridDensityPreset('lots');
         this.setSphereSizePreset('small');
         this.setMurmurationStyle('none', { toggle: false, applyEntropyPreset: true });
-        this.setMurmurationTone('color', { applyEntropyPreset: false });
+        this.setMurmurationTone('default', { applyEntropyPreset: false });
         this.setGridEntropy(0);
     };
 

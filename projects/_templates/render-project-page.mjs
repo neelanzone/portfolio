@@ -1,6 +1,8 @@
-import { renderFooterBlock, renderHeader, renderMetaTags, renderMoreProjectsBlock } from './layout.mjs';
+﻿import { renderFooterBlock, renderHeader, renderMetaTags, renderMoreProjectsBlock, renderProjectSidebar } from './layout.mjs';
 import { renderSection } from './render-sections.mjs';
 import { renderLudoBentoPage } from './template-replication/ludo-bento.mjs';
+import { renderAssetSearchBentoPage } from './template-replication/asset-search-bento.mjs';
+import { renderProjectLongformPage } from './project-longform/project-longform.mjs';
 import { escapeHtml } from './template-utils.mjs';
 
 function buildStackSections(project) {
@@ -30,8 +32,16 @@ function buildStackSections(project) {
 }
 
 export function renderProjectPage(project, site) {
+    if (project.customTemplate === 'asset-search-bento') {
+        return renderAssetSearchBentoPage(project, site);
+    }
+
     if (project.customTemplate === 'ludo-bento') {
         return renderLudoBentoPage(project, site);
+    }
+
+    if (project.customTemplate === 'project-longform') {
+        return renderProjectLongformPage(project, site);
     }
 
     const toRoot = '../../';
@@ -63,20 +73,26 @@ export function renderProjectPage(project, site) {
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
     <link rel="stylesheet" href="../_shared/project-system.css">
-    <link rel="stylesheet" href="${toRoot}shared/project-navbar.css">
+    <link rel="stylesheet" href="../_shared/project-sidebar-mobile-component.css">
 </head>
-<body class="project-page ${escapeHtml(themeClass)} overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
+<body class="project-page project-page--sidebar-layout ${escapeHtml(themeClass)} overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
 ${renderHeader(project, site, toRoot)}
-    <div id="project-stack-overlay" aria-hidden="true"></div>
-    <div id="page-scale">
-        <main class="project-scroll-stage pt-20 sm:pt-20 lg:pt-24">
+    <div class="project-page-layout">
+${renderProjectSidebar(project, site, toRoot)}
+        <div class="project-page-layout__main">
+            <div id="project-stack-overlay" aria-hidden="true"></div>
+            <div id="page-scale">
+                <main class="project-scroll-stage pt-20 sm:pt-20 lg:pt-24">
 ${sectionsMarkup}
-        </main>
+                </main>
+            </div>
+        </div>
     </div>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="../../shared/navbar.js" defer></script>
     <script src="../_shared/project-page.js" defer></script>
     <script src="../_shared/project-stack.js" defer></script>
 </body>
 </html>`;
 }
+
+

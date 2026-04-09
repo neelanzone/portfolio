@@ -1,15 +1,15 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en" class="light-theme">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Managed Asset Search | Neel</title>
+    <title>Asset Manager | Neelanzone</title>
     <meta name="description" content="An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.">
     <meta property="og:type" content="website">
-    <meta property="og:title" content="Managed Asset Search | Neel">
+    <meta property="og:title" content="Asset Manager | Neelanzone">
     <meta property="og:description" content="An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.">
     <meta name="twitter:card" content="summary_large_image">
-    <meta name="twitter:title" content="Managed Asset Search | Neel">
+    <meta name="twitter:title" content="Asset Manager | Neelanzone">
     <meta name="twitter:description" content="An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -19,169 +19,621 @@
     <script src="../_shared/tailwind-config.js"></script>
     <link rel="stylesheet" href="../_shared/project-reference.css">
     <link rel="stylesheet" href="../_shared/project-system.css">
-    <link rel="stylesheet" href="../../shared/project-navbar.css">
+    <link rel="stylesheet" href="../_shared/project-sidebar-mobile-component.css">
+    <link rel="stylesheet" href="../_templates/template-replication/ludo-bento.css">
+    <link rel="stylesheet" href="../_templates/project-longform/project-longform.css">
+    <link rel="stylesheet" href="./asset-search.css">
 </head>
-<body class="project-page theme-editorial overflow-x-hidden bg-canvas bg-grain font-body text-ink antialiased selection:bg-accent selection:text-white">
-
-    <div data-navbar-mount data-navbar-variant="project" data-to-root="../../"></div>
-
-        <div id="section-pills" class="section-pill-bar" aria-hidden="true">
-            <div class="section-pill-bar__inner">
-                <a href="#overview" class="section-pill is-active" data-section="overview">Overview</a>
-                <a href="#context" class="section-pill" data-section="context">Context</a>
-                <a href="#process" class="section-pill" data-section="process">Artifacts</a>
-                <a href="#outcomes" class="section-pill" data-section="outcomes">Outcomes</a>
-                <a href="#more-projects" class="section-pill" data-section="more-projects">More</a>
+<body class="project-page project-page--sidebar-layout template-project-longform theme-art overflow-x-hidden bg-canvas font-body text-ink antialiased selection:bg-accent selection:text-white">
+    <div class="project-page-layout">
+    <aside class="home-sidebar project-sidebar" id="project-sidebar" data-project-sidebar aria-label="Asset Manager section navigation">
+        <div class="home-sidebar__top">
+            <button
+                class="home-sidebar__toggle"
+                type="button" data-project-sidebar-toggle
+                aria-controls="project-sidebar"
+                aria-expanded="true"
+                aria-label="Collapse sidebar"
+            >
+                <span class="home-sidebar__toggle-icon" aria-hidden="true"></span>
+            </button>
+        </div>
+        <div class="home-sidebar__body">
+            <div class="home-sidebar__intro">
+                <p class="home-sidebar__roles"><span>UX</span><span class="home-sidebar__dot" aria-hidden="true">&bull;</span><span>Internal Tool</span><span class="home-sidebar__dot" aria-hidden="true">&bull;</span><span>Total Environment</span></p>
+                <details class="home-sidebar__page home-sidebar__page-group home-sidebar__page--portfolio">
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Cabinet of Curiosities</summary>
+                    <p class="home-sidebar__page-brief">A home for projects, musings, and a little soul.</p>
+                    <span class="home-sidebar__index-divider" aria-hidden="true"></span>
+                    
+                <div class="home-sidebar__index-block">
+                    <nav class="home-sidebar__index" aria-label="Portfolio navigation">
+                        <a class="home-sidebar__index-link" href="../../index.html#about">About</a>
+                        <details class="home-sidebar__index-group">
+                            <summary class="home-sidebar__index-link home-sidebar__index-link--toggle">Work</summary>
+                            <div class="home-sidebar__index-submenu">
+                                <a class="home-sidebar__index-sublink" href="../ludo-cards/index.html">Ludo Cards</a>
+                                <a class="home-sidebar__index-sublink" href="./index.html" aria-current="page">Asset Manager</a>
+                                <a class="home-sidebar__index-sublink" href="../venture-hub/index.html">Venture Hub</a>
+                                <a class="home-sidebar__index-sublink" href="../qualitative-reports-at-scale/index.html">Qualitative Reports at Scale</a>
+                            </div>
+                        </details>
+                    </nav>
+                </div>
+                </details>
+                <details class="home-sidebar__page home-sidebar__page-group" open>
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Asset Manager</summary>
+                    <p class="home-sidebar__page-brief">Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests.</p>
+                </details>
+                <details class="home-sidebar__page home-sidebar__page--birds home-sidebar__page-group" open>
+                    <summary class="home-sidebar__page-title home-sidebar__page-title--toggle">Navigation</summary>
+                    <nav class="home-sidebar__index-submenu home-sidebar__page-nav" aria-label="Asset Manager section navigation">
+                        <a class="home-sidebar__index-sublink" href="#project-brief" data-section-nav-link>Project Brief</a>
+                        <a class="home-sidebar__index-sublink" href="#system-map" data-section-nav-link>System Map</a>
+                        <a class="home-sidebar__index-sublink" href="#process" data-section-nav-link>Process</a>
+                        <a class="home-sidebar__index-sublink" href="#outcome" data-section-nav-link>Outcome</a>
+                    </nav>
+                </details>
+            </div>
+            <div class="home-sidebar__bottom">
+                <div class="home-sidebar__meta">
+                    <span class="home-sidebar__title">Neel Banerjee</span>
+                    <p class="home-sidebar__tagline">Drawn to systems,<br>obsessed with play</p>
+                </div>
+                <div class="home-sidebar__actions">
+                    <a class="home-sidebar__logo" href="#project-topfold" aria-label="Back to top">
+                        <img src="../../Assets/identity-motion-active-sidebar.gif" alt="neel Logo">
+                    </a>
+                    <a class="home-sidebar__contact" href="mailto:neelanzone@gmail.com"><span class="home-sidebar__contact-label">Get in touch</span></a>
+                </div>
             </div>
         </div>
-    <div id="project-stack-overlay" aria-hidden="true"></div>
-    <div id="page-scale">
-        <main class="project-scroll-stage pt-20 sm:pt-20 lg:pt-24">
-
-        <section id="hero" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="0" style="--stack-card-index:0;" data-desktop-variant="split" data-mobile-variant="summary-first">
-            <div class="project-stack-card__inner">
-                <div class="project-stack-card__content mx-auto flex max-w-[70rem] flex-col gap-8 px-5 py-4 sm:px-7 lg:px-12 lg:py-6">
-                    <div class="project-hero-grid grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
-                        <div class="space-y-6">
-                            <div class="space-y-3">
-                                <div class="flex flex-wrap gap-2">
-                                    <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">IA</span>
-                                <span class="inline-flex items-center rounded-full border border-rule bg-surface px-3 py-1 font-mono text-tag uppercase text-subtext">2021</span>
+    </aside>
+    <button
+        class="home-topbar__menu project-sidebar-mobile-menu"
+        type="button" data-project-sidebar-toggle
+        aria-controls="project-sidebar"
+        aria-expanded="false"
+        aria-label="Expand sidebar"
+    >
+        <span class="home-topbar__menu-icon" aria-hidden="true"></span>
+    </button>
+        <div class="project-page-layout__main">
+            <main class="project-longform-stage">
+                
+        <div class="project-longform__topbar" data-project-topbar>
+            <div class="project-longform__topbar-inner">
+                
+                    <div class="project-longform__topbar-affordance" aria-hidden="true">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <nav class="project-longform__project-pillbar" aria-label="Project page navigation">
+                        
+            <a class="project-longform__project-pill" href="../../index.html" aria-label="Open home page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Home</span>
+            </a>
+            <a class="project-longform__project-pill" href="../ludo-cards/index.html" aria-label="Open Ludo Cards project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Ludo Cards</span>
+            </a>
+            <a class="project-longform__project-pill" href="../venture-hub/index.html" aria-label="Open Venture Hub project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Venture Hub</span>
+            </a>
+            <a class="project-longform__project-pill" href="../qualitative-reports-at-scale/index.html" aria-label="Open Qualitative Reports at Scale project page" data-project-topbar-pill>
+                <span class="project-longform__project-pill-label">Qualitative Reports at Scale</span>
+            </a>
+                    </nav>
+                
+        <button class="project-theme-toggle project-longform__theme-toggle" data-theme-toggle aria-label="Toggle theme">
+            <span class="project-theme-toggle__cap" aria-hidden="true">
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="moon-icon">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                <svg viewBox="0 0 24 24" width="18" height="18" stroke="currentColor" stroke-width="2" fill="none" stroke-linecap="round" stroke-linejoin="round" class="sun-icon">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+            </span>
+        </button>
+            </div>
+        </div>
+                <div class="project-longform__shell">
+                    <section class="project-longform__topfold" id="project-topfold" aria-label="Asset Manager top fold">
+                        
+                        
+                        <section class="project-longform__hero" id="project-brief">
+                            <div class="ludo-bento__hero-content project-longform__hero-content">
+                                <header class="project-longform__hero-header">
+                                    <h1>Asset Manager</h1>
+                                    <div class="project-longform__hero-tags">
+                                        <span>UX</span><span>Internal Tool</span><span>Total Environment</span>
+                                    </div>
+                                </header>
+                                
+        <div class="ludo-bento__hero-tabs" role="tablist" aria-label="Project summary tabs">
+        <button
+            class="ludo-bento__hero-tab is-active"
+            type="button"
+            role="tab"
+            aria-selected="true"
+            aria-controls="ludo-hero-panel-problem"
+            id="ludo-hero-tab-problem"
+            data-ludo-hero-tab="problem"
+        >Problem</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-approach"
+            id="ludo-hero-tab-approach"
+            data-ludo-hero-tab="approach"
+        >Approach</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-outcome"
+            id="ludo-hero-tab-outcome"
+            data-ludo-hero-tab="outcome"
+        >Outcome</button>
+        <button
+            class="ludo-bento__hero-tab"
+            type="button"
+            role="tab"
+            aria-selected="false"
+            aria-controls="ludo-hero-panel-constraint"
+            id="ludo-hero-tab-constraint"
+            data-ludo-hero-tab="constraint"
+        >Constraint</button>
+        </div>
+        <div class="ludo-bento__hero-panels">
+        <div
+            class="ludo-bento__hero-panel-body is-active"
+            id="ludo-hero-panel-problem"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-problem"
+            
+            data-ludo-hero-panel="problem"
+        >
+            <p class="ludo-bento__hero-summary">Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests.</p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-approach"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-approach"
+            hidden
+            data-ludo-hero-panel="approach"
+        >
+            <p class="ludo-bento__hero-summary">The work began with a running audit, flagging assets across multiple sources, creating a taxonomy system that cut across multiple dimensions simultaneously : asset type, resolution tier, campaign &amp; project keywords, photographer, time of day, interior/exterior and even color profiles. Each dimension became a different way a different user might arrive at the same asset. </p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-outcome"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-outcome"
+            hidden
+            data-ludo-hero-panel="outcome"
+        >
+            <p class="ludo-bento__hero-summary">Teams across departments could find, mark as favourite, download and share assets independently without routing requests through the design team. New team members could orient themselves autonomously. Time spent hunting for files, and aligning with stakeholders on which asset to use, dropped significantly.</p>
+        </div>
+        <div
+            class="ludo-bento__hero-panel-body"
+            id="ludo-hero-panel-constraint"
+            role="tabpanel"
+            aria-labelledby="ludo-hero-tab-constraint"
+            hidden
+            data-ludo-hero-panel="constraint"
+        >
+            <p class="ludo-bento__hero-summary">The system is only as current as its last upload. New assets require manual uploading and tagging - making the model fragile. Rotational ownership introduces inconsistencies, hard to identify later. Single member ownership creates fatigue. The next natural step is to automate uploads with assisted smart tagging, hedging against bad entries.</p>
+        </div>
+        </div>
+                                
+        <button class="ludo-bento__quote-stack project-longform__quote-stack" type="button" data-ludo-quote-stack data-active-quote="0" aria-label="Show next user story">
+            
+                <span hidden data-ludo-quote-source data-ludo-quote-index="0" data-ludo-quote-source-text="This photograph is by Rakesh, check his folder in the marketing HDD under Projects&gt;2015&gt;QWERTY&gt;Photographs, it should be either in site photos, or final" data-ludo-quote-source-meta="Senior Designer"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="1" data-ludo-quote-source-text="Where are the source files for last year&#39;s launch campaign social videos? I need to convert them to gifs." data-ludo-quote-source-meta="Social media manager"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="2" data-ludo-quote-source-text="Hey, quick favor! Can you point me to the ZNMD brochures folder in Onedrive? Need the current version with all the spec edits. Thanks!" data-ludo-quote-source-meta="Sales Associate"></span>
+                <span hidden data-ludo-quote-source data-ludo-quote-index="3" data-ludo-quote-source-text="We had sent over the latest project renders last week, the emailer is still using the older ones" data-ludo-quote-source-meta="Archvis Lead"></span>
+            <span class="ludo-bento__quote-deck">
+                <span class="ludo-bento__quote-layer ludo-bento__quote-layer--third" aria-hidden="true"></span>
+                <span class="ludo-bento__quote-layer ludo-bento__quote-layer--second" aria-hidden="true"></span>
+                <span class="ludo-bento__quote-card">
+                    <span class="ludo-bento__quote-text" data-ludo-quote-current-text>This photograph is by Rakesh, check his folder in the marketing HDD under Projects&gt;2015&gt;QWERTY&gt;Photographs, it should be either in site photos, or final</span>
+                    <span class="ludo-bento__quote-footer">
+                        <span class="ludo-bento__quote-meta" data-ludo-quote-current-meta>Senior Designer</span>
+                        <span class="ludo-bento__quote-count" data-ludo-quote-current-count>1/4</span>
+                    </span>
+                </span>
+            </span>
+        </button>
+                            </div>
+                        </section>
+                        
+        <section class="project-longform__feature project-longform__feature--carousel" data-project-feature-carousel data-active-slide="0" aria-label="Project media carousel">
+            <div class="project-longform__feature-slides">
+                <figure class="project-longform__feature-slide is-active has-caption" data-project-feature-slide="0">
+                    
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/jNkDPHw7K7k?rel=0&amp;modestbranding=1&amp;playsinline=1&amp;iv_load_policy=3&amp;autoplay=1&amp;controls=0&amp;mute=1&amp;loop=1&amp;playlist=jNkDPHw7K7k"
+                title="Searching across mixed libraries demo preview"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+            ></iframe>
+                    <figcaption class="project-longform__feature-caption">Cross-dimensional keyword mapping encourages discoverability</figcaption>
+                </figure><figure class="project-longform__feature-slide has-caption" data-project-feature-slide="1" hidden>
+                    
+            <iframe
+                src="https://www.youtube-nocookie.com/embed/hsx1RTGIdws?rel=0&amp;modestbranding=1&amp;playsinline=1&amp;iv_load_policy=3&amp;autoplay=1&amp;controls=0&amp;mute=1&amp;loop=1&amp;playlist=hsx1RTGIdws"
+                title="Uploading with structured metadata demo preview"
+                loading="lazy"
+                referrerpolicy="strict-origin-when-cross-origin"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                allowfullscreen
+            ></iframe>
+                    <figcaption class="project-longform__feature-caption">Pre-determined keywords minimise inconsistent tagging by owners</figcaption>
+                </figure>
+            </div>
+            <div class="project-longform__feature-dots" role="tablist" aria-label="Feature media navigation">
+                <button class="project-longform__feature-dot is-active" type="button" role="tab" aria-selected="true" aria-label="Show media 1" data-project-feature-dot="0"><span aria-hidden="true"></span></button><button class="project-longform__feature-dot" type="button" role="tab" aria-selected="false" aria-label="Show media 2" data-project-feature-dot="1"><span aria-hidden="true"></span></button>
+            </div>
+        </section>
+                    </section>
+                    <div class="project-longform__body">
+                        
+        <section class="project-longform__section project-longform__section--map-stage" id="system-map">
+            <div class="project-longform__section-heading"><p>System Map</p></div>
+            <div class="project-longform__map-shell">
+                <article class="ludo-bento__info-card asset-search__map-card project-longform__map-card">
+                    <div class="asset-search__map-shell">
+                        <div class="asset-search__map-stage" data-asset-map-stage="inline" data-asset-map-default="before" aria-label="Interactive asset structure visualization">
+                            <div class="asset-search__map-overlay">
+                                <div class="asset-search__map-toggle-group" role="group" aria-label="Visualization mode">
+                                    <button class="asset-search__map-toggle is-active" type="button" data-asset-map-toggle="before" aria-pressed="true">Before DAM</button>
+                                    <button class="asset-search__map-toggle" type="button" data-asset-map-toggle="after" aria-pressed="false">After DAM</button>
+                                    <button class="asset-search__map-toggle" type="button" data-asset-map-toggle="information" aria-pressed="false">Information architecture</button>
                                 </div>
-                                <h1 class="max-w-xl font-display text-displayhero font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Managed Asset Search</h1>
                             </div>
-
-                            <div class="grid max-w-2xl gap-4 sm:grid-cols-2">
-                                <div class="space-y-1"><p class="font-mono text-eyebrow uppercase text-subtext">Scope</p><p class="text-body text-ink">IA + Taxonomy</p></div><div class="space-y-1"><p class="font-mono text-eyebrow uppercase text-subtext">Focus</p><p class="text-body text-ink">Asset discovery</p></div>
-                            </div>
-                        </div>
-
-                        <div class="project-hero-summary lg:flex lg:min-h-full lg:items-end">
-                            <p class="max-w-lg text-lead text-subtext lg:border-l lg:border-rule lg:pl-6">This project focuses on making complex asset libraries easier to search, understand, and retrieve. The work centers on metadata structure, taxonomy decisions, and a clearer information architecture for discovery.</p>
-                        </div>
-                    </div>
-
-                    <figure class="project-hero-media h-[40vh] w-full overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
-                        <video autoplay loop muted playsinline class="h-full w-full object-cover" preload="auto" aria-hidden="true"><source src="../../Assets/DAM-TE.mp4" type="video/mp4"></video>
-                    </figure>
-                </div>
-            </div>
-        </section>
-
-        <section id="overview" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="1" style="--stack-card-index:1;" data-desktop-variant="notes-aside" data-mobile-variant="notes-inline">
-            <div class="project-stack-card__inner">
-                <div class="project-stack-card__content mx-auto grid max-w-[70rem] gap-10 px-5 py-12 sm:px-7 lg:grid-cols-[1.08fr_0.92fr] lg:px-12 lg:py-16">
-                    <div class="space-y-5">
-                        <div class="space-y-3">
-                            <p class="font-mono text-eyebrow uppercase text-subtext">Overview</p>
-                            <h2 class="font-display text-displaysubhead font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Quick read</h2>
-                        </div>
-
-                        <div class="divide-y divide-rule">
-                            <article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Problem</p><p class="max-w-[44rem] text-body text-ink">Large asset libraries become hard to navigate when metadata is inconsistent and category structures are unclear.</p></article><article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Approach</p><p class="max-w-[44rem] text-body text-ink">Used information architecture and taxonomy design to make search paths more legible and retrieval more predictable.</p></article><article class="grid gap-y-2 py-3 sm:grid-cols-[160px_minmax(0,1fr)] sm:items-start sm:gap-x-6"><p class="font-mono text-eyebrow uppercase text-subtext sm:pt-2">Outcome</p><p class="max-w-[44rem] text-body text-ink">The concept improves findability by making structure, labels, and content relationships easier to understand.</p></article>
-                        </div>
-                    </div>
-
-                    <div class="project-overview-notes grid gap-4 self-start pt-1 lg:translate-x-12 xl:translate-x-16">
-                        <article class="rotate-[-2deg] bg-note-gold hover:bg-[#f3e3a5] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">Discovery gap</p><p class="project-note-card__body mt-2 text-body">Search quality often breaks long before the search bar itself, at the level of naming and structure.</p></article><article class="rotate-[1.6deg] bg-note-lilac hover:bg-[#e8c8f8] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">Metadata first</p><p class="project-note-card__body mt-2 text-body">Better taxonomy decisions made the interface feel clearer without adding more visual complexity.</p></article><article class="rotate-[-1deg] bg-note-peach hover:bg-[#f6d4c7] rounded-[4px] border border-black/5 px-4 py-4 shadow-note transition duration-200 ease-out will-change-transform hover:-translate-y-1 hover:scale-[1.015] hover:shadow-soft"><p class="project-note-card__eyebrow font-mono text-eyebrow uppercase">System payoff</p><p class="project-note-card__body mt-2 text-body">The real value came from making retrieval more dependable across teams and content types.</p></article>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="context" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="2" style="--stack-card-index:2;">
-            <div class="project-stack-card__inner">
-                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 pt-12 pb-8 sm:px-7 lg:px-12 lg:pt-16 lg:pb-10">
-                    <div class="grid gap-6 lg:grid-cols-[1.15fr_0.85fr] lg:items-end">
-                        <div class="space-y-5">
-                            <p class="font-mono text-eyebrow uppercase text-subtext">Context</p>
-                            <h2 class="max-w-3xl font-display text-displaysection font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Search gets easier when the structure behind it carries more of the cognitive load</h2>
-                        </div>
-
-                        <div class="border-l border-rule pl-6 lg:translate-x-3 lg:translate-y-4">
-                            <p class="text-base leading-7 text-subtext">The challenge was not just improving an interface, but clarifying the system underneath it. Metadata patterns, labels, and hierarchy had to work together so users could find assets with less guesswork.</p>
-                        </div>
-                    </div>
-                    
-                </div>
-            </div>
-        </section>
-
-        <section id="process" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="3" style="--stack-card-index:3;" data-desktop-variant="preview-cards" data-mobile-variant="stacked-cards">
-            <div class="project-stack-card__inner">
-                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 py-12 sm:px-7 lg:px-12 lg:py-16">
-                    <div class="flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
-                        <p class="font-mono text-eyebrow uppercase text-subtext">Artifacts</p>
-                        <p class="hidden font-mono text-tag uppercase tracking-[0.16em] text-subtext/75 lg:block">Click to expand</p>
-                    </div>
-
-                    <div class="mt-6 process-stack" id="process-stack" data-active-card="none" data-ready="false">
-                        <article data-process-card data-process-origin="left" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Audit Content Patterns"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/20"><svg viewBox="0 0 520 360" class="h-full w-full" aria-hidden="true"><polygon points="260,20 410,70 380,320 260,290" fill="#d9d7d2"></polygon><polygon points="260,20 110,70 140,320 260,290" fill="#dfddd9"></polygon><polygon points="170,52 260,20 350,52 318,255 260,238 202,255" fill="#d3d1cd"></polygon></svg></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">01</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Audit<br>Content Patterns</h3></div><p class="process-card__description text-subtext">The work started by identifying repeated labeling issues, metadata gaps, and retrieval blockers across the system.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article><article data-process-card data-process-origin="center" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Reshape Taxonomy"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/30"><div class="grid h-full w-full content-center gap-3"><div class="h-10 rounded-[4px] bg-surface"></div><div class="grid grid-cols-[1.15fr_0.85fr] gap-3"><div class="rounded-[4px] bg-surface p-4"><div class="h-3 w-3/4 rounded-full bg-rule/60"></div><div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div></div><div class="rounded-[4px] bg-surface p-4"><div class="h-3 w-2/3 rounded-full bg-rule/60"></div><div class="mt-4 h-16 rounded-[4px] bg-rule/40"></div></div></div><div class="h-24 rounded-[4px] bg-surface"></div></div></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">02</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Reshape<br>Taxonomy</h3></div><p class="process-card__description text-subtext">Categories and terms were restructured to create a more stable mental model for how assets are organized.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article><article data-process-card data-process-origin="right" class="process-card overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft" tabindex="0" role="button" aria-expanded="false" aria-label="Expand process card: Improve Findability"><div class="process-card__inner"><div class="process-card__media flex items-center justify-center bg-rule/25"><div class="grid h-full w-full content-center gap-4"><div class="rounded-[4px] bg-surface p-4"><div class="flex items-center justify-between"><div class="h-3 w-24 rounded-full bg-rule/60"></div><div class="h-8 w-20 rounded-full bg-note-gold/70"></div></div><div class="mt-5 grid grid-cols-3 gap-3"><div class="h-20 rounded-[4px] bg-rule/30"></div><div class="h-20 rounded-[4px] bg-rule/40"></div><div class="h-20 rounded-[4px] bg-rule/30"></div></div></div></div></div><div class="process-card__body p-6 sm:p-8"><div class="process-card__content"><div class="process-card__title-block"><p class="process-card__eyebrow font-mono text-eyebrow uppercase text-subtext">03</p><h3 class="mt-3 font-display text-title font-bold [font-kerning:normal] [text-rendering:optimizeLegibility] text-ink">Improve<br>Findability</h3></div><p class="process-card__description text-subtext">The interface then surfaced that structure more clearly so search felt faster, calmer, and more dependable.</p></div><p class="process-card__hint font-mono text-tag uppercase tracking-[0.16em] text-subtext/75">Open details</p></div></div></article>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section id="outcomes" class="project-stack-card border-b border-rule/80" data-stack-card data-stack-index="4" style="--stack-card-index:4;">
-            <div class="project-stack-card__inner">
-                <div class="project-stack-card__content mx-auto max-w-[70rem] px-5 pt-12 pb-4 sm:px-7 lg:px-12 lg:pt-16 lg:pb-2">
-                    <p class="mb-4 font-mono text-eyebrow uppercase text-subtext">Outcomes</p>
-
-                    <div class="overflow-hidden rounded-[4px] border border-rule bg-surface shadow-soft">
-                        <div class="px-4 pb-4 sm:px-6 sm:pb-6">
-                            <div class="relative h-[60vh] overflow-hidden rounded-[4px] border border-rule bg-rule/30 lg:relative lg:left-1/2 lg:w-[108%] lg:-translate-x-1/2">
-                                <video autoplay loop muted playsinline class="block h-full min-h-full w-full min-w-full scale-[1.18] object-cover object-center" preload="none" aria-hidden="true"><source src="../../Assets/DAM-TE.mp4" type="video/mp4"></video>
+                            <div class="asset-search__map-footer-controls">
+                                <label class="asset-search__map-zoom" aria-label="Zoom map view">
+                                    <span class="asset-search__map-zoom-glyph" aria-hidden="true">
+                                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M15.5 15.5 21 21"></path>
+                                            <circle cx="10.5" cy="10.5" r="5.75"></circle>
+                                        </svg>
+                                    </span>
+                                    <input class="asset-search__map-zoom-input" type="range" min="0" max="100" value="56" data-asset-map-zoom aria-label="Zoom visualization">
+                                </label>
+                                <button class="asset-search__map-icon-button asset-search__map-reset" type="button" data-asset-map-reset aria-label="Reset map view">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <path d="M20 7v5h-5"></path>
+                                        <path d="M20 12a8 8 0 1 1-2.35-5.66L20 7"></path>
+                                    </svg>
+                                </button>
                             </div>
                         </div>
-
-                        <div class="grid gap-px bg-rule sm:grid-cols-2 lg:grid-cols-4">
-                            <article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Structure</p><p class="mt-3 font-sans text-stat font-bold text-ink">Clearer</p><p class="mt-2 text-base leading-7 text-subtext">Taxonomy decisions create a more stable discovery model.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Search</p><p class="mt-3 font-sans text-stat font-bold text-ink">Faster</p><p class="mt-2 text-base leading-7 text-subtext">Users get to relevant assets with less ambiguity.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Metadata</p><p class="mt-3 font-sans text-stat font-bold text-ink">Stronger</p><p class="mt-2 text-base leading-7 text-subtext">Classification becomes more consistent across the system.</p></article><article class="bg-surface px-5 py-4"><p class="font-mono text-eyebrow uppercase text-subtext">Retrieval</p><p class="mt-3 font-sans text-stat font-bold text-ink">Easier</p><p class="mt-2 text-base leading-7 text-subtext">Asset discovery feels more predictable across teams.</p></article>
-                        </div>
                     </div>
-
-                    
-        <div id="more-projects" class="project-tail-block pt-5 lg:pt-6">
-            <div class="project-carousel-section" data-current-project="managed-asset-search">
-                <div class="project-carousel-space" data-project-space aria-hidden="true"></div>
-                <div class="project-carousel-shell">
-                    <div class="project-carousel-heading">
-                        <p class="project-carousel-eyebrow font-mono text-eyebrow uppercase">More Projects</p>
-                    </div>
-                    <div class="project-carousel" data-project-carousel tabindex="0" role="region" aria-label="More projects carousel">
-                        <button class="project-carousel-control prev" type="button" aria-label="Previous project">
-                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="../../Assets/Icons/left-arrow-button-dark.svg" alt="" aria-hidden="true">
-                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="../../Assets/Icons/left-arrow-button-light.svg" alt="" aria-hidden="true">
-                        </button>
-                        <button class="project-carousel-control next" type="button" aria-label="Next project">
-                            <img class="project-carousel-control__icon project-carousel-control__icon--dark" src="../../Assets/Icons/right-arrow-button-dark.svg" alt="" aria-hidden="true">
-                            <img class="project-carousel-control__icon project-carousel-control__icon--light" src="../../Assets/Icons/right-arrow-button-light.svg" alt="" aria-hidden="true">
-                        </button>
-                        <div class="project-carousel-track">
-                            <article class="project-carousel-card" data-project-slug="ludo-cards"><a class="project-carousel-card__link" href="../ludo-cards/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">Game Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="../../Assets/ludo-cards.mp4" type="video/mp4"></video></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Ludo Cards</h3><p class="project-carousel-card__description">A strategic twist on Ludo that gives players more control, agency, and tactical depth.</p></div></div></div></a></article><article class="project-carousel-card" data-project-slug="venture-hub"><a class="project-carousel-card__link" href="../venture-hub/index.html"><div class="project-carousel-card__shell"><div class="project-carousel-card__face project-carousel-card__face--back" aria-hidden="true"></div><div class="project-carousel-card__face project-carousel-card__face--front"><div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group"><span class="project-carousel-card__pill project-carousel-card__pill--type">System Design</span></div><span class="project-carousel-card__pill project-carousel-card__pill--date">2026</span></div><div class="project-carousel-card__image"><img src="../../Assets/accelerator-dashboard.png" alt="Dashboard preview for Venture Hub" loading="lazy" decoding="async"></div><div class="project-carousel-card__meta"><h3 class="project-carousel-card__title">Venture Hub</h3><p class="project-carousel-card__description">A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.</p></div></div></div></a></article>
-                        </div>
-                    </div>
+                </article>
+                <div class="project-longform__map-explanations" data-asset-map-copy-panel>
+                    <article class="ludo-bento__cta-card asset-search__cta-card project-longform__map-copy-shell" data-asset-map-copy-shell data-active-map="before">
+                        <h3 class="project-longform__map-copy-title" data-asset-map-copy-title>Before DAM</h3>
+                        <p class="project-longform__map-copy-body" data-asset-map-copy-body>Asset retrieval depended on who held the file or which team remembered the right folder. Search started with people, not structure.</p>
+                        <div class="project-longform__map-copy-sources" hidden><span data-asset-map-copy-source="before" data-asset-map-copy-source-title="Before DAM" data-asset-map-copy-source-body="Asset retrieval depended on who held the file or which team remembered the right folder. Search started with people, not structure."></span><span data-asset-map-copy-source="after" data-asset-map-copy-source-title="After DAM" data-asset-map-copy-source-body="The system recenters everything around shared discovery. Asset clusters around projects, departments and vendors become visible and searchable in one place."></span><span data-asset-map-copy-source="information" data-asset-map-copy-source-title="Information Architecture" data-asset-map-copy-source-body="The information architecture showcases the taxonomical hierarchy and cross-dimensional connections"></span></div>
+                    </article>
                 </div>
             </div>
+        </section>
+
+        <section class="project-longform__section project-longform__section--panels" id="process">
+            <div class="project-longform__section-heading"><p>Process</p></div>
+            <section class="ludo-bento__top-grid project-longform__expansion-grid" data-ludo-info-stack data-ludo-info-enhanced="false" data-ready="false" data-active-card="none">
+                
+        <article class="ludo-bento__info-card" id="map-assets" data-ludo-info-card data-ludo-info-origin="left" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Map Assets">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Map Assets</h2>
+                        <p>The first pass made the library visible as a system. Assets were traced across teams, folders, storage points, and request pathways so the search problem could be seen before it was redesigned.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__legend-grid">
+                
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--sun"></span>
+                        Teams
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--sea"></span>
+                        Projects
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--leaf"></span>
+                        Formats
+                    </span>
+                    <span class="ludo-bento__legend-item">
+                        <span class="ludo-bento__legend-dot ludo-bento__legend-dot--gold"></span>
+                        Status
+                    </span>
+            </div>
+                    </div>
+                </div>
+                
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Discovery Baseline</h3>
+                    <p>Mapping the current state showed where retrieval depended on memory, personal handoff, or local folder habits instead of a shared discovery model.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>System Visibility</h3>
+                    <p>That map created a common frame for the rest of the project, making it easier to separate true structure problems from one-off content gaps.</p>
+                </div>
         </div>
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+        <article class="ludo-bento__info-card" id="establish-taxonomy" data-ludo-info-card data-ludo-info-origin="center" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Establish Taxonomy">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Establish Taxonomy</h2>
+                        <p>Once the landscape was visible, the next step was naming it consistently. Taxonomy rules defined how projects, asset types, business functions, and usage states should connect inside search.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow project-longform__support-pills">
+                <span class="project-longform__support-pill">Asset Type</span><span class="project-longform__support-pill">Discipline</span><span class="project-longform__support-pill">Usage</span><span class="project-longform__support-pill">Lifecycle</span>
+            </div>
+                    </div>
+                </div>
+                
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Naming Logic</h3>
+                    <p>The taxonomy had to stay broad enough for cross-team reuse while still giving people clear handles for filtering, grouping, and understanding relationships.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>Retrieval Payoff</h3>
+                    <p>Consistent labels turn search from a guessing exercise into a readable path, where metadata does more of the work before a user even types a query.</p>
+                </div>
+        </div>
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+        <article class="ludo-bento__info-card" id="sharepoint-batch-tagging" data-ludo-info-card data-ludo-info-origin="right" data-active="false" data-expanded-content="false" tabindex="0" role="button" aria-expanded="false" aria-label="Expand section card: Batch tagging in Sharepoint">
+            <div class="ludo-bento__info-card-shell">
+                <div class="ludo-bento__info-card-main">
+                    <div class="ludo-bento__info-card-copy">
+                        <h2>Batch tagging in Sharepoint</h2>
+                        <p>The taxonomy only becomes useful once it is applied at scale. Batch tagging in Sharepoint translated the structure into a repeatable operational layer that teams could maintain over time.</p>
+                        
+            <div class="ludo-bento__info-card-support ludo-bento__info-card-support--flow ludo-bento__development-support">
+                <div class="ludo-bento__development-block">
+                    <h3 class="ludo-bento__support-heading">Rollout path</h3>
+                    
+        <div class="ludo-bento__timeline">
+            
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--live"></span>
+                        <span class="ludo-bento__timeline-line"></span>
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 01</span>
+                        <strong class="ludo-bento__timeline-title">Pilot library</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--live" aria-hidden="true"></span>Live</span>
+                    </span>
+                </div>
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--progress"></span>
+                        <span class="ludo-bento__timeline-line"></span>
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 02</span>
+                        <strong class="ludo-bento__timeline-title">Template pass</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--progress" aria-hidden="true"></span>In Progress</span>
+                    </span>
+                </div>
+                <div class="ludo-bento__timeline-item">
+                    <span class="ludo-bento__timeline-rail" aria-hidden="true">
+                        <span class="ludo-bento__timeline-dot ludo-bento__timeline-dot--tbd"></span>
+                        
+                    </span>
+                    <span class="ludo-bento__timeline-copy">
+                        <span class="ludo-bento__timeline-phase">Phase 03</span>
+                        <strong class="ludo-bento__timeline-title">Bulk tagging</strong>
+                        <span class="ludo-bento__timeline-status"><span class="ludo-bento__timeline-status-dot ludo-bento__timeline-status-dot--tbd" aria-hidden="true"></span>TBD</span>
+                    </span>
+                </div>
+        </div>
+                </div>
+            </div>
+                    </div>
+                </div>
+                
+        <div class="ludo-bento__info-card-expanded">
+            
+                <div class="ludo-bento__info-column">
+                    <h3>Operational Layer</h3>
+                    <p>Batch tagging reduced the need to fix assets one by one, making the metadata model practical for real libraries instead of only clean sample sets.</p>
+                </div>
+                <div class="ludo-bento__info-column">
+                    <h3>Maintenance Model</h3>
+                    <p>Embedding the tagging workflow into Sharepoint created a path for future teams to inherit the structure, extend it, and keep search quality from drifting.</p>
+                </div>
+        </div>
+            </div>
+            
+        <span class="ludo-bento__expand-button" aria-hidden="true">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-dark" src="../../Assets/Icons/expansion-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--expand-light" src="../../Assets/Icons/expansion-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-dark" src="../../Assets/Icons/collapse-arrow-button-dark.svg" alt="" loading="lazy" decoding="async">
+            <img class="ludo-bento__expand-button-icon ludo-bento__expand-button-icon--collapse-light" src="../../Assets/Icons/collapse-arrow-button-light.svg" alt="" loading="lazy" decoding="async">
+        </span>
+        </article>
+            </section>
+        </section>
 
-        <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
-                <div class="flex items-center gap-[1.15rem]">
-                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+        <section class="project-longform__section project-longform__section--snackbars" id="outcome">
+            <div class="project-longform__section-heading"><p>Outcome</p></div>
+            <div class="project-longform__snackbar-stack">
+                <article class="project-longform__snackbar">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Easier Access</h3>
+                            <p>What used to take tracking down people with the relevant files now becomes one asynchronous scan across searchable systems, making favorites easier to filter.</p>
+                        </div>
+                        
+                    </article><article class="project-longform__snackbar">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Faster Turnaround</h3>
+                            <p>Delivery pipelines stop getting blocked by missing references or hidden assets, so sales folders can be pulled faster and project campaigns keep moving.</p>
+                        </div>
+                        
+                    </article><article class="project-longform__snackbar">
+                        <div class="project-longform__snackbar-copy">
+                            <h3>Faster Onboarding</h3>
+                            <p>For a new employee, understanding project libraries, accessing brochures, or marketing material now takes weeks less because the structure explains itself.</p>
+                        </div>
+                        
+                    </article>
+            </div>
+        </section>
+                    </div>
+                </div>
+                
+                <div class="ludo-mobile">
+                    <div class="ludo-mobile__video-frame">
+            <video autoplay muted loop playsinline>
+                <source src="../../Assets/DAM-TE.mp4" type="video/mp4">
+            </video></div>
+                    <div class="ludo-mobile__body">
+                        <header class="ludo-mobile__header">
+                            <h1 class="ludo-mobile__title">Asset Manager</h1>
+                            <div class="ludo-mobile__tags"><span class="ludo-mobile__tag">UX</span><span class="ludo-mobile__tag">Internal Tool</span><span class="ludo-mobile__tag">Total Environment</span></div>
+                        </header>
+                        
+                            <div class="ludo-mobile__pao">
+                                <div class="ludo-mobile__pao-tablist" role="tablist" aria-label="Project summary">
+                                    <button class="ludo-mobile__pao-tab is-active" type="button" role="tab" aria-selected="true" data-ludo-mobile-pao="problem" data-ludo-mobile-summary="Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests.">Problem</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="approach" data-ludo-mobile-summary="The work began with a running audit, flagging assets across multiple sources, creating a taxonomy system that cut across multiple dimensions simultaneously : asset type, resolution tier, campaign &amp; project keywords, photographer, time of day, interior/exterior and even color profiles. Each dimension became a different way a different user might arrive at the same asset. ">Approach</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="outcome" data-ludo-mobile-summary="Teams across departments could find, mark as favourite, download and share assets independently without routing requests through the design team. New team members could orient themselves autonomously. Time spent hunting for files, and aligning with stakeholders on which asset to use, dropped significantly.">Outcome</button><button class="ludo-mobile__pao-tab" type="button" role="tab" aria-selected="false" data-ludo-mobile-pao="constraint" data-ludo-mobile-summary="The system is only as current as its last upload. New assets require manual uploading and tagging - making the model fragile. Rotational ownership introduces inconsistencies, hard to identify later. Single member ownership creates fatigue. The next natural step is to automate uploads with assisted smart tagging, hedging against bad entries.">Constraint</button>
+                                </div>
+                                <p class="ludo-mobile__pao-text" data-ludo-mobile-pao-text>Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests.</p>
+                            </div>
+                        
+                            <button class="ludo-mobile__quote" type="button" data-ludo-mobile-quote data-active-quote="0" aria-label="Show next user story">
+                                <span hidden data-ludo-mobile-quote-source data-m-quote-text="This photograph is by Rakesh, check his folder in the marketing HDD under Projects&gt;2015&gt;QWERTY&gt;Photographs, it should be either in site photos, or final" data-m-quote-meta="Senior Designer"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="Where are the source files for last year&#39;s launch campaign social videos? I need to convert them to gifs." data-m-quote-meta="Social media manager"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="Hey, quick favor! Can you point me to the ZNMD brochures folder in Onedrive? Need the current version with all the spec edits. Thanks!" data-m-quote-meta="Sales Associate"></span><span hidden data-ludo-mobile-quote-source data-m-quote-text="We had sent over the latest project renders last week, the emailer is still using the older ones" data-m-quote-meta="Archvis Lead"></span>
+                                <span class="ludo-mobile__quote-deck">
+                                    <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--third" aria-hidden="true"></span>
+                                    <span class="ludo-mobile__quote-layer ludo-mobile__quote-layer--second" aria-hidden="true"></span>
+                                    <span class="ludo-mobile__quote-card">
+                                        <span class="ludo-mobile__quote-text" data-ludo-mobile-quote-text>This photograph is by Rakesh, check his folder in the marketing HDD under Projects&gt;2015&gt;QWERTY&gt;Photographs, it should be either in site photos, or final</span>
+                                        <span class="ludo-mobile__quote-footer">
+                                            <span class="ludo-mobile__quote-meta" data-ludo-mobile-quote-meta>Senior Designer</span>
+                                            <span class="ludo-mobile__quote-count" data-ludo-mobile-quote-count>1/4</span>
+                                        </span>
+                                    </span>
+                                </span>
+                            </button>
+                        
+                        
+                            <div class="ludo-mobile__journey">
+                                <p class="ludo-mobile__section-label">System Map</p>
+                                <div class="ludo-mobile__pills">
+                                    <button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="0" data-m-pill-phase="01" data-m-pill-title="Before DAM" data-m-pill-body="Asset retrieval depended on who held the file or which team remembered the right folder. Search started with people, not structure.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">01</span><span class="ludo-mobile__pill-title">Before DAM</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="1" data-m-pill-phase="02" data-m-pill-title="After DAM" data-m-pill-body="The system recenters everything around shared discovery. Asset clusters around projects, departments and vendors become visible and searchable in one place.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">02</span><span class="ludo-mobile__pill-title">After DAM</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="2" data-m-pill-phase="03" data-m-pill-title="Information Architecture" data-m-pill-body="The information architecture showcases the taxonomical hierarchy and cross-dimensional connections">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">03</span><span class="ludo-mobile__pill-title">Information Architecture</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button>
+                                </div>
+                            </div>
+                            <div class="ludo-mobile__journey">
+                                <p class="ludo-mobile__section-label">Process</p>
+                                <div class="ludo-mobile__pills">
+                                    <button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="3" data-m-pill-phase="01" data-m-pill-title="Map Assets" data-m-pill-body="The first pass made the library visible as a system. Assets were traced across teams, folders, storage points, and request pathways so the search problem could be seen before it was redesigned.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">01</span><span class="ludo-mobile__pill-title">Map Assets</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="4" data-m-pill-phase="02" data-m-pill-title="Establish Taxonomy" data-m-pill-body="Once the landscape was visible, the next step was naming it consistently. Taxonomy rules defined how projects, asset types, business functions, and usage states should connect inside search.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">02</span><span class="ludo-mobile__pill-title">Establish Taxonomy</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="5" data-m-pill-phase="03" data-m-pill-title="Batch tagging in Sharepoint" data-m-pill-body="The taxonomy only becomes useful once it is applied at scale. Batch tagging in Sharepoint translated the structure into a repeatable operational layer that teams could maintain over time.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">03</span><span class="ludo-mobile__pill-title">Batch tagging in Sharepoint</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button>
+                                </div>
+                            </div>
+                            <div class="ludo-mobile__journey">
+                                <p class="ludo-mobile__section-label">Outcome</p>
+                                <div class="ludo-mobile__pills">
+                                    <button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="6" data-m-pill-phase="01" data-m-pill-title="Easier Access" data-m-pill-body="What used to take tracking down people with the relevant files now becomes one asynchronous scan across searchable systems, making favorites easier to filter.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">01</span><span class="ludo-mobile__pill-title">Easier Access</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="7" data-m-pill-phase="02" data-m-pill-title="Faster Turnaround" data-m-pill-body="Delivery pipelines stop getting blocked by missing references or hidden assets, so sales folders can be pulled faster and project campaigns keep moving.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">02</span><span class="ludo-mobile__pill-title">Faster Turnaround</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button><button class="ludo-mobile__pill" type="button" data-ludo-mobile-pill="8" data-m-pill-phase="03" data-m-pill-title="Faster Onboarding" data-m-pill-body="For a new employee, understanding project libraries, accessing brochures, or marketing material now takes weeks less because the structure explains itself.">
+                                            <span class="ludo-mobile__pill-left"><span class="ludo-mobile__pill-num">03</span><span class="ludo-mobile__pill-title">Faster Onboarding</span></span>
+                                            <span class="ludo-mobile__pill-arrow" aria-hidden="true">&#8599;</span>
+                                        </button>
+                                </div>
+                            </div>
+                    </div>
+                    
+                        <div class="ludo-mobile__drawer-overlay" data-ludo-mobile-overlay hidden>
+                            <div class="ludo-mobile__drawer" role="dialog" aria-modal="true" aria-label="Section detail">
+                                <div class="ludo-mobile__drawer-handle" data-ludo-mobile-close role="button" aria-label="Close" tabindex="0"></div>
+                                <p class="ludo-mobile__drawer-phase" data-ludo-mobile-drawer-phase></p>
+                                <h2 class="ludo-mobile__drawer-title" data-ludo-mobile-drawer-title></h2>
+                                <p class="ludo-mobile__drawer-body" data-ludo-mobile-drawer-body></p>
+                            </div>
+                        </div>
+                </div>
+                
+        <footer class="project-tail-footer">
+            <div class="project-tail-footer__inner">
+                
+                <div class="project-tail-footer__icons">
+                    <a href="https://x.com/Neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="X"><img src="../../Assets/social/x.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="https://github.com/neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="../../Assets/social/github.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="../../Assets/social/linkedin.svg" alt="" class="project-social-icon__img"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="project-social-icon" aria-label="Email"><img src="../../Assets/social/mail.svg" alt="" class="project-social-icon__img"></a>
                 </div>
             </div>
         </footer>
-                </div>
-            </div>
-        </section>
-        </main>
+            </main>
+        </div>
     </div>
+    
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js" defer></script>
-    <script src="../../shared/navbar.js" defer></script>
     <script src="../_shared/project-page.js" defer></script>
-    <script src="../_shared/project-stack.js" defer></script>
+    <script src="../_templates/project-longform/project-longform.js" defer></script>
+    <script src="../_templates/template-replication/ludo-bento.js" defer></script>
+    <script src="./asset-search.js" defer></script>
 </body>
 </html>

@@ -1,155 +1,310 @@
 {
-  "slug": "managed-asset-search",
-  "title": "Managed Asset Search",
-  "theme": "editorial",
-  "colorMode": "light",
-  "seo": {
-    "title": "Managed Asset Search | Neel",
-    "description": "An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.",
-    "socialImage": "Assets/DAM-TE.gif"
-  },
-  "sections": [
-    {
-      "type": "hero",
-      "id": "hero",
-      "navLabel": null,
-      "desktopVariant": "split",
-      "mobileVariant": "summary-first",
-      "tags": [
-        "IA",
-        "2021"
-      ],
-      "title": "Managed Asset Search",
-      "summary": [
-        "This project focuses on making complex asset libraries easier to search, understand, and retrieve.",
-        "The work centers on metadata structure, taxonomy decisions, and a clearer information architecture for discovery."
-      ],
-      "meta": [
-        {
-          "label": "Scope",
-          "value": "IA + Taxonomy"
-        },
-        {
-          "label": "Focus",
-          "value": "Asset discovery"
-        }
-      ],
-      "media": {
-        "src": "Assets/DAM-TE.mp4",
-        "alt": "Animated interface preview for Managed Asset Search."
-      }
+    "slug": "managed-asset-search",
+    "title": "Asset Manager",
+    "theme": "art",
+    "colorMode": "light",
+    "seo": {
+        "title": "Asset Manager | Neelanzone",
+        "description": "An information architecture case study on improving enterprise asset discovery through metadata design, taxonomy, and clearer search structure.",
+        "socialImage": "Assets/DAM-TE.gif"
     },
-    {
-      "type": "overview",
-      "id": "overview",
-      "navLabel": "Overview",
-      "desktopVariant": "notes-aside",
-      "mobileVariant": "notes-inline",
-      "label": "Overview",
-      "heading": "Quick read",
-      "items": [
+    "sections": [
         {
-          "label": "Problem",
-          "value": "Large asset libraries become hard to navigate when metadata is inconsistent and category structures are unclear."
-        },
-        {
-          "label": "Approach",
-          "value": "Used information architecture and taxonomy design to make search paths more legible and retrieval more predictable."
-        },
-        {
-          "label": "Outcome",
-          "value": "The concept improves findability by making structure, labels, and content relationships easier to understand."
+            "type": "hero",
+            "id": "hero",
+            "navLabel": null,
+            "desktopVariant": "split",
+            "mobileVariant": "summary-first",
+            "tags": [
+                "DesOps",
+                "Internal Tool"
+            ],
+            "title": "Asset Manager",
+            "summary": [
+                "Smart media library for all design and marketing assets, accessible through keyword mapped search, built with sharepoint"
+            ],
+            "meta": [
+                {
+                    "label": "Scope",
+                    "value": "IA + Taxonomy"
+                },
+                {
+                    "label": "Focus",
+                    "value": "Asset discovery"
+                }
+            ],
+            "media": {
+                "src": "Assets/DAM-TE.mp4",
+                "alt": "Animated interface preview for Asset Manager."
+            }
         }
-      ],
-      "notes": [
-        {
-          "title": "Discovery gap",
-          "tone": "gold",
-          "text": "Search quality often breaks long before the search bar itself, at the level of naming and structure."
-        },
-        {
-          "title": "Metadata first",
-          "tone": "lilac",
-          "text": "Better taxonomy decisions made the interface feel clearer without adding more visual complexity."
-        },
-        {
-          "title": "System payoff",
-          "tone": "peach",
-          "text": "The real value came from making retrieval more dependable across teams and content types."
+    ],
+    "customTemplate": "project-longform",
+    "templateContent": {
+        "longform": {
+            "sidebar": {
+                "noteTitle": "Navigation",
+                "note": "",
+                "noteOpen": true,
+                "navigationItems": [
+                    {
+                        "label": "Project Brief",
+                        "href": "#project-brief"
+                    },
+                    {
+                        "label": "System Map",
+                        "href": "#system-map"
+                    },
+                    {
+                        "label": "Process",
+                        "href": "#process"
+                    },
+                    {
+                        "label": "Outcome",
+                        "href": "#outcome"
+                    }
+                ]
+            },
+            "hero": {
+                "anchorId": "project-brief",
+                "title": "Asset Manager",
+                "tags": [
+                    "UX",
+                    "Internal Tool",
+                    "Total Environment"
+                ],
+                "tabs": [
+                    {
+                        "id": "problem",
+                        "label": "Problem",
+                        "body": "Marketing assets were scattered across hard drives, inboxes and shared folders with inconsistent naming and structure. Teams across departments found it difficult to share, download, and actually discover them when needed. Design team at marketing became the go to for all retrieval requests, adding on to the long list of service requests."
+                    },
+                    {
+                        "id": "approach",
+                        "label": "Approach",
+                        "body": "The work began with a running audit, flagging assets across multiple sources, creating a taxonomy system that cut across multiple dimensions simultaneously : asset type, resolution tier, campaign & project keywords, photographer, time of day, interior/exterior and even color profiles. Each dimension became a different way a different user might arrive at the same asset. "
+                    },
+                    {
+                        "id": "outcome",
+                        "label": "Outcome",
+                        "body": "Teams across departments could find, mark as favourite, download and share assets independently without routing requests through the design team. New team members could orient themselves autonomously. Time spent hunting for files, and aligning with stakeholders on which asset to use, dropped significantly."
+                    },
+                    {
+                        "id": "constraint",
+                        "label": "Constraint",
+                        "body": "The system is only as current as its last upload. New assets require manual uploading and tagging - making the model fragile. Rotational ownership introduces inconsistencies, hard to identify later. Single member ownership creates fatigue. The next natural step is to automate uploads with assisted smart tagging, hedging against bad entries."
+                    }
+                ],
+                "quotes": [
+                    {
+                        "text": "This photograph is by Rakesh, check his folder in the marketing HDD under Projects>2015>QWERTY>Photographs, it should be either in site photos, or final",
+                        "attribution": "Senior Designer"
+                    },
+                    {
+                        "text": "Where are the source files for last year's launch campaign social videos? I need to convert them to gifs.",
+                        "attribution": "Social media manager"
+                    },
+                    {
+                        "text": "Hey, quick favor! Can you point me to the ZNMD brochures folder in Onedrive? Need the current version with all the spec edits. Thanks!",
+                        "attribution": "Sales Associate"
+                    },
+                    {
+                        "text": "We had sent over the latest project renders last week, the emailer is still using the older ones",
+                        "attribution": "Archvis Lead"
+                    }
+                ],
+                "featureMedia": {
+                    "kind": "youtube",
+                    "src": "https://www.youtube-nocookie.com/embed/jNkDPHw7K7k?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&autoplay=1&controls=0&mute=1&loop=1&playlist=jNkDPHw7K7k",
+                    "title": "Searching across mixed libraries demo preview",
+                    "alt": "Searching across mixed libraries demo preview.",
+                    "caption": "Cross-dimensional keyword mapping encourages discoverability",
+                    "slides": [
+                        {
+                            "kind": "youtube",
+                            "src": "https://www.youtube-nocookie.com/embed/hsx1RTGIdws?rel=0&modestbranding=1&playsinline=1&iv_load_policy=3&autoplay=1&controls=0&mute=1&loop=1&playlist=hsx1RTGIdws",
+                            "title": "Uploading with structured metadata demo preview",
+                            "alt": "Uploading with structured metadata demo preview.",
+                            "caption": "Pre-determined keywords minimise inconsistent tagging by owners"
+                        }
+                    ]
+                }
+            },
+            "blocks": [
+                {
+                    "type": "asset-map-stage",
+                    "id": "system-map",
+                    "title": "System Map",
+                    "ariaLabel": "Interactive asset structure visualization",
+                    "toggleAriaLabel": "Visualization mode",
+                    "defaultMap": "before",
+                    "items": [
+                        {
+                            "mapKey": "before",
+                            "label": "Before DAM",
+                            "body": "Asset retrieval depended on who held the file or which team remembered the right folder. Search started with people, not structure."
+                        },
+                        {
+                            "mapKey": "after",
+                            "label": "After DAM",
+                            "body": "The system recenters everything around shared discovery. Asset clusters around projects, departments and vendors become visible and searchable in one place."
+                        },
+                        {
+                            "mapKey": "information",
+                            "label": "Information Architecture",
+                            "body": "The information architecture showcases the taxonomical hierarchy and cross-dimensional connections"
+                        }
+                    ]
+                },
+                {
+                    "type": "expansion-panels",
+                    "id": "process",
+                    "title": "Process",
+                    "items": [
+                        {
+                            "id": "map-assets",
+                            "origin": "left",
+                            "ariaLabel": "Map Assets",
+                            "title": "Map Assets",
+                            "body": "The first pass made the library visible as a system. Assets were traced across teams, folders, storage points, and request pathways so the search problem could be seen before it was redesigned.",
+                            "support": {
+                                "kind": "legend",
+                                "placement": "flow",
+                                "items": [
+                                    {
+                                        "label": "Teams",
+                                        "tone": "sun"
+                                    },
+                                    {
+                                        "label": "Projects",
+                                        "tone": "sea"
+                                    },
+                                    {
+                                        "label": "Formats",
+                                        "tone": "leaf"
+                                    },
+                                    {
+                                        "label": "Status",
+                                        "tone": "gold"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Discovery Baseline",
+                                    "body": "Mapping the current state showed where retrieval depended on memory, personal handoff, or local folder habits instead of a shared discovery model."
+                                },
+                                {
+                                    "title": "System Visibility",
+                                    "body": "That map created a common frame for the rest of the project, making it easier to separate true structure problems from one-off content gaps."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "establish-taxonomy",
+                            "origin": "center",
+                            "ariaLabel": "Establish Taxonomy",
+                            "title": "Establish Taxonomy",
+                            "body": "Once the landscape was visible, the next step was naming it consistently. Taxonomy rules defined how projects, asset types, business functions, and usage states should connect inside search.",
+                            "support": {
+                                "kind": "pill-list",
+                                "placement": "flow",
+                                "items": [
+                                    {
+                                        "label": "Asset Type"
+                                    },
+                                    {
+                                        "label": "Discipline"
+                                    },
+                                    {
+                                        "label": "Usage"
+                                    },
+                                    {
+                                        "label": "Lifecycle"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Naming Logic",
+                                    "body": "The taxonomy had to stay broad enough for cross-team reuse while still giving people clear handles for filtering, grouping, and understanding relationships."
+                                },
+                                {
+                                    "title": "Retrieval Payoff",
+                                    "body": "Consistent labels turn search from a guessing exercise into a readable path, where metadata does more of the work before a user even types a query."
+                                }
+                            ]
+                        },
+                        {
+                            "id": "sharepoint-batch-tagging",
+                            "origin": "right",
+                            "ariaLabel": "Batch tagging in Sharepoint",
+                            "title": "Batch tagging in Sharepoint",
+                            "body": "The taxonomy only becomes useful once it is applied at scale. Batch tagging in Sharepoint translated the structure into a repeatable operational layer that teams could maintain over time.",
+                            "support": {
+                                "kind": "timeline",
+                                "placement": "flow",
+                                "title": "Rollout path",
+                                "items": [
+                                    {
+                                        "phase": "Phase 01",
+                                        "title": "Pilot library",
+                                        "status": "Live",
+                                        "tone": "live"
+                                    },
+                                    {
+                                        "phase": "Phase 02",
+                                        "title": "Template pass",
+                                        "status": "In Progress",
+                                        "tone": "progress"
+                                    },
+                                    {
+                                        "phase": "Phase 03",
+                                        "title": "Bulk tagging",
+                                        "status": "TBD",
+                                        "tone": "tbd"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Operational Layer",
+                                    "body": "Batch tagging reduced the need to fix assets one by one, making the metadata model practical for real libraries instead of only clean sample sets."
+                                },
+                                {
+                                    "title": "Maintenance Model",
+                                    "body": "Embedding the tagging workflow into Sharepoint created a path for future teams to inherit the structure, extend it, and keep search quality from drifting."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "snackbar-stack",
+                    "id": "outcome",
+                    "title": "Outcome",
+                    "items": [
+                        {
+                            "title": "Easier Access",
+                            "body": "What used to take tracking down people with the relevant files now becomes one asynchronous scan across searchable systems, making favorites easier to filter."
+                        },
+                        {
+                            "title": "Faster Turnaround",
+                            "body": "Delivery pipelines stop getting blocked by missing references or hidden assets, so sales folders can be pulled faster and project campaigns keep moving."
+                        },
+                        {
+                            "title": "Faster Onboarding",
+                            "body": "For a new employee, understanding project libraries, accessing brochures, or marketing material now takes weeks less because the structure explains itself."
+                        }
+                    ]
+                }
+            ],
+            "extraStyles": [
+                "./asset-search.css"
+            ],
+            "extraScripts": [
+                "./asset-search.js"
+            ]
         }
-      ]
-    },
-    {
-      "type": "context",
-      "id": "context",
-      "navLabel": "Context",
-      "label": "Context",
-      "heading": "Search gets easier when the structure behind it carries more of the cognitive load",
-      "aside": "The challenge was not just improving an interface, but clarifying the system underneath it. Metadata patterns, labels, and hierarchy had to work together so users could find assets with less guesswork."
-    },
-    {
-      "type": "process",
-      "id": "process",
-      "navLabel": "Artifacts",
-      "desktopVariant": "preview-cards",
-      "mobileVariant": "stacked-cards",
-      "eyebrow": "Artifacts",
-      "hint": "Click to expand",
-      "cards": [
-        {
-          "index": "01",
-          "origin": "left",
-          "title": "Audit\nContent Patterns",
-          "description": "The work started by identifying repeated labeling issues, metadata gaps, and retrieval blockers across the system.",
-          "mediaPreset": "layers"
-        },
-        {
-          "index": "02",
-          "origin": "center",
-          "title": "Reshape\nTaxonomy",
-          "description": "Categories and terms were restructured to create a more stable mental model for how assets are organized.",
-          "mediaPreset": "panels"
-        },
-        {
-          "index": "03",
-          "origin": "right",
-          "title": "Improve\nFindability",
-          "description": "The interface then surfaced that structure more clearly so search felt faster, calmer, and more dependable.",
-          "mediaPreset": "decision"
-        }
-      ]
-    },
-    {
-      "type": "outcomes",
-      "id": "outcomes",
-      "navLabel": "Outcomes",
-      "label": "Outcomes",
-      "image": {
-        "src": "Assets/DAM-TE.mp4",
-        "alt": "Interface preview for Managed Asset Search."
-      },
-      "metrics": [
-        {
-          "label": "Structure",
-          "value": "Clearer",
-          "text": "Taxonomy decisions create a more stable discovery model."
-        },
-        {
-          "label": "Search",
-          "value": "Faster",
-          "text": "Users get to relevant assets with less ambiguity."
-        },
-        {
-          "label": "Metadata",
-          "value": "Stronger",
-          "text": "Classification becomes more consistent across the system."
-        },
-        {
-          "label": "Retrieval",
-          "value": "Easier",
-          "text": "Asset discovery feels more predictable across teams."
-        }
-      ]
     }
-  ]
 }

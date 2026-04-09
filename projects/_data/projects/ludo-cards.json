@@ -1,158 +1,319 @@
-﻿{
-  "slug": "ludo-cards",
-  "title": "Ludo Cards",
-  "theme": "art",
-  "colorMode": "light",
-  "customTemplate": "ludo-bento",
-  "seo": {
-    "title": "Ludo Cards | Neel",
-    "description": "A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.",
-    "socialImage": "Assets/ludo-cards.gif"
-  },
-  "sections": [
-    {
-      "type": "hero",
-      "id": "hero",
-      "navLabel": null,
-      "desktopVariant": "split",
-      "mobileVariant": "summary-first",
-      "tags": [
-        "Game Design",
-        "2026"
-      ],
-      "title": "Ludo Cards",
-      "summary": [
-        "This concept revisits Ludo through the lens of strategy, pacing, and player control.",
-        "Instead of relying primarily on chance, it explores how the game can reward planning, agency, and tactical decisions."
-      ],
-      "meta": [
-        {
-          "label": "Scope",
-          "value": "Systems + Play"
-        },
-        {
-          "label": "Focus",
-          "value": "Player agency"
-        }
-      ],
-      "media": {
-        "src": "Assets/ludo-cards.mp4",
-        "alt": "Animated gameplay preview for Ludo Cards."
-      }
+{
+    "slug": "ludo-cards",
+    "title": "Ludo Cards",
+    "theme": "art",
+    "colorMode": "light",
+    "customTemplate": "project-longform",
+    "seo": {
+        "title": "Ludo Cards | Neelanzone",
+        "description": "A game design case study exploring how Ludo can feel more strategic, intentional, and replayable through stronger player agency.",
+        "socialImage": "Assets/ludo-cards.gif"
     },
-    {
-      "type": "overview",
-      "id": "overview",
-      "navLabel": "Overview",
-      "desktopVariant": "notes-aside",
-      "mobileVariant": "notes-inline",
-      "label": "Overview",
-      "heading": "Quick read",
-      "items": [
+    "sections": [
         {
-          "label": "Problem",
-          "value": "Classic Ludo often leaves too much of the outcome to chance, which limits tactical depth and player ownership."
-        },
-        {
-          "label": "Approach",
-          "value": "Explored rule and interaction changes that make the game feel more strategic without losing its familiarity."
-        },
-        {
-          "label": "Outcome",
-          "value": "The result is a more intentional play experience built around stronger decisions, clearer tradeoffs, and better replay value."
+            "type": "hero",
+            "id": "hero",
+            "navLabel": null,
+            "desktopVariant": "split",
+            "mobileVariant": "summary-first",
+            "tags": [
+                "Game Design",
+                "Personal"
+            ],
+            "title": "Ludo Cards",
+            "summary": [
+                "Card based redesign of classic ludo, immersed in lore, rewarding player agency and strategic gameplay."
+            ],
+            "meta": [
+                {
+                    "label": "Scope",
+                    "value": "Systems + Play"
+                },
+                {
+                    "label": "Focus",
+                    "value": "Player agency"
+                }
+            ],
+            "media": {
+                "src": "Assets/ludo-cards.mp4",
+                "alt": "Animated gameplay preview for Ludo Cards."
+            }
         }
-      ],
-      "notes": [
-        {
-          "title": "Core tension",
-          "tone": "gold",
-          "text": "How do you keep the game recognizable while making each turn feel more meaningful?"
-        },
-        {
-          "title": "Player control",
-          "tone": "lilac",
-          "text": "The concept prioritizes agency, so progress feels earned instead of purely luck-driven."
-        },
-        {
-          "title": "Replay value",
-          "tone": "peach",
-          "text": "Tactical variation was treated as a core outcome, not just a side effect."
+    ],
+    "templateContent": {
+        "longform": {
+            "sidebar": {
+                "noteTitle": "Navigation",
+                "note": "",
+                "noteOpen": true,
+                "navigationItems": [
+                    {
+                        "label": "Project Brief",
+                        "href": "#project-brief"
+                    },
+                    {
+                        "label": "Process",
+                        "href": "#process"
+                    },
+                    {
+                        "label": "Artifacts",
+                        "href": "#artifact-rail"
+                    },
+                    {
+                        "label": "Prototype",
+                        "href": "#prototype"
+                    }
+                ]
+            },
+            "hero": {
+                "anchorId": "project-brief",
+                "title": "Ludo Cards",
+                "tags": [
+                    "Game Design",
+                    "Personal"
+                ],
+                "tabs": [
+                    {
+                        "id": "problem",
+                        "label": "Problem",
+                        "body": "Classic ludo leaves too much to chance. Your ability to exit the base, move, attack, defend - all comes down to a single dice roll. The only real choice a player makes is which pawn to move. In an age of Catan, Monopoly Deal, D&D - a tabletop legend has taken a backseat."
+                    },
+                    {
+                        "id": "approach",
+                        "label": "Approach",
+                        "body": "The goal was to introduce meaningful choices without dismantling the game. RPG mechanics, narrative framing, and deck-based abilities rewards foresight and planning instead of a single lucky throw. Lore was added to make players care about the lives of pawns they otherwise so casually sacrificed at the altar of chance."
+                    },
+                    {
+                        "id": "outcome",
+                        "label": "Outcome",
+                        "body": "Players think beyond their dice rolls and reconsider moves based on what cards others might be holding. Metagame manipulators shift the social texture of the game. Suddenly you're not just playing the board, you're playing the table."
+                    },
+                    {
+                        "id": "constraint",
+                        "label": "Constraint",
+                        "body": "The question that kept the project grounded - If you have to explain more than two minutes, is it still ludo? Engineering the feeling that your choices mattered, even when the dice disagrees, while keeping it casual - is the challenge." 
+                        
+                    }
+                        ],
+
+                "paragraph": "Card based redesign of classic ludo, immersed in lore, rewarding player agency and strategic gameplay.",
+                "quotes": [
+                    {
+                        "text": "I do not feel like I have control over the board, you roll a dice and choose which token to move. That is all.",
+                        "attribution": "anonymous - 28 years old"
+                    },
+                    {
+                        "text": "It's frustrating to wait for a 1 or 6 to get my pawn out, feels like I'm losing before the game even begins.",
+                        "attribution": "playtester, age 12"
+                    },
+                    {
+                        "text": "When someone takes out my token right before the safe passage to the finish, I'm helpless.",
+                        "attribution": "anonymous - 11 years old"
+                    },
+                    {
+                        "text": "I'd love a reason to care about which pawn to move, not just which one is safest.",
+                        "attribution": "playtester - 29 years old"
+                    }
+                ],
+                "leftVisual": {
+                    "src": "Assets/ludo-rpg-cards/character group cards.png",
+                    "alt": "Stacked character group cards from the Ludo RPG concept."
+                },
+                "rightVisual": {
+                    "src": "Assets/ludo-rpg-cards/action group cards.png",
+                    "alt": "Fan of action group cards from the Ludo RPG concept."
+                },
+                "featureMedia": {
+                    "kind": "image",
+                    "src": "Assets/ludo-rpg-cards/temporary screen png.png",
+                    "alt": "Temporary gameplay screen placeholder for the Ludo Cards prototype.",
+                    "caption": "screengrab of a gameplay in progress - under development"
+                }
+            },
+            "blocks": [
+                {
+                    "type": "expansion-panels",
+                    "id": "details",
+                    "items": [
+                        {
+                            "id": "process",
+                            "origin": "left",
+                            "ariaLabel": "Narrative Design",
+                            "title": "Narrative Design",
+                            "body": "The building blocks of a story were already hiding in Classic Ludo: a journey, factions, contested ground, and moments of reversal. Naming the board as a world made movement feel less abstract and more like traversal.",
+                            "support": {
+                                "kind": "legend",
+                                "placement": "flow",
+                                "items": [
+                                    {
+                                        "label": "Mountains",
+                                        "tone": "sun"
+                                    },
+                                    {
+                                        "label": "Oceans",
+                                        "tone": "sea"
+                                    },
+                                    {
+                                        "label": "Valleys",
+                                        "tone": "leaf"
+                                    },
+                                    {
+                                        "label": "Sky",
+                                        "tone": "gold"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Worldbuilding Hooks",
+                                    "body": "Terrain names turned each lane into a setting cue, which helped movement feel more like traversal through regions than a color-coded sprint."
+                                },
+                                {
+                                    "title": "Narrative Payoff",
+                                    "body": "That framing opened room for quests, regional hazards, and card abilities that could feel anchored to the world instead of randomly assigned to a pawn."
+                                }
+                            ]
+                        },
+                        {
+                            "origin": "center",
+                            "ariaLabel": "Board Game Design",
+                            "title": "Board Game Design",
+                            "body": "Ludo Cards adds planning, role identity, and risk-reward decisions to a loop that is usually resolved by pure probability. The aim was not to replace Ludo, but to reveal a more tactical version inside it.",
+                            "support": {
+                                "kind": "stats",
+                                "placement": "flow",
+                                "items": [
+                                    {
+                                        "src": "Assets/Icons/armor-1.png",
+                                        "label": "Armour"
+                                    },
+                                    {
+                                        "src": "Assets/Icons/weapons-1.png",
+                                        "label": "Weapons"
+                                    },
+                                    {
+                                        "src": "Assets/Icons/hitpoints-1.png",
+                                        "label": "Hitpoints"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Decision Density",
+                                    "body": "Cards and character classes create reasons to commit to one move over another, so a turn feels authored rather than merely resolved."
+                                },
+                                {
+                                    "title": "Readable Tradeoffs",
+                                    "body": "Abilities had to stay legible at a glance. The system works best when aggression, defense, and mobility each create a visible cost."
+                                }
+                            ]
+                        },
+                        {
+                            "origin": "right",
+                            "ariaLabel": "Digital Development",
+                            "title": "Digital Development",
+                            "body": "Playtesting the physical version revealed a bookkeeping problem. Once characters, action cards, traps, and board events layered together, players needed a digital surface to hold the complexity cleanly.",
+                            "support": {
+                                "kind": "timeline",
+                                "placement": "flow",
+                                "title": "Prototype roadmap",
+                                "items": [
+                                    {
+                                        "phase": "Phase 01",
+                                        "title": "Remote Multiplayer",
+                                        "status": "Live",
+                                        "tone": "live"
+                                    },
+                                    {
+                                        "phase": "Phase 02",
+                                        "title": "Characters",
+                                        "status": "In Progress",
+                                        "tone": "progress"
+                                    },
+                                    {
+                                        "phase": "Phase 03",
+                                        "title": "Traps & Events",
+                                        "status": "TBD",
+                                        "tone": "tbd"
+                                    }
+                                ]
+                            },
+                            "expandedColumns": [
+                                {
+                                    "title": "Why Go Digital",
+                                    "body": "The digital surface reduces rules friction, keeps board state visible, and makes richer systems easier to test with real players."
+                                },
+                                {
+                                    "title": "What Comes Next",
+                                    "body": "The web prototype becomes the proving ground for class balance, pacing, and how multiplayer coordination should feel when the system scales."
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "type": "artifact-rail",
+                    "id": "artifact-rail",
+                    "title": "Artifacts",
+                    "ariaLabel": "Ludo Cards artifact groups",
+                    "lightbox": {
+                        "ariaLabel": "Fullscreen character viewer",
+                        "primaryLabel": "Flat",
+                        "secondaryLabel": "Stylised",
+                        "detailNameTitle": "Character name",
+                        "detailRoleTitle": "Character class"
+                    },
+                    "groups": [
+                        {
+                            "id": "characters-01",
+                            "label": "Characters Iteration 01",
+                            "preset": "ludo-characters-iteration-01"
+                        },
+                        {
+                            "id": "characters-02",
+                            "label": "Characters Iteration 02",
+                            "cards": [],
+                            "emptyText": "The second character pass will land here once the next visual batch is ready."
+                        },
+                        {
+                            "id": "trap-cards",
+                            "label": "Trap Cards",
+                            "cards": [],
+                            "emptyText": "Trap card variants will plug into this rail lane next."
+                        },
+                        {
+                            "id": "action-cards",
+                            "label": "Action Cards",
+                            "cards": [],
+                            "emptyText": "Action card explorations will appear here as the deck gets formalised."
+                        }
+                    ]
+                },
+                {
+                    "type": "snackbar-stack",
+                    "id": "prototype",
+                    "items": [
+                        {
+                            "title": "Expansion Pack",
+                            "body": "A printable add-on deck that lets the concept move off the screen and back onto the table.",
+                            "cta": "Download",
+                            "href": "#artifact-rail"
+                        },
+                        {
+                            "title": "Web App Prototype",
+                            "body": "A multiplayer-friendly prototype where card logic, character states, and board events can all live in one readable system.",
+                            "cta": "Open",
+                            "href": "#details"
+                        },
+                        {
+                            "title": "Reflections",
+                            "body": "Notes on constraints, tradeoffs, and the moments where the system got more complicated than the board could comfortably hold.",
+                            "cta": "Read",
+                            "href": "#project-topfold"
+                        }
+                    ]
+                }
+            ]
         }
-      ]
-    },
-    {
-      "type": "context",
-      "id": "context",
-      "navLabel": "Context",
-      "label": "Context",
-      "heading": "A familiar game gets more interesting when players can plan instead of only react",
-      "aside": "The project looks at how small system changes can shift the feel of play. The goal was to preserve accessibility while introducing stronger decision-making, pacing, and control."
-    },
-    {
-      "type": "process",
-      "id": "process",
-      "navLabel": "Artifacts",
-      "desktopVariant": "preview-cards",
-      "mobileVariant": "stacked-cards",
-      "eyebrow": "Artifacts",
-      "hint": "Click to expand",
-      "cards": [
-        {
-          "index": "01",
-          "origin": "left",
-          "title": "Rework\nCore Loop",
-          "description": "The core turn structure was reframed to create more room for intentional decisions and risk-reward tradeoffs.",
-          "mediaPreset": "layers"
-        },
-        {
-          "index": "02",
-          "origin": "center",
-          "title": "Introduce\nTactical Choices",
-          "description": "Play moments were shaped around choice-making so strategy becomes visible across turns, not only at the end.",
-          "mediaPreset": "panels"
-        },
-        {
-          "index": "03",
-          "origin": "right",
-          "title": "Sharpen\nRound Pacing",
-          "description": "The system was tuned to keep games moving while still rewarding careful planning and anticipation.",
-          "mediaPreset": "decision"
-        }
-      ]
-    },
-    {
-      "type": "outcomes",
-      "id": "outcomes",
-      "navLabel": "Outcomes",
-      "label": "Outcomes",
-      "image": {
-        "src": "Assets/ludo-cards.mp4",
-        "alt": "Gameplay preview for Ludo Cards."
-      },
-      "metrics": [
-        {
-          "label": "Agency",
-          "value": "Higher",
-          "text": "Players have more meaningful influence over how rounds unfold."
-        },
-        {
-          "label": "Depth",
-          "value": "Stronger",
-          "text": "The system supports more tactical variety across sessions."
-        },
-        {
-          "label": "Pacing",
-          "value": "Balanced",
-          "text": "Rounds stay readable without feeling flat or repetitive."
-        },
-        {
-          "label": "Replay",
-          "value": "Improved",
-          "text": "The concept encourages return play through strategic variation."
-        }
-      ]
     }
-  ]
 }
-
-

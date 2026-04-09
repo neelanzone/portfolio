@@ -574,27 +574,184 @@ class ProjectSpaceField {
                 });
             }
 
-            const navbarAnchorLinks = Array.from(document.querySelectorAll('header nav a[href^="#"]'));
-            const scrollToNavbarAnchor = function (hash) {
-                if (!hash || hash === '#') {
+            const projectSidebar = document.querySelector('[data-project-sidebar]');
+            const projectSidebarToggleButtons = Array.from(document.querySelectorAll('[data-project-sidebar-toggle]'));
+            const projectSidebarLinks = projectSidebar ? Array.from(projectSidebar.querySelectorAll('a[href]')) : [];
+            const sectionPillBar = document.getElementById('section-pills');
+            const isCompactProjectViewport = function () {
+                return window.innerWidth < 1024;
+            };
+
+            const getStoredProjectSidebarCollapsed = function () {
+                try {
+                    const stored = localStorage.getItem('project-sidebar-collapsed');
+                    return stored === null ? isCompactProjectViewport() : stored === 'true';
+                } catch (error) {
+                    return isCompactProjectViewport();
+                }
+            };
+
+            const setStoredProjectSidebarCollapsed = function (collapsed) {
+                try {
+                    localStorage.setItem('project-sidebar-collapsed', String(collapsed));
+                } catch (error) {
+                    // Ignore storage failures and keep the in-memory sidebar state only.
+                }
+            };
+
+            const refreshProjectLayout = function () {
+                window.dispatchEvent(new Event('resize'));
+                window.setTimeout(function () {
+                    window.dispatchEvent(new Event('resize'));
+                }, 320);
+            };
+
+            const applyProjectSidebarCollapsedPreference = function (collapsed) {
+                document.body.classList.toggle('project-page--sidebar-collapsed', collapsed);
+                setStoredProjectSidebarCollapsed(collapsed);
+
+                if (projectSidebar) {
+                    projectSidebar.setAttribute('data-collapsed', String(collapsed));
+                }
+
+                projectSidebarToggleButtons.forEach(function (button) {
+                    button.classList.toggle('is-collapsed', collapsed);
+                    button.setAttribute('aria-expanded', String(!collapsed));
+                    button.setAttribute('aria-label', collapsed ? 'Expand sidebar' : 'Collapse sidebar');
+                });
+
+                requestAnimationFrame(refreshProjectLayout);
+            };
+
+            applyProjectSidebarCollapsedPreference(getStoredProjectSidebarCollapsed());
+            document.body.classList.add('project-page--sidebar-ready');
+
+            projectSidebarToggleButtons.forEach(function (button) {
+                button.addEventListener('click', function () {
+                    applyProjectSidebarCollapsedPreference(!document.body.classList.contains('project-page--sidebar-collapsed'));
+                });
+            });
+
+            projectSidebarLinks.forEach(function (link) {
+                link.addEventListener('click', function () {
+                    if (isCompactProjectViewport()) {
+                        applyProjectSidebarCollapsedPreference(true);
+                    }
+                });
+            });
+
+            document.addEventListener('keydown', function (event) {
+                if (event.key === 'Escape' && isCompactProjectViewport() && !document.body.classList.contains('project-page--sidebar-collapsed')) {
+                    applyProjectSidebarCollapsedPreference(true);
+                }
+            });
+
+            document.addEventListener('click', function (event) {
+                if (!projectSidebar || !isCompactProjectViewport() || document.body.classList.contains('project-page--sidebar-collapsed')) {
                     return;
+                }
+
+                const clickedToggle = projectSidebarToggleButtons.some(function (button) {
+                    return button.contains(event.target);
+                });
+
+                if (!projectSidebar.contains(event.target) && !clickedToggle) {
+                    applyProjectSidebarCollapsedPreference(true);
+                }
+            });
+
+            const sectionNavLinks = Array.from(document.querySelectorAll('[data-section-nav-link][href^="#"]'));
+            const sectionTargets = Array.from(new Set(sectionNavLinks
+                .map(function (link) {
+                    return link.getAttribute('href');
+                })
+                .filter(function (hash) {
+                    return Boolean(hash && hash !== '#');
+                })))
+                .map(function (hash) {
+                    const target = document.querySelector(hash);
+                    return target ? { hash, id: hash.slice(1), element: target } : null;
+                })
+                .filter(Boolean);
+
+            const getSectionScrollOffset = function () {
+                const pillBarVisible = sectionPillBar && window.getComputedStyle(sectionPillBar).display !== 'none';
+                return (pillBarVisible ? sectionPillBar.getBoundingClientRect().height : 0) + 18;
+            };
+
+            const scrollToSectionAnchor = function (hash) {
+                if (!hash || hash === '#') {
+                    return false;
                 }
 
                 const target = document.querySelector(hash);
                 if (!target) {
-                    return;
+                    return false;
                 }
 
-                const viewportShift = window.innerHeight * 0.05;
-                const targetTop = target.getBoundingClientRect().top + window.scrollY - viewportShift;
+                const targetTop = target.getBoundingClientRect().top + window.scrollY - getSectionScrollOffset();
                 const maxScrollTop = document.documentElement.scrollHeight - window.innerHeight;
                 const clampedTop = Math.max(0, Math.min(targetTop, maxScrollTop));
 
-                window.scrollTo({ top: clampedTop, behavior: 'auto' });
-                history.pushState(null, '', hash);
+                window.scrollTo({
+                    top: clampedTop,
+                    behavior: reducedMotion ? 'auto' : 'smooth'
+                });
+
+                if (window.history?.replaceState) {
+                    window.history.replaceState(null, '', hash);
+                }
+
+                return true;
             };
 
-            navbarAnchorLinks.forEach(function (link) {
+            const setActiveSection = function (activeId) {
+                const activeIndex = sectionTargets.findIndex(function (target) {
+                    return target.id === activeId;
+                });
+
+                sectionNavLinks.forEach(function (link) {
+                    const hash = link.getAttribute('href') || '';
+                    const linkId = hash.startsWith('#') ? hash.slice(1) : '';
+                    const linkIndex = sectionTargets.findIndex(function (target) {
+                        return target.id === linkId;
+                    });
+                    const isActive = linkId === activeId;
+                    const isComplete = activeIndex > 0 && linkIndex > -1 && linkIndex < activeIndex;
+
+                    link.classList.toggle('is-active', isActive);
+                    link.classList.toggle('is-complete', isComplete && !isActive);
+
+                    if (isActive) {
+                        link.setAttribute('aria-current', 'true');
+                    } else {
+                        link.removeAttribute('aria-current');
+                    }
+                });
+            };
+
+            const syncActiveSection = function () {
+                if (!sectionTargets.length) {
+                    return;
+                }
+
+                const threshold = getSectionScrollOffset() + 44;
+                let activeId = sectionTargets[0].id;
+
+                sectionTargets.forEach(function (target) {
+                    if (target.element.getBoundingClientRect().top <= threshold) {
+                        activeId = target.id;
+                    }
+                });
+
+                if (window.innerHeight + window.scrollY >= document.documentElement.scrollHeight - 8) {
+                    activeId = sectionTargets[sectionTargets.length - 1].id;
+                }
+
+                setActiveSection(activeId);
+            };
+
+            sectionNavLinks.forEach(function (link) {
                 link.addEventListener('click', function (event) {
                     const hash = link.getAttribute('href');
                     if (!hash || hash === '#') {
@@ -602,62 +759,15 @@ class ProjectSpaceField {
                     }
 
                     event.preventDefault();
-                    scrollToNavbarAnchor(hash);
+                    setActiveSection(hash.slice(1));
+                    scrollToSectionAnchor(hash);
                 });
             });
 
-            const navLinks = Array.from(document.querySelectorAll('.nav-link'));
-            const sections = navLinks
-                .map(function (link) {
-                    const id = link.getAttribute('href');
-                    return id ? document.querySelector(id) : null;
-                })
-                .filter(Boolean);
-
-            if (sections.length && navLinks.length) {
-                const activateLink = function (id) {
-                    const darkMode = root.classList.contains('dark-theme');
-                    navLinks.forEach(function (link) {
-                        const active = link.getAttribute('href') === '#' + id;
-                        link.classList.toggle('text-ink', active && !darkMode);
-                        link.classList.toggle('text-subtext', !active && !darkMode);
-                        link.classList.toggle('text-white', active && darkMode);
-                        link.classList.toggle('text-white/65', !active && darkMode);
-                        link.setAttribute('aria-current', active ? 'true' : 'false');
-                    });
-                };
-
-                const observer = new IntersectionObserver(
-                    function (entries) {
-                        const visible = entries
-                            .filter(function (entry) { return entry.isIntersecting; })
-                            .sort(function (a, b) { return b.intersectionRatio - a.intersectionRatio; });
-
-                        if (visible[0]) {
-                            activateLink(visible[0].target.id);
-                        }
-                    },
-                    {
-                        rootMargin: '-25% 0px -45% 0px',
-                        threshold: [0.2, 0.45, 0.7]
-                    }
-                );
-
-                sections.forEach(function (section) {
-                    observer.observe(section);
-                });
-
-                const themeObserver = new MutationObserver(function () {
-                    const current = navLinks.find(function (link) {
-                        return link.getAttribute('aria-current') === 'true';
-                    });
-                    if (current) {
-                        const id = current.getAttribute('href').slice(1);
-                        activateLink(id);
-                    }
-                });
-
-                themeObserver.observe(root, { attributes: true, attributeFilter: ['class'] });
+            if (sectionTargets.length) {
+                syncActiveSection();
+                window.addEventListener('scroll', syncActiveSection, { passive: true });
+                window.addEventListener('resize', syncActiveSection);
             }
 
             const processStack = document.getElementById('process-stack');

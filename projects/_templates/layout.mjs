@@ -1,4 +1,7 @@
-﻿import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
+import sharedSidebarTemplate from '../../shared/sidebar-template.js';
+import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
+
+const { renderSidebar, renderSidebarMobileMenuButton } = sharedSidebarTemplate;
 
 function renderMetaTags(project, site) {
     const title = project.seo?.title ?? `${project.title} | ${site.owner}`;
@@ -24,16 +27,41 @@ function renderMetaTags(project, site) {
     ].filter(Boolean).join('\n    ');
 }
 
-function renderSectionPills(project) {
-    const pillItems = project.sections
+function getProjectNavItems(project, options = {}) {
+    const includeTail = options.includeTail ?? project.customTemplate !== 'ludo-bento';
+    const items = project.sections
         .filter((section) => section.navLabel)
         .map((section) => ({ id: section.id, label: section.navLabel }));
 
-    pillItems.push({ id: 'more-projects', label: 'More' });
+    if (includeTail) {
+        items.push({ id: 'more-projects', label: 'More' });
+    }
+
+    return items;
+}
+
+function getProjectSidebarCopy(project) {
+    const heroSection = project.sections.find((section) => section.type === 'hero');
+    const roles = Array.isArray(heroSection?.tags) && heroSection.tags.length
+        ? heroSection.tags.slice(0, 3)
+        : ['Project'];
+    const summaryLines = Array.isArray(heroSection?.summary)
+        ? heroSection.summary.map((line) => String(line).trim()).filter(Boolean)
+        : [];
+    const brief = summaryLines[0] || project.seo?.description || '';
+
+    return {
+        roles,
+        brief
+    };
+}
+
+function renderSectionPills(project) {
+    const pillItems = getProjectNavItems(project);
 
     const pills = pillItems.map((item, index) => {
         const activeClass = index === 0 ? ' is-active' : '';
-        return `<a href="#${escapeHtml(item.id)}" class="section-pill${activeClass}" data-section="${escapeHtml(item.id)}">${escapeHtml(item.label)}</a>`;
+        return `<a href="#${escapeHtml(item.id)}" class="section-pill${activeClass}" data-section="${escapeHtml(item.id)}" data-section-nav-link>${escapeHtml(item.label)}</a>`;
     }).join('\n                ');
 
     return `
@@ -44,10 +72,74 @@ function renderSectionPills(project) {
         </div>`;
 }
 
+export function renderProjectSidebar(project, site, toRoot, options = {}) {
+    const sidebarCopy = {
+        ...getProjectSidebarCopy(project),
+        ...(options.sidebarCopy ?? {})
+    };
+    const emailLink = site.socialLinks.find((entry) => entry.label?.toLowerCase() === 'email')?.href ?? 'mailto:neelanzone@gmail.com';
+    const workItems = (site.moreProjects ?? []).map((entry) => ({
+        href: resolveProjectLink(entry.link, project.slug, toRoot),
+        label: entry.title,
+        current: entry.slug === project.slug
+    }));
+    const sidebarNote = options.sidebarNote
+        ? {
+            title: options.sidebarNote.title || 'Project note',
+            copy: options.sidebarNote.copy || '',
+            links: Array.isArray(options.sidebarNote.links) ? options.sidebarNote.links : [],
+            navAriaLabel: options.sidebarNote.navAriaLabel || options.sidebarNote.title || 'Project navigation',
+            open: options.sidebarNote.open ?? false
+        }
+        : null;
+
+    const sidebarMarkup = renderSidebar({
+        sidebarId: 'project-sidebar',
+        extraClassName: 'project-sidebar',
+        rootDataAttribute: 'data-project-sidebar',
+        toggleDataAttribute: 'data-project-sidebar-toggle',
+        ariaLabel: `${escapeHtml(project.title)} section navigation`,
+        introOrder: Array.isArray(options.sidebarIntroOrder) && options.sidebarIntroOrder.length
+            ? options.sidebarIntroOrder
+            : undefined,
+        roles: sidebarCopy.roles,
+        projectSection: {
+            title: project.title,
+            brief: sidebarCopy.brief,
+            open: true
+        },
+        birdsSection: sidebarNote,
+        portfolioSection: {
+            title: 'Cabinet of Curiosities',
+            brief: 'A home for projects, musings, and a little soul.',
+            open: false
+        },
+        index: {
+            ariaLabel: 'Portfolio navigation',
+            aboutHref: `${toRoot}index.html#about`,
+            workItems,
+            embedInPortfolio: true
+        },
+        footer: {
+            title: 'Neel Banerjee',
+            taglineHtml: options.footerTaglineHtml || 'Drawn to systems,<br>obsessed with play',
+            logoHref: options.footerLogoHref || '#overview',
+            logoSrc: resolveAssetPath('Assets/identity-motion-active-sidebar.gif', toRoot),
+            logoAlt: 'neel Logo',
+            emailHref: emailLink,
+            contactLabel: 'Get in touch'
+        }
+    });
+
+    return `${sidebarMarkup}${renderSidebarMobileMenuButton({
+        controlsId: 'project-sidebar',
+        toggleDataAttribute: 'data-project-sidebar-toggle',
+        extraClassName: 'project-sidebar-mobile-menu',
+        ariaLabel: 'Expand sidebar'
+    })}`;
+}
 export function renderHeader(project, site, toRoot) {
-    return `
-    <div data-navbar-mount data-navbar-variant="project" data-to-root="${escapeHtml(toRoot)}"></div>
-${renderSectionPills(project)}`;
+    return renderSectionPills(project);
 }
 
 function splitCardMeta(entry) {
@@ -56,9 +148,10 @@ function splitCardMeta(entry) {
     const dateLabel = parts.length > 1 ? parts.pop().trim() : '';
 
     const explicitLabelsBySlug = {
-        'ludo-cards': ['Game Design'],
-        'managed-asset-search': ['IA', 'Taxonomy'],
-        'venture-hub': ['System Design']
+        'ludo-cards': ['Game Design', 'Personal'],
+        'managed-asset-search': ['UX', 'Internal Tool', 'Total Environment'],
+        'venture-hub': ['UX', 'Product Design', 'Concept'],
+        'qualitative-reports-at-scale': ['UX', 'Internal Tool', 'StartupYou']
     };
 
     if (explicitLabelsBySlug[entry.slug]) {
@@ -112,7 +205,7 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
                                 const typePills = typeLabels
                                     .map((label) => `<span class="project-carousel-card__pill project-carousel-card__pill--type">${escapeHtml(label)}</span>`)
                                     .join('');
-                                const pills = `<div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group">${typePills}</div>${dateLabel ? `<span class="project-carousel-card__pill project-carousel-card__pill--date">${escapeHtml(dateLabel)}</span>` : ''}</div>`;
+                                const pills = `<div class="project-carousel-card__pills"><div class="project-carousel-card__pill-group">${typePills}</div></div>`;
                                 const isVideo = entry.image.src.endsWith('.mp4') || entry.image.src.endsWith('.webm');
                                 const cardMedia = isVideo
                                     ? `<video autoplay loop muted playsinline preload="none" aria-hidden="true" style="width:100%;height:100%;object-fit:cover;"><source src="${escapeHtml(resolveAssetPath(entry.image.src, toRoot))}" type="video/mp4"></video>`
@@ -126,21 +219,30 @@ export function renderMoreProjectsBlock(project, site, toRoot) {
         </div>`;
 }
 
-export function renderFooterBlock(site, toRoot) {
+export function renderFooterBlock(site, toRoot, options = {}) {
+    const footerCopy = options.copyHtml
+        ? `<p class="project-tail-footer__copy">${options.copyHtml}</p>`
+        : options.copy
+            ? `<p class="project-tail-footer__copy">${escapeHtml(options.copy)}</p>`
+            : '';
+
     return `
-        <footer class="project-tail-footer border-t border-rule/80 mt-4 pt-4 lg:mt-5 lg:pt-5">
-            <div class="mx-auto flex max-w-[70rem] justify-center text-subtext">
-                <div class="flex items-center gap-[1.15rem]">
-                    <a href="https://x.com/Neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="X"><img src="${escapeHtml(resolveAssetPath('Assets/social/x.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://github.com/neelanzone" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="${escapeHtml(resolveAssetPath('Assets/social/github.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="https://www.linkedin.com/in/neelanzone/" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="${escapeHtml(resolveAssetPath('Assets/social/linkedin.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
-                    <a href="mailto:neelanzone@gmail.com" class="inline-flex h-12 w-12 items-center justify-center rounded-full border border-rule/80 bg-[rgba(255,255,255,0.02)] transition hover:-translate-y-0.5 hover:border-ink" aria-label="Email"><img src="${escapeHtml(resolveAssetPath('Assets/social/mail.svg', toRoot))}" alt="" class="h-[1.35rem] w-[1.35rem] opacity-80 grayscale"></a>
+        <footer class="project-tail-footer">
+            <div class="project-tail-footer__inner">
+                ${footerCopy}
+                <div class="project-tail-footer__icons">
+                    <a href="https://x.com/Neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="X"><img src="${escapeHtml(resolveAssetPath('Assets/social/x.svg', toRoot))}" alt="" class="project-social-icon__img"></a>
+                    <a href="https://github.com/neelanzone" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="GitHub"><img src="${escapeHtml(resolveAssetPath('Assets/social/github.svg', toRoot))}" alt="" class="project-social-icon__img"></a>
+                    <a href="https://www.linkedin.com/in/neelanzone/" class="project-social-icon" target="_blank" rel="noreferrer" aria-label="LinkedIn"><img src="${escapeHtml(resolveAssetPath('Assets/social/linkedin.svg', toRoot))}" alt="" class="project-social-icon__img"></a>
+                    <a href="mailto:neelanzone@gmail.com" class="project-social-icon" aria-label="Email"><img src="${escapeHtml(resolveAssetPath('Assets/social/mail.svg', toRoot))}" alt="" class="project-social-icon__img"></a>
                 </div>
             </div>
         </footer>`;
 }
 
-export { renderMetaTags };
+export { getProjectNavItems, renderMetaTags };
+
+
 
 
 

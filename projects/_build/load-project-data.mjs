@@ -97,6 +97,55 @@ function validateGallery(section, label) {
     ensureArray(section.items, `${label}.items`);
 }
 
+function validateLongformMedia(media, label) {
+    assert(media && typeof media === 'object', `${label} must be an object.`);
+    ensureString(media.src, `${label}.src`);
+    ensureOptionalString(media.alt, `${label}.alt`);
+    ensureOptionalString(media.kind, `${label}.kind`);
+    ensureOptionalString(media.caption, `${label}.caption`);
+}
+
+function validateOptionalLongformMedia(media, label) {
+    if (media == null) {
+        return;
+    }
+
+    validateLongformMedia(media, label);
+}
+
+function validateProjectLongformTemplate(template, label) {
+    assert(template && typeof template === 'object', `${label} must be an object.`);
+    assert(template.hero && typeof template.hero === 'object', `${label}.hero must be an object.`);
+    ensureString(template.hero.title, `${label}.hero.title`);
+    ensureArray(template.hero.tags, `${label}.hero.tags`);
+    ensureArray(template.hero.tabs, `${label}.hero.tabs`);
+    ensureOptionalString(template.hero.paragraph, `${label}.hero.paragraph`);
+    ensureArray(template.hero.quotes, `${label}.hero.quotes`);
+    validateOptionalLongformMedia(template.hero.leftVisual, `${label}.hero.leftVisual`);
+    validateOptionalLongformMedia(template.hero.rightVisual, `${label}.hero.rightVisual`);
+    validateLongformMedia(template.hero.featureMedia, `${label}.hero.featureMedia`);
+    ensureArray(template.blocks, `${label}.blocks`);
+
+    template.hero.tabs.forEach((tab, index) => {
+        ensureString(tab.id, `${label}.hero.tabs[${index}].id`);
+        ensureString(tab.label, `${label}.hero.tabs[${index}].label`);
+        ensureString(tab.body, `${label}.hero.tabs[${index}].body`);
+    });
+
+    template.hero.quotes.forEach((quote, index) => {
+        ensureString(quote.text, `${label}.hero.quotes[${index}].text`);
+        ensureOptionalString(quote.attribution, `${label}.hero.quotes[${index}].attribution`);
+    });
+
+    template.blocks.forEach((block, index) => {
+        const blockLabel = `${label}.blocks[${index}]`;
+        assert(block && typeof block === 'object', `${blockLabel} must be an object.`);
+        ensureString(block.type, `${blockLabel}.type`);
+        ensureString(block.id, `${blockLabel}.id`);
+        assert(new Set(['expansion-panels', 'artifact-rail', 'asset-map-stage', 'snackbar-stack']).has(block.type), `${blockLabel}.type "${block.type}" is not supported.`);
+    });
+}
+
 function validateSection(section, index, slug) {
     const label = `project "${slug}" section[${index}]`;
     assert(section && typeof section === 'object', `${label} must be an object.`);
@@ -131,6 +180,10 @@ function validateProject(project) {
         assert(!ids.has(section.id), `project "${project.slug}" has duplicate section id "${section.id}".`);
         ids.add(section.id);
     });
+
+    if (project.customTemplate === 'project-longform') {
+        validateProjectLongformTemplate(project.templateContent?.longform ?? project.templateContent, `project "${project.slug}".templateContent`);
+    }
 }
 
 function validateSite(site) {
@@ -169,5 +222,6 @@ export async function loadProjectData() {
 
     return projects;
 }
+
 
 

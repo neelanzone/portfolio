@@ -1,72 +1,87 @@
-﻿{
-    "owner": "Neel",
-    "copyrightOwner": "neelanzone",
-    "year": "2026",
-    "siteUrl": "",
-    "homeHref": "index.html",
-    "socialLinks": [
-        {
-            "label": "X",
-            "href": "https://x.com/Neelanzone"
-        },
-        {
-            "label": "GitHub",
-            "href": "https://github.com/neelanzone"
-        },
-        {
-            "label": "LinkedIn",
-            "href": "https://www.linkedin.com/in/neelanzone/"
-        },
-        {
-            "label": "Email",
-            "href": "mailto:neelanzone@gmail.com"
-        }
-    ],
-    "moreProjects": [
-        {
-            "slug": "ludo-cards",
-            "title": "Ludo Cards",
-            "type": "Game Design, 2026",
-            "image": {
-                "src": "Assets/ludo-cards.mp4",
-                "alt": "Animated gameplay preview for Ludo Cards"
-            },
-            "link": {
-                "type": "project",
-                "slug": "ludo-cards"
-            },
-            "description": "A strategic twist on Ludo that gives players more control, agency, and tactical depth."
-        },
-        {
-            "slug": "managed-asset-search",
-            "title": "Managed Asset Search",
-            "type": "Information Architecture, 2021",
-            "image": {
-                "src": "Assets/DAM-TE.mp4",
-                "alt": "Animated interface preview for Managed Asset Search"
-            },
-            "link": {
-                "type": "project",
-                "slug": "managed-asset-search"
-            },
-            "description": "A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery."
-        },
-        {
-            "slug": "venture-hub",
-            "title": "Venture Hub",
-            "type": "UX/UI & System Design, 2026",
-            "image": {
-                "src": "Assets/accelerator-dashboard.png",
-                "alt": "Dashboard preview for Venture Hub"
-            },
-            "link": {
-                "type": "project",
-                "slug": "venture-hub"
-            },
-            "description": "A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders."
-        }
-    ]
+{
+    "owner":  "Neel",
+    "copyrightOwner":  "neelanzone",
+    "year":  "2026",
+    "siteUrl":  "",
+    "homeHref":  "index.html",
+    "socialLinks":  [
+                        {
+                            "label":  "X",
+                            "href":  "https://x.com/Neelanzone"
+                        },
+                        {
+                            "label":  "GitHub",
+                            "href":  "https://github.com/neelanzone"
+                        },
+                        {
+                            "label":  "LinkedIn",
+                            "href":  "https://www.linkedin.com/in/neelanzone/"
+                        },
+                        {
+                            "label":  "Email",
+                            "href":  "mailto:neelanzone@gmail.com"
+                        }
+                    ],
+    "moreProjects":  [
+                         {
+                             "slug":  "ludo-cards",
+                             "title":  "Ludo Cards",
+                             "type":  "Game Design \u0026 Personal",
+                             "image":  {
+                                           "src":  "Assets/ludo-cards.mp4",
+                                           "alt":  "Animated gameplay preview for Ludo Cards"
+                                       },
+                             "link":  {
+                                          "type":  "project",
+                                          "slug":  "ludo-cards"
+                                      },
+                             "description":  "A strategic twist on Ludo that gives players more control, agency, and tactical depth.",
+                             "readingTime":  "5 minutes"
+                         },
+                         {
+                             "slug":  "managed-asset-search",
+                             "title":  "Asset Manager",
+                             "type":  "UX \u0026 Internal Tool \u0026 Total Environment",
+                             "image":  {
+                                           "src":  "Assets/DAM-TE.mp4",
+                                           "alt":  "Animated interface preview for Asset Manager"
+                                       },
+                             "link":  {
+                                          "type":  "project",
+                                          "slug":  "managed-asset-search"
+                                      },
+                             "description":  "A metadata-led asset management system focused on information architecture, taxonomy design, and faster asset discovery.",
+                             "readingTime":  "5 minutes"
+                         },
+                         {
+                             "slug":  "venture-hub",
+                             "title":  "Venture Hub",
+                             "type":  "UX \u0026 Product Design \u0026 Concept",
+                             "image":  {
+                                           "src":  "Assets/accelerator-dashboard.png",
+                                           "alt":  "Dashboard preview for Venture Hub"
+                                       },
+                             "link":  {
+                                          "type":  "project",
+                                          "slug":  "venture-hub"
+                                      },
+                             "description":  "A centralized platform for monitoring student ventures, guiding progress, and improving visibility across stakeholders.",
+                             "readingTime":  "10 minutes"
+                         },
+                         {
+                             "slug":  "qualitative-reports-at-scale",
+                             "title":  "Qualitative Reports at Scale",
+                             "type":  "UX \u0026 Internal Tool \u0026 StartupYou",
+                             "image":  {
+                                           "src":  "Assets/grid-discovery.png",
+                                           "alt":  "Placeholder preview for Qualitative Reports at Scale"
+                                       },
+                             "link":  {
+                                          "type":  "project",
+                                          "slug":  "qualitative-reports-at-scale"
+                                      },
+                             "description":  "A placeholder internal-tool case study for making qualitative reports easier to structure, browse, and reuse at scale.",
+                             "readingTime":  "7 minutes"
+                         }
+                     ]
 }
-
-
-
