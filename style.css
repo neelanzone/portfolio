@@ -18,8 +18,8 @@
     --type-h3: 1.25rem;
     --type-h4: 1rem;
     --type-h5: 0.9rem;
-    --type-copy: 0.9rem;
-    --type-copy-sm: 0.9rem;
+    --type-copy: 1rem;
+    --type-copy-sm: 0.875rem;
     --type-body-sm: 0.875rem;
     --type-menu: 0.9rem;
 }
@@ -679,7 +679,7 @@ a:hover {
 
 .theme-toggle:focus-visible {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.14);
+    box-shadow: 0 0 0 3px var(--accent);
 }
 
 :root.light-theme .theme-toggle {
@@ -998,6 +998,7 @@ a:hover {
 .hero {
     position: relative;
     height: 100vh;
+    height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1012,6 +1013,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100vh;
+    height: 100svh;
     z-index: 1;
 }
 
@@ -1026,6 +1028,7 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100vh;
+    height: 100svh;
     z-index: 2;
     text-align: center;
     pointer-events: none;

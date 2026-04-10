@@ -1738,6 +1738,7 @@ html.light-theme body.project-page .moon-icon {
         flex-direction: column;
         gap: 1.25rem;
         max-height: calc(100vh - var(--nav-height) - 1.8rem);
+        max-height: calc(100svh - var(--nav-height) - 1.8rem);
         padding: 1.2rem 1rem 1rem;
         overflow: auto;
         border: 1px solid rgb(var(--rule) / 0.72);
@@ -1971,6 +1972,7 @@ html.light-theme body.project-page .moon-icon {
         height: 100vh;
         height: 100dvh;
         min-height: 100vh;
+        min-height: 100dvh;
         box-sizing: border-box;
         z-index: 101;
         width: var(--home-sidebar-current-width);

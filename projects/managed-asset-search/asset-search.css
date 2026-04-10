@@ -412,6 +412,7 @@ html.light-theme .asset-search__modal-shell {
     .asset-search__modal-shell {
         width: calc(100vw - 1rem);
         height: calc(100vh - 1rem);
+        height: calc(100svh - 1rem);
     }
 }
 
@@ -628,6 +629,7 @@ html.light-theme .asset-search__video-modal-shell {
     .asset-search__video-modal-shell {
         width: calc(100vw - 1rem);
         height: calc(100vh - 1rem);
+        height: calc(100svh - 1rem);
     }
 }
 

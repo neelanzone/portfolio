@@ -23,7 +23,7 @@
     <style>
         html.dark-theme body.home-alt { background: #070d1d; color: #f3eee7; }
         html.light-theme body.home-alt { background: #f7f2e8; color: #1c1a16; }
-        body.home-alt { margin: 0; min-height: 100vh; overflow-x: hidden; }
+        body.home-alt { margin: 0; min-height: 100vh; min-height: 100svh; overflow-x: hidden; }
         body.home-alt.home-alt--booting #three-container,
         body.home-alt.home-alt--booting .home-sidebar,
         body.home-alt.home-alt--booting .navbar--home,
@@ -39,8 +39,9 @@
         body.home-alt.home-alt--scene-only .home-shell { padding-top: 72px; padding-bottom: 0; }
         body.home-alt.home-alt--scene-only .home-composition,
         body.home-alt.home-alt--scene-only .home-shell__anchor,
+        body.home-alt.home-alt--scene-only #gallery,
         body.home-alt.home-alt--scene-only #work { display: none; }
-        :where(body.home-alt) .home-shell { position: relative; padding: 72px 24px 40px; }
+        :where(body.home-alt) .home-shell { position: relative; padding: 0 24px 40px; }
         :where(body.home-alt) .home-composition { width: min(1180px, 100%); margin: 0 auto; overflow: visible; }
         :where(body.home-alt) #about { position: relative; display: grid; place-items: center; min-height: 60svh; overflow: visible; }
         :where(body.home-alt) .collage-container { position: relative; width: min(24rem, 100%); height: 20rem; margin: 0 auto; overflow: visible; }
@@ -128,9 +129,8 @@
     </style>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Instrument+Sans:wght@700&family=Merriweather:wght@400;700;900&family=Nunito+Sans:ital,opsz,wght@0,6..12,300;0,6..12,400;0,6..12,600;1,6..12,400&family=Space+Mono:ital,wght@0,400;0,700;1,400;1,700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="mobile.css">
     <link rel="stylesheet" href="home-alt.css">
 </head>
 
@@ -139,6 +139,86 @@
     <div data-navbar-mount data-navbar-variant="home"></div>
 
     <main class="home-shell" id="hero">
+        <section id="gallery" class="section home-gallery-section" aria-label="Gallery showcase">
+            <div class="home-gallery-section__shell">
+                <div class="home-gallery-strip" role="list" aria-label="Scrollable gallery grid">
+                    <button type="button" class="home-gallery-tile home-gallery-tile--hero" role="listitem" data-gallery-open
+                        data-gallery-title="Passion Glacier Typography"
+                        data-gallery-type="Kinetic Type"
+                        data-gallery-description="Looping typography study with icy gradients and custom blackletter-inspired forms for high-impact visual identity."
+                        data-gallery-caption="A calligraphic typeface inspired by mountains"
+                        data-gallery-image="Assets/gallery/1mb-passion-glacier-font.mp4"
+                        data-gallery-moodboard="Assets/gallery/hiroshima-2.png">
+                        <video autoplay loop muted playsinline preload="metadata" aria-label="Passion glacier kinetic typography loop">
+                            <source src="Assets/gallery/1mb-passion-glacier-font.mp4" type="video/mp4">
+                        </video>
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Animated Don Poster"
+                        data-gallery-type="Motion Poster"
+                        data-gallery-description="Character-led graphic sequence with bold color blocks and kinetic framing for social promotion."
+                        data-gallery-caption="The 70s - Amitabh Bachhan meets Roy Lichtenstein"
+                        data-gallery-image="Assets/gallery/AnimatedDon1978-400px.gif"
+                        data-gallery-lightbox-image="Assets/gallery/gallery-stage/AnimatedDon1978-800px.gif"
+                        data-gallery-moodboard="Assets/gallery/AnimatedDon1978-400px.gif">
+                        <img src="Assets/gallery/AnimatedDon1978-400px.gif" alt="Animated Don motion poster" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Kombuchai Packaging"
+                        data-gallery-type="Packaging Design"
+                        data-gallery-description="Playful can label direction mixing product storytelling, flat color fields, and flavor-forward cues."
+                        data-gallery-caption="Legends in a can"
+                        data-gallery-image="Assets/gallery/packaging-design-kombuchai-8bit.png"
+                        data-gallery-moodboard="Assets/gallery/illustration-wedding.png">
+                        <img src="Assets/gallery/packaging-design-kombuchai-8bit.png" alt="Kombucha packaging concept" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Wedding Illustration"
+                        data-gallery-type="Illustration"
+                        data-gallery-description="High-grain digital painting with layered texture and soft edge treatments to frame a narrative portrait."
+                        data-gallery-caption="illustrated invites for a wholesome wedding"
+                        data-gallery-image="Assets/gallery/illustration-wedding.png"
+                        data-gallery-moodboard="Assets/gallery/packaging-design-kombuchai-8bit.png">
+                        <img src="Assets/gallery/illustration-wedding.png" alt="Wedding illustration artwork" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Crossroads Album Art"
+                        data-gallery-type="Brand Artwork"
+                        data-gallery-description="Cover exploration using retro lettering, gradients, and texture layering for an indie music release."
+                        data-gallery-caption="Album art for an indie music band"
+                        data-gallery-image="Assets/gallery/music-album-cover-crossroads.jpg"
+                        data-gallery-moodboard="Assets/gallery/hiroshima-2.png">
+                        <img src="Assets/gallery/music-album-cover-crossroads.jpg" alt="Crossroads album cover artwork" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Hiroshima Collage II"
+                        data-gallery-type="Editorial Visual"
+                        data-gallery-description="Dense typographic layering and field photography combined into a high-tension editorial frame."
+                        data-gallery-caption="A response to the rising threats of war"
+                        data-gallery-image="Assets/gallery/hiroshima-2.png"
+                        data-gallery-lightbox-image="Assets/gallery/gallery-stage/hiroshima-2.1-variant.png"
+                        data-gallery-moodboard="Assets/gallery/magazine-ad-eaglesnest-400px.png">
+                        <img src="Assets/gallery/hiroshima-2.png" alt="Hiroshima collage composition two" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Hiroshima Collage III"
+                        data-gallery-type="Archival Montage"
+                        data-gallery-description="Archive-driven composition exploring time, conflict, and place through directional hierarchy."
+                        data-gallery-caption="Living in the future, looking back to the past"
+                        data-gallery-image="Assets/gallery/hiroshima-3.png"
+                        data-gallery-moodboard="Assets/gallery/hiroshima-2.png">
+                        <img src="Assets/gallery/hiroshima-3.png" alt="Hiroshima collage composition three" loading="lazy" decoding="async">
+                    </button>
+                </div>
+            </div>
+        </section>
+
         <div class="home-composition">
             <section class="home-column home-column--about home-column--intro" id="about" aria-label="Profile and about summary">
                 <div class="collage-container">
@@ -325,7 +405,34 @@
                 <div class="carousel-dots" id="carousel-dots" aria-hidden="true"></div>
             </div>
         </section>
+
     </main>
+
+    <div class="home-gallery-lightbox" data-gallery-lightbox hidden aria-hidden="true">
+        <div class="home-gallery-lightbox__scrim" data-gallery-close></div>
+        <div class="home-gallery-lightbox__dialog" role="dialog" aria-modal="true" aria-labelledby="gallery-lightbox-caption">
+            <button type="button" class="home-gallery-lightbox__close" data-gallery-close aria-label="Close gallery stage">
+                <span aria-hidden="true">&times;</span>
+            </button>
+
+            <button type="button" class="home-gallery-lightbox__nav home-gallery-lightbox__nav--prev" data-gallery-prev aria-label="Previous artwork">
+                <span aria-hidden="true">&#8249;</span>
+            </button>
+            <button type="button" class="home-gallery-lightbox__nav home-gallery-lightbox__nav--next" data-gallery-next aria-label="Next artwork">
+                <span aria-hidden="true">&#8250;</span>
+            </button>
+
+            <div class="home-gallery-lightbox__content">
+                <div class="home-gallery-lightbox__stage" data-gallery-stage>
+                    <div class="home-gallery-stage-card" data-gallery-stage-card>
+                        <img src="" alt="" data-gallery-stage-image loading="lazy" decoding="async">
+                        <video data-gallery-stage-video loop muted playsinline preload="metadata" hidden></video>
+                    </div>
+                    <p id="gallery-lightbox-caption" class="home-gallery-lightbox__caption" data-gallery-lightbox-caption></p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <footer>
         <div class="container footer-content">
@@ -350,6 +457,7 @@
     <script src="shared/navbar.js"></script>
     <script src="home-background.js" defer></script>
     <script src="home-alt.js"></script>
+    <script src="home-gallery.js"></script>
 </body>
 
 </html>
