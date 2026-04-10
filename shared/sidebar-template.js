@@ -1,4 +1,4 @@
-(function (root, factory) {
+﻿(function (root, factory) {
     if (typeof module === 'object' && module.exports) {
         module.exports = factory();
         return;
@@ -104,6 +104,9 @@
         var aboutHref = index.aboutHref || '#about';
         var aboutLabel = index.aboutLabel || 'About';
         var aboutAttributes = index.aboutAttributes ? ' ' + index.aboutAttributes : '';
+        var galleryHref = index.galleryHref || '';
+        var galleryLabel = index.galleryLabel || 'Gallery';
+        var galleryAttributes = index.galleryAttributes ? ' ' + index.galleryAttributes : '';
         var workGroupAttributes = index.workGroupAttributes ? ' ' + index.workGroupAttributes : '';
         var workSummaryAttributes = index.workSummaryAttributes ? ' ' + index.workSummaryAttributes : '';
         var workSummaryLabel = index.workSummaryLabel || 'Work';
@@ -112,6 +115,9 @@
             var currentAttribute = item.current ? ' aria-current="page"' : '';
             return '<a class="home-sidebar__index-sublink" href="' + escapeHtml(item.href || '#') + '"' + currentAttribute + '>' + escapeHtml(item.label || '') + '</a>';
         }).join('\n                                ');
+        var galleryMarkup = galleryHref
+            ? '\n                        <a class="home-sidebar__index-link" href="' + escapeHtml(galleryHref) + '"' + galleryAttributes + '>' + escapeHtml(galleryLabel) + '</a>'
+            : '';
 
         return '\n                <div class="home-sidebar__index-block">' +
             '\n                    <nav class="home-sidebar__index" aria-label="' + escapeHtml(index.ariaLabel || 'Section index') + '">' +
@@ -122,6 +128,7 @@
             '\n                                ' + workLinksMarkup +
             '\n                            </div>' +
             '\n                        </details>' +
+            galleryMarkup +
             '\n                    </nav>' +
             '\n                </div>';
     }
@@ -241,3 +248,4 @@
         renderSidebarMobileMenuButton: renderSidebarMobileMenuButton
     };
 });
+

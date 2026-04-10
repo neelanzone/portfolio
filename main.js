@@ -1782,7 +1782,7 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const storedTheme = localStorage.getItem('theme');
-    applyThemePreference(storedTheme === 'light' ? 'light' : 'dark');
+    applyThemePreference(storedTheme === 'dark' ? 'dark' : 'light');
 
     themeToggleButtons.forEach((themeToggleBtn) => {
         themeToggleBtn.addEventListener('click', () => {

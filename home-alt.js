@@ -24,6 +24,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const cursorHighlightTargets = Array.from(document.querySelectorAll('.murmuration-control__button, .murmuration-mode-toggle, .scene-only-toggle, .music-toggle, .home-sidebar__contact'));
     const footer = document.querySelector('footer');
     const homeTopbar = document.querySelector('.home-topbar');
+    const homeTopbarRevealRegion = document.querySelector('.navbar--home') || homeTopbar;
     const desktopTopbarRevealMedia = window.matchMedia('(min-width: 768px)');
 
     const getStoredTheme = () => {
@@ -65,6 +66,37 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
+    const ensureSidebarGalleryLink = () => {
+        if (!homeSidebar) {
+            return null;
+        }
+
+        const indexNav = homeSidebar.querySelector('.home-sidebar__index');
+        if (!indexNav) {
+            return null;
+        }
+
+        const existing = indexNav.querySelector('[data-home-gallery-link]');
+        if (existing) {
+            return existing;
+        }
+
+        const galleryLink = document.createElement('a');
+        galleryLink.className = 'home-sidebar__index-link';
+        galleryLink.href = '#gallery';
+        galleryLink.textContent = 'Gallery';
+        galleryLink.setAttribute('data-home-gallery-link', '');
+
+        const workGroup = indexNav.querySelector('[data-home-work-group]');
+        if (workGroup) {
+            workGroup.insertAdjacentElement('afterend', galleryLink);
+        } else {
+            indexNav.appendChild(galleryLink);
+        }
+
+        return galleryLink;
+    };
+
     const refreshLayout = (source = 'layout') => {
         window.dispatchEvent(new CustomEvent('home-layout-refresh', {
             detail: { source }
@@ -76,7 +108,9 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        homeTopbar.classList.toggle('is-revealed', desktopTopbarRevealMedia.matches && revealed);
+        const isDesktopRevealed = desktopTopbarRevealMedia.matches && revealed;
+        homeTopbar.classList.toggle('is-revealed', isDesktopRevealed);
+        document.body.classList.toggle('home-alt--topbar-revealed', isDesktopRevealed);
     };
 
     const syncHomeTopbarReveal = () => {
@@ -89,7 +123,8 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        setHomeTopbarRevealed(homeTopbar.matches(':hover') || homeTopbar.matches(':focus-within'));
+        const regionIsHovered = homeTopbarRevealRegion ? homeTopbarRevealRegion.matches(':hover') : homeTopbar.matches(':hover');
+        setHomeTopbarRevealed(regionIsHovered || homeTopbar.matches(':focus-within'));
     };
 
     const updateCursorHighlight = (target, event) => {
@@ -369,12 +404,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     };
 
-    applyThemePreference(window.innerWidth < 768 ? 'light' : (getStoredTheme() === 'light' ? 'light' : 'dark'));
+    const storedTheme = getStoredTheme();
+    applyThemePreference(storedTheme === 'dark' ? 'dark' : 'light');
     applySidebarCollapsedPreference(getStoredSidebarCollapsed());
     applySceneOnlyPreference(getStoredSceneOnly());
     syncMobileFlockBar();
     syncHomeTopbarReveal();
     finishBootSequence();
+
+    const sidebarGalleryLink = ensureSidebarGalleryLink();
+    if (sidebarGalleryLink && !homeSidebarLinks.includes(sidebarGalleryLink)) {
+        homeSidebarLinks.push(sidebarGalleryLink);
+    }
 
     themeToggleButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -383,17 +424,19 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    if (homeTopbar) {
-        homeTopbar.addEventListener('mouseenter', () => {
+    if (homeTopbarRevealRegion) {
+        homeTopbarRevealRegion.addEventListener('mouseenter', () => {
             setHomeTopbarRevealed(true);
         });
 
-        homeTopbar.addEventListener('mouseleave', () => {
-            if (!homeTopbar.matches(':focus-within')) {
+        homeTopbarRevealRegion.addEventListener('mouseleave', () => {
+            if (!homeTopbar || !homeTopbar.matches(':focus-within')) {
                 setHomeTopbarRevealed(false);
             }
         });
+    }
 
+    if (homeTopbar) {
         homeTopbar.addEventListener('focusin', () => {
             setHomeTopbarRevealed(true);
         });
@@ -743,8 +786,23 @@ document.addEventListener('DOMContentLoaded', () => {
             updateMobileActiveDot();
         };
 
+        const releaseTouchCarouselPointerCapture = (pointerId) => {
+            if (pointerId === null || pointerId === undefined) {
+                return;
+            }
+
+            try {
+                if (typeof carouselContainer.hasPointerCapture === 'function' && carouselContainer.hasPointerCapture(pointerId)) {
+                    carouselContainer.releasePointerCapture(pointerId);
+                }
+            } catch {
+                // Ignore capture release failures if capture was already lost.
+            }
+        };
+
         const endTouchCarouselGesture = (pointerId = null) => {
-            if (pointerId !== null && touchCarouselPointerId !== pointerId) {
+            const activePointerId = touchCarouselPointerId;
+            if (pointerId !== null && activePointerId !== pointerId) {
                 return;
             }
 
@@ -755,6 +813,7 @@ document.addEventListener('DOMContentLoaded', () => {
             touchCarouselPointerId = null;
             touchCarouselDragging = false;
             carouselContainer.classList.remove('is-touch-dragging');
+            releaseTouchCarouselPointerCapture(activePointerId);
         };
 
         const applyFilingSpread = (hoveredIdx) => {
@@ -798,6 +857,7 @@ document.addEventListener('DOMContentLoaded', () => {
         };
 
         const updateCarouselGeometry = () => {
+            endTouchCarouselGesture();
             isDesktopCarousel = window.innerWidth >= 768;
             const containerRect = carouselContainer.getBoundingClientRect();
 
@@ -831,7 +891,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const projCards = cards.filter((card) => !card.classList.contains('title-card'));
             const count = projCards.length;
             const spacing = Math.round(containerWidth / count);
-            const startX = Math.round(containerWidth / 2 - ((count - 1) / 2) * spacing - cardWidth / 2);
+            const visualCenterBias = Math.round(Math.max(16, Math.min(44, containerWidth * 0.022)));
+            const startX = Math.round(containerWidth / 2 - ((count - 1) / 2) * spacing - cardWidth / 2 - visualCenterBias);
             const midIdx = (count - 1) / 2;
 
             carouselTrack.style.transform = 'none';
@@ -971,6 +1032,12 @@ document.addEventListener('DOMContentLoaded', () => {
             touchCarouselStartY = event.clientY;
             touchCarouselStartScrollLeft = carouselContainer.scrollLeft;
             touchCarouselDragging = false;
+
+            try {
+                carouselContainer.setPointerCapture(event.pointerId);
+            } catch {
+                // Ignore capture errors for environments that do not support capturing this pointer.
+            }
         });
 
         carouselContainer.addEventListener('pointermove', (event) => {
@@ -1003,12 +1070,32 @@ document.addEventListener('DOMContentLoaded', () => {
             endTouchCarouselGesture(event.pointerId);
         });
 
+        carouselContainer.addEventListener('lostpointercapture', (event) => {
+            endTouchCarouselGesture(event.pointerId);
+        });
+
         carouselContainer.addEventListener('click', (event) => {
             if (!isDesktopCarousel && Date.now() < suppressCarouselClickUntil) {
                 event.preventDefault();
                 event.stopPropagation();
             }
         }, true);
+
+        window.addEventListener('pointerup', (event) => {
+            if (!isDesktopCarousel) {
+                endTouchCarouselGesture(event.pointerId);
+            }
+        });
+
+        window.addEventListener('pointercancel', (event) => {
+            if (!isDesktopCarousel) {
+                endTouchCarouselGesture(event.pointerId);
+            }
+        });
+
+        window.addEventListener('blur', () => {
+            endTouchCarouselGesture();
+        });
 
         updateCarouselGeometry();
         requestAnimationFrame(updateCarouselGeometry);

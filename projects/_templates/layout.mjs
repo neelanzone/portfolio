@@ -1,4 +1,4 @@
-import sharedSidebarTemplate from '../../shared/sidebar-template.js';
+﻿import sharedSidebarTemplate from '../../shared/sidebar-template.js';
 import { absoluteUrl, escapeHtml, resolveAssetPath, resolveProjectLink } from './template-utils.mjs';
 
 const { renderSidebar, renderSidebarMobileMenuButton } = sharedSidebarTemplate;
@@ -115,6 +115,7 @@ export function renderProjectSidebar(project, site, toRoot, options = {}) {
         index: {
             ariaLabel: 'Portfolio navigation',
             aboutHref: `${toRoot}index.html#about`,
+            galleryHref: `${toRoot}index.html#gallery`,
             workItems,
             embedInPortfolio: true
         },
@@ -240,6 +241,12 @@ export function renderFooterBlock(site, toRoot, options = {}) {
 }
 
 export { getProjectNavItems, renderMetaTags };
+
+
+
+
+
+
 
 
 
