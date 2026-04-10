@@ -1,4 +1,4 @@
-﻿/* Generated from design-project-template-desktop.html */
+/* Generated from design-project-template-desktop.html */
 class ProjectSpaceField {
             constructor(container, isLightMode) {
                 if (!window.THREE || !container) {
@@ -583,7 +583,12 @@ class ProjectSpaceField {
             };
 
             const getStoredProjectSidebarCollapsed = function () {
-                return true;
+                try {
+                    const stored = localStorage.getItem('project-sidebar-collapsed');
+                    return stored === null ? isCompactProjectViewport() : stored === 'true';
+                } catch (error) {
+                    return isCompactProjectViewport();
+                }
             };
 
             const setStoredProjectSidebarCollapsed = function (collapsed) {
@@ -1012,4 +1017,3 @@ class ProjectSpaceField {
             });
 
         }());
-

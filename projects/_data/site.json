@@ -1,4 +1,4 @@
-{
+﻿{
     "owner":  "Neel",
     "copyrightOwner":  "neelanzone",
     "year":  "2026",
@@ -73,8 +73,8 @@
                              "title":  "Qualitative Reports at Scale",
                              "type":  "UX \u0026 Internal Tool \u0026 StartupYou",
                              "image":  {
-                                           "src":  "Assets/grid-discovery.png",
-                                           "alt":  "Placeholder preview for Qualitative Reports at Scale"
+                                           "src":  "Assets/qualitative-report-thumbnail.mp4",
+                                           "alt":  "Animated preview for Qualitative Reports at Scale"
                                        },
                              "link":  {
                                           "type":  "project",
@@ -85,3 +85,4 @@
                          }
                      ]
 }
+
