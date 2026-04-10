@@ -2858,7 +2858,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         --home-mobile-top-offset: calc(env(safe-area-inset-top, 0px) + 0.8rem);
         --home-mobile-side-gap: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
         --home-mobile-right-gap: calc(env(safe-area-inset-right, 0px) + 1rem);
-        --home-mobile-control-size: clamp(3.1rem, min(12vh, 26vw), 5rem);
+        --home-mobile-control-size: clamp(3rem, min(9.5vh, 21vw), 4.3rem);
         --home-mobile-scene-toggle-width: calc(var(--home-mobile-control-size) * 2.2258);
         --home-mobile-scene-toggle-padding: clamp(0.2rem, 0.62vh, 0.36rem);
         --home-mobile-menu-stroke-width: clamp(2px, 0.28vh, 3px);
@@ -2885,7 +2885,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         width: auto;
         max-width: none;
         display: flex;
-        flex-wrap: wrap;
+        flex-wrap: nowrap;
         align-items: center;
         justify-content: flex-start;
         column-gap: 0.28rem;
@@ -3844,7 +3844,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         display: grid;
         grid-template-columns: minmax(0, 1fr) auto;
         grid-template-areas:
-            'meta logo'
+            'logo meta'
             'contact contact';
         flex: 1 0 auto;
         gap: 0.55rem;
@@ -3874,17 +3874,18 @@ html.dark-theme .home-gallery-lightbox__nav {
 
     .home-alt .home-sidebar__logo {
         grid-area: logo;
-        align-self: stretch;
-        justify-self: end;
-        width: auto;
-        min-width: 2rem;
-        height: 100%;
-        min-height: 2.7rem;
+        align-self: start;
+        justify-self: start;
+        width: 24px;
+        min-width: 24px;
+        height: 24px;
+        min-height: 24px;
+        margin-top: 0.06rem;
     }
 
     .home-alt .home-sidebar__logo img {
         position: static;
-        width: auto;
+        width: 24px;
         height: 100%;
         object-position: center;
     }
@@ -3928,7 +3929,7 @@ html.dark-theme .home-gallery-lightbox__nav {
 
     .home-alt .home-column--about .photo-wrapper {
         width: 179.5px;
-        --about-mobile-orbit-radius: min(8.6rem, 38vw);
+        --about-mobile-orbit-radius: min(7.4rem, 33vw);
     }
 
     .home-alt .home-column--about .collage-photo {
@@ -3946,7 +3947,7 @@ html.dark-theme .home-gallery-lightbox__nav {
 
     .home-alt .home-column--about .pull-tab {
         padding-top: 73.5px;
-        transform: translateX(-50%) translateY(calc(7.35px + var(--pull-y, 0px)));
+        transform: translateX(-50%) translateY(calc(8.1px + var(--pull-y, 0px)));
     }
 
     .home-alt .home-column--about .about-text {
@@ -3976,7 +3977,8 @@ html.dark-theme .home-gallery-lightbox__nav {
     .home-work-archive .container {
         width: 100%;
         max-width: none;
-        padding: 0;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
     }
 
     .home-work-archive .carousel-container {
