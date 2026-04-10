@@ -18,6 +18,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeBirdsGroup = document.querySelector('[data-home-birds-group]');
     const homeAccordionGroups = Array.from(document.querySelectorAll('[data-home-accordion-item]'));
     const homeSidebarMeta = document.querySelector('.home-sidebar__meta');
+    const homeSidebarBrief = document.querySelector('.home-sidebar__page-brief');
     const homeSidebarLinks = homeSidebar ? Array.from(homeSidebar.querySelectorAll('a[href]')) : [];
     const mobileBirdsDrawer = document.querySelector('[data-mobile-birds-drawer]');
     const mobileBirdsDrawerToggle = document.querySelector('[data-mobile-birds-drawer-toggle]');
@@ -26,6 +27,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const homeTopbar = document.querySelector('.home-topbar');
     const homeTopbarRevealRegion = document.querySelector('.navbar--home') || homeTopbar;
     const desktopTopbarRevealMedia = window.matchMedia('(min-width: 768px)');
+    const mobileViewportMedia = window.matchMedia('(max-width: 767px)');
 
     const getStoredTheme = () => {
         try {
@@ -127,6 +129,24 @@ document.addEventListener('DOMContentLoaded', () => {
         setHomeTopbarRevealed(regionIsHovered || homeTopbar.matches(':focus-within'));
     };
 
+    const syncMobileSidebarBriefLineBreak = () => {
+        if (!homeSidebarBrief) {
+            return;
+        }
+
+        const canonicalBrief = 'A home for projects, musings, and a little soul.';
+        const normalizedText = homeSidebarBrief.textContent.replace(/\s+/g, ' ').trim();
+        if (normalizedText !== canonicalBrief) {
+            return;
+        }
+
+        if (mobileViewportMedia.matches) {
+            homeSidebarBrief.innerHTML = 'A home for projects, musings,<br class="home-sidebar__brief-break"> and a little soul.';
+        } else {
+            homeSidebarBrief.textContent = canonicalBrief;
+        }
+    };
+
     const updateCursorHighlight = (target, event) => {
         const rect = target.getBoundingClientRect();
 
@@ -165,6 +185,9 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     };
+
+    syncMobileSidebarBriefLineBreak();
+    mobileViewportMedia.addEventListener('change', syncMobileSidebarBriefLineBreak);
 
     const syncNavbar = () => {
         if (!navbar) {
@@ -726,6 +749,10 @@ document.addEventListener('DOMContentLoaded', () => {
             mobileDots.forEach((dot, index) => {
                 dot.classList.toggle('is-active', index === activeIdx);
             });
+
+            filingCards.forEach((card, index) => {
+                card.classList.toggle('is-active', !isDesktopCarousel && index === activeIdx);
+            });
         };
 
         const updateMobileActiveDot = () => {
@@ -876,6 +903,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.style.removeProperty('--filing-tilt');
                     card.dataset.baseFilingX = '0';
                     card.style.display = card.classList.contains('title-card') ? 'none' : '';
+                    card.classList.remove('is-active');
                 });
                 filingCards = cards.filter((card) => !card.classList.contains('title-card'));
                 filingCardWidth = filingCards[0]?.offsetWidth || 280;

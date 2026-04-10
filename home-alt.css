@@ -2362,6 +2362,10 @@ html.dark-theme .home-gallery-lightbox__nav {
     color: var(--text-muted);
 }
 
+.home-alt .home-sidebar__brief-break {
+    display: none;
+}
+
 .home-alt .home-sidebar__page--birds {
     display: none;
     gap: 0.5rem;
@@ -2853,8 +2857,8 @@ html.dark-theme .home-gallery-lightbox__nav {
         --home-sidebar-gap: 0px;
         --home-mobile-top-offset: calc(env(safe-area-inset-top, 0px) + 0.8rem);
         --home-mobile-side-gap: max(1rem, env(safe-area-inset-left), env(safe-area-inset-right));
-        --home-mobile-right-gap: calc(env(safe-area-inset-right, 0px) + 0.1rem);
-        --home-mobile-control-size: clamp(3.1rem, min(8vh, 20vw), 4.1rem);
+        --home-mobile-right-gap: calc(env(safe-area-inset-right, 0px) + 1rem);
+        --home-mobile-control-size: clamp(3.1rem, min(12vh, 26vw), 5rem);
         --home-mobile-scene-toggle-width: calc(var(--home-mobile-control-size) * 2.2258);
         --home-mobile-scene-toggle-padding: clamp(0.2rem, 0.62vh, 0.36rem);
         --home-mobile-menu-stroke-width: clamp(2px, 0.28vh, 3px);
@@ -3032,8 +3036,8 @@ html.dark-theme .home-gallery-lightbox__nav {
     }
 
     .home-alt .home-shell {
-        padding-top: calc(var(--nav-height) + var(--home-mobile-control-size) + 0.6rem);
-        padding-bottom: 5.6rem;
+        padding-top: calc(var(--nav-height) + (var(--home-mobile-control-size) * 0.4) + 0.24rem);
+        padding-bottom: 2.4rem;
     }
 
     .home-alt footer .container {
@@ -3838,9 +3842,12 @@ html.dark-theme .home-gallery-lightbox__nav {
 
     .home-alt .home-sidebar__bottom {
         display: grid;
-        grid-template-rows: auto auto auto;
+        grid-template-columns: minmax(0, 1fr) auto;
+        grid-template-areas:
+            'meta logo'
+            'contact contact';
         flex: 1 0 auto;
-        gap: 0.4rem;
+        gap: 0.55rem;
         margin-top: auto;
         min-height: 0;
         align-content: end;
@@ -3849,7 +3856,7 @@ html.dark-theme .home-gallery-lightbox__nav {
     .home-alt .home-sidebar__meta {
         display: grid;
         gap: 0.16rem;
-        grid-row: 1;
+        grid-area: meta;
     }
 
     .home-alt .home-sidebar__title {
@@ -3861,14 +3868,36 @@ html.dark-theme .home-gallery-lightbox__nav {
     }
 
     .home-alt .home-sidebar__actions {
-        grid-row: 3;
+        display: contents;
         margin-top: 0;
     }
 
+    .home-alt .home-sidebar__logo {
+        grid-area: logo;
+        align-self: stretch;
+        justify-self: end;
+        width: auto;
+        min-width: 2rem;
+        height: 100%;
+        min-height: 2.7rem;
+    }
+
+    .home-alt .home-sidebar__logo img {
+        position: static;
+        width: auto;
+        height: 100%;
+        object-position: center;
+    }
+
     .home-alt .home-sidebar__contact {
-        flex: 0 0 9.75rem;
-        width: 9.75rem;
-        max-width: calc(100% - 2.35rem);
+        grid-area: contact;
+        flex: 0 0 auto;
+        width: 100%;
+        max-width: none;
+    }
+
+    .home-alt .home-sidebar__brief-break {
+        display: block;
     }
 
     .home-alt #about {
@@ -3877,15 +3906,15 @@ html.dark-theme .home-gallery-lightbox__nav {
         justify-items: center;
         gap: 1rem;
         min-height: auto;
-        padding: 0.5rem 1rem 0;
+        padding: 0.2rem 1rem 0;
     }
 
     .home-alt .home-column--about {
         --about-stage-lift: 0rem;
-        --about-stage-slot-width: min(20rem, 100%);
-        --about-stage-slot-height: 19rem;
-        --about-stage-width: min(21rem, calc(100vw - 1rem));
-        --about-stage-height: 19rem;
+        --about-stage-slot-width: min(22rem, 100%);
+        --about-stage-slot-height: 20rem;
+        --about-stage-width: min(22rem, calc(100vw - 1rem));
+        --about-stage-height: 20rem;
         --about-stage-shift-y: 0rem;
         margin: 0 auto;
         max-width: none;
@@ -3893,22 +3922,31 @@ html.dark-theme .home-gallery-lightbox__nav {
 
     .home-alt .home-column--about .collage-container,
     .home-alt .home-column--about .about-stage {
-        width: min(20rem, 100%);
-        height: 19rem;
+        width: min(22rem, 100%);
+        height: 20rem;
     }
 
     .home-alt .home-column--about .photo-wrapper {
-        width: 149.6px;
-        --about-mobile-orbit-radius: min(7.8rem, 34vw);
+        width: 179.5px;
+        --about-mobile-orbit-radius: min(8.6rem, 38vw);
     }
 
     .home-alt .home-column--about .collage-photo {
-        width: 149.6px;
-        height: 149.6px;
+        width: 179.5px;
+        height: 179.5px;
+    }
+
+    .home-alt .home-column--about .accessory-wrapper {
+        transform: translate(calc(-50% + var(--active-x) + var(--drag-x, 0px)), calc(-50% + var(--active-y) + var(--drag-y, 0px))) rotate(var(--rot)) scale(calc(var(--scale) * 0.9));
+    }
+
+    .home-alt .home-column--about .accessory {
+        max-width: 115px;
     }
 
     .home-alt .home-column--about .pull-tab {
-        transform: translateX(-50%) translateY(calc(10.5px + var(--pull-y, 0px)));
+        padding-top: 73.5px;
+        transform: translateX(-50%) translateY(calc(7.35px + var(--pull-y, 0px)));
     }
 
     .home-alt .home-column--about .about-text {
@@ -3958,6 +3996,10 @@ html.dark-theme .home-gallery-lightbox__nav {
         cursor: auto;
     }
 
+    .home-work-archive .carousel-control.prev {
+        display: none !important;
+    }
+
     .home-work-archive .carousel-container::-webkit-scrollbar {
         display: none;
     }
@@ -3967,7 +4009,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         gap: 0.9rem;
         width: max-content !important;
         height: auto;
-        padding-inline: calc((100vw - min(80vw, 19rem)) / 2);
+        padding-inline: calc((100% - min(80vw, 19rem)) / 2);
         transform: none !important;
     }
 
@@ -3997,6 +4039,29 @@ html.dark-theme .home-gallery-lightbox__nav {
     .home-work-archive .work-image {
         width: 100%;
         height: 100%;
+    }
+
+    .home-work-archive .carousel-dots {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 0.4rem;
+        margin-top: 0.5rem;
+    }
+
+    .home-work-archive .carousel-dot {
+        width: 0.42rem;
+        height: 0.42rem;
+        border: 0;
+        border-radius: 999px;
+        background: rgba(130, 111, 96, 0.36);
+        padding: 0;
+        transition: transform 0.18s ease, background-color 0.18s ease;
+    }
+
+    .home-work-archive .carousel-dot.is-active {
+        transform: scale(1.18);
+        background: rgba(130, 111, 96, 0.88);
     }
 }
 
