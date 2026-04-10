@@ -18,7 +18,7 @@
     --type-h3: 1.25rem;
     --type-h4: 1rem;
     --type-h5: 0.9rem;
-    --type-copy: 1rem;
+    --type-copy: 1.2rem;
     --type-copy-sm: 0.875rem;
     --type-body-sm: 0.875rem;
     --type-menu: 0.9rem;
@@ -2886,7 +2886,7 @@ footer {
         --type-h3: 1.25rem;
         --type-h4: 1rem;
         --type-h5: 0.9rem;
-        --type-copy: 0.9rem;
+        --type-copy: 1.2rem;
         --type-copy-sm: 0.9rem;
         --type-menu: 1.15rem;
         --type-control: 1.55rem;

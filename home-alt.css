@@ -728,6 +728,11 @@ html.dark-theme .home-gallery-lightbox__nav {
 }
 
 @media (max-width: 767px) {
+    .home-alt .home-topbar__tone,
+    .home-alt .murmuration-mode-toggle {
+        display: none !important;
+    }
+
     .home-alt .navbar {
         padding: 0 1.2rem;
     }
@@ -3864,7 +3869,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         justify-items: center;
         gap: 1rem;
         min-height: auto;
-        padding: 1rem 1rem 0;
+        padding: 0.5rem 1rem 0;
     }
 
     .home-alt .home-column--about {
@@ -3885,7 +3890,13 @@ html.dark-theme .home-gallery-lightbox__nav {
     }
 
     .home-alt .home-column--about .photo-wrapper {
+        width: 149.6px;
         --about-mobile-orbit-radius: min(7.8rem, 34vw);
+    }
+
+    .home-alt .home-column--about .collage-photo {
+        width: 149.6px;
+        height: 149.6px;
     }
 
     .home-alt .home-column--about .pull-tab {
@@ -3933,7 +3944,7 @@ html.dark-theme .home-gallery-lightbox__nav {
         scroll-snap-type: x mandatory;
         -webkit-overflow-scrolling: touch;
         overscroll-behavior-x: contain;
-        touch-action: pan-y;
+        touch-action: pan-x pan-y;
         scrollbar-width: none;
         padding: 0;
         cursor: auto;
@@ -3966,7 +3977,7 @@ html.dark-theme .home-gallery-lightbox__nav {
     }
 
     .home-work-archive .work-card-link {
-        touch-action: pan-y;
+        touch-action: pan-x pan-y;
     }
 
     .home-work-archive .work-card.is-filing-open,

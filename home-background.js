@@ -2437,6 +2437,18 @@
             };
         }
 
+        if (tone !== 'mono') {
+            return {
+                key: 'murmurations',
+                sources: [
+                    {
+                        src: 'Assets/music/murmurations.webm',
+                        type: 'audio/webm; codecs="opus"'
+                    }
+                ]
+            };
+        }
+
         return {
             key: 'yojimbo-theme-portfolio-128k',
             sources: [
