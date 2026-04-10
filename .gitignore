@@ -1,3 +1,7 @@
 alternate.html
 alternate.js
 alternate-style.css
+.edge-diag-profile/
+.edge-headless-profile/
+.claude/
+*.env

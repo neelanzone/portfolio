@@ -5,14 +5,11 @@
     <script>
         (function () {
             try {
-                var storedTheme = localStorage.getItem('theme');
-                var isCompactViewport = window.matchMedia('(max-width: 767px)').matches;
-                var themeClass = isCompactViewport ? 'light-theme' : (storedTheme === 'light' ? 'light-theme' : 'dark-theme');
-                document.documentElement.classList.remove('light-theme', 'dark-theme');
-                document.documentElement.classList.add(themeClass);
+                document.documentElement.classList.remove('dark-theme');
+                document.documentElement.classList.add('light-theme');
                 document.documentElement.dataset.homeTone = 'color';
             } catch (error) {
-                document.documentElement.classList.add('dark-theme');
+                document.documentElement.classList.add('light-theme');
             }
         })();
     </script>
@@ -23,7 +20,8 @@
     <style>
         html.dark-theme body.home-alt { background: #070d1d; color: #f3eee7; }
         html.light-theme body.home-alt { background: #f7f2e8; color: #1c1a16; }
-        body.home-alt { margin: 0; min-height: 100vh; min-height: 100svh; overflow-x: hidden; }
+        body.home-alt .theme-toggle { display: none !important; }
+        body.home-alt { margin: 0; min-height: 100vh; overflow-x: hidden; }
         body.home-alt.home-alt--booting #three-container,
         body.home-alt.home-alt--booting .home-sidebar,
         body.home-alt.home-alt--booting .navbar--home,
@@ -41,7 +39,7 @@
         body.home-alt.home-alt--scene-only .home-shell__anchor,
         body.home-alt.home-alt--scene-only #gallery,
         body.home-alt.home-alt--scene-only #work { display: none; }
-        :where(body.home-alt) .home-shell { position: relative; padding: 0 24px 40px; }
+        :where(body.home-alt) .home-shell { position: relative; padding: 72px 24px 40px; }
         :where(body.home-alt) .home-composition { width: min(1180px, 100%); margin: 0 auto; overflow: visible; }
         :where(body.home-alt) #about { position: relative; display: grid; place-items: center; min-height: 60svh; overflow: visible; }
         :where(body.home-alt) .collage-container { position: relative; width: min(24rem, 100%); height: 20rem; margin: 0 auto; overflow: visible; }
@@ -214,6 +212,17 @@
                         data-gallery-image="Assets/gallery/hiroshima-3.png"
                         data-gallery-moodboard="Assets/gallery/hiroshima-2.png">
                         <img src="Assets/gallery/hiroshima-3.png" alt="Hiroshima collage composition three" loading="lazy" decoding="async">
+                    </button>
+
+                    <button type="button" class="home-gallery-tile" role="listitem" data-gallery-open
+                        data-gallery-title="Eagles Nest Magazine Ad"
+                        data-gallery-type="Editorial Design"
+                        data-gallery-description="Fictional architectural magazine spread showcasing bold layout composition and high-contrast styling."
+                        data-gallery-caption="Editorial spread for an architectural magazine"
+                        data-gallery-image="Assets/gallery/magazine-ad-eaglesnest-400px.png"
+                        data-gallery-lightbox-image="Assets/gallery/magazine-ad-eaglesnest-400px.png"
+                        data-gallery-moodboard="Assets/gallery/magazine-ad-eaglesnest-400px.png">
+                        <img src="Assets/gallery/magazine-ad-eaglesnest-400px.png" alt="Eagles Nest magazine ad" loading="lazy" decoding="async">
                     </button>
                 </div>
             </div>

@@ -998,7 +998,6 @@ a:hover {
 .hero {
     position: relative;
     height: 100vh;
-    height: 100svh;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -1013,7 +1012,6 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100vh;
-    height: 100svh;
     z-index: 1;
 }
 
@@ -1028,7 +1026,6 @@ a:hover {
     left: 0;
     width: 100%;
     height: 100vh;
-    height: 100svh;
     z-index: 2;
     text-align: center;
     pointer-events: none;
@@ -3122,5 +3119,15 @@ footer {
 /* Final override for homepage project-card reading-time color */
 html body.home-alt .work-reading-time {
     color: #6e6693 !important;
+}
+
+
+/* Mobile SVH Overrides (Protected from Desktop) */
+@media screen and (max-width: 767px) {
+    .hero,
+    #three-container,
+    .hero-content {
+        height: 100svh !important;
+    }
 }
 
