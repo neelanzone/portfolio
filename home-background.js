@@ -852,8 +852,13 @@
                 const lightness = palette.gridLightnessBase + (1 - radialMix) * palette.gridLightnessRange;
 
                 if (this.murmurationTone === 'mono') {
-                    const monoMix = Math.min(1, 0.18 + seedMix * 0.42 + (1 - radialMix) * 0.24);
-                    this.tempColorA.lerpColors(palette.gridMonoAccent, palette.gridMonoHighlight, monoMix);
+                    const forceSceneMonoBlack = this.sceneOnlyView && this.murmurationTone === 'mono';
+                    if (forceSceneMonoBlack) {
+                        this.tempColorA.setRGB(0, 0, 0);
+                    } else {
+                        const monoMix = Math.min(1, 0.18 + seedMix * 0.42 + (1 - radialMix) * 0.24);
+                        this.tempColorA.lerpColors(palette.gridMonoAccent, palette.gridMonoHighlight, monoMix);
+                    }
                 } else {
                     this.tempColorA.setHSL(hue, palette.gridSaturation, lightness);
                     this.tempColorB.setHSL(
@@ -1525,7 +1530,8 @@
                     this.pixelBaseColors[colorIndex + 2]
                 );
 
-                if (highlightMix > 0.001) {
+                const forceSceneMonoBlack = this.sceneOnlyView && this.murmurationTone === 'mono';
+                if (highlightMix > 0.001 && !forceSceneMonoBlack) {
                     const pulseMix = 0.5 + 0.5 * Math.sin(time * 4.4 - Math.hypot(baseX, baseZ) * 0.14);
                     const isMonoMode = this.murmurationTone === 'mono';
 
@@ -1819,25 +1825,32 @@
         }
 
         const revealMix = this.getGridEntropyColorMix();
+        const forceSceneMonoBlack = this.sceneOnlyView && this.murmurationTone === 'mono';
         const backgroundColor = this.getSceneBackgroundColor();
 
         for (let index = 0; index < this.pixelCount; index += 1) {
             const colorIndex = index * 3;
-            this.tempColorA.setRGB(
-                this.pixelPaletteColors[colorIndex],
-                this.pixelPaletteColors[colorIndex + 1],
-                this.pixelPaletteColors[colorIndex + 2]
-            );
-            this.tempColorB.lerpColors(backgroundColor, this.tempColorA, revealMix);
+            if (forceSceneMonoBlack) {
+                this.pixelBaseColors[colorIndex] = 0;
+                this.pixelBaseColors[colorIndex + 1] = 0;
+                this.pixelBaseColors[colorIndex + 2] = 0;
+            } else {
+                this.tempColorA.setRGB(
+                    this.pixelPaletteColors[colorIndex],
+                    this.pixelPaletteColors[colorIndex + 1],
+                    this.pixelPaletteColors[colorIndex + 2]
+                );
+                this.tempColorB.lerpColors(backgroundColor, this.tempColorA, revealMix);
 
-            this.pixelBaseColors[colorIndex] = this.tempColorB.r;
-            this.pixelBaseColors[colorIndex + 1] = this.tempColorB.g;
-            this.pixelBaseColors[colorIndex + 2] = this.tempColorB.b;
+                this.pixelBaseColors[colorIndex] = this.tempColorB.r;
+                this.pixelBaseColors[colorIndex + 1] = this.tempColorB.g;
+                this.pixelBaseColors[colorIndex + 2] = this.tempColorB.b;
+            }
 
             if (syncVisibleColors) {
-                this.pixelColors[colorIndex] = this.tempColorB.r;
-                this.pixelColors[colorIndex + 1] = this.tempColorB.g;
-                this.pixelColors[colorIndex + 2] = this.tempColorB.b;
+                this.pixelColors[colorIndex] = this.pixelBaseColors[colorIndex];
+                this.pixelColors[colorIndex + 1] = this.pixelBaseColors[colorIndex + 1];
+                this.pixelColors[colorIndex + 2] = this.pixelBaseColors[colorIndex + 2];
             }
         }
 
