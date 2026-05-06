@@ -2389,6 +2389,11 @@ html.dark-theme  .proj-card__desc { color: rgba(180, 195, 255, 0.65); }
     display: block;
 }
 
+.work-slide[data-slide="1"] video,
+.work-slide[data-slide="2"] video {
+    object-position: center;
+}
+
 .work-panel-slide {
     position: absolute;
     inset: 0;
