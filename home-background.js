@@ -26,11 +26,10 @@
             this.activePalette = null;
             this.sphereStage = 0;
             this.sphereVisible = 0;
-            this.sphereSizePreset = 'small';
-            this.sphereRadius = 0.5;
-            this.sphereInfluenceRadius = 1.5;
-            this.sphereSizeKnob = null;
-            this.sphereSizeValue = null;
+            this.disableCursorSphereInteractions = true;
+            this.sphereSizePreset = 'none';
+            this.sphereRadius = 0;
+            this.sphereInfluenceRadius = 0;
             this.burstActive = false;
             this.burstProgress = 0;
             this.burstDuration = 1.85;
@@ -81,20 +80,17 @@
             this.gridEntropy = 0;
             this.gridDensity = 1;
             this.gridDensityPreset = 'lots';
-            this.densityKnob = null;
-            this.densityValue = null;
             this.densityKnobDisplayAngle = 135;
             this.murmurationStyle = 'none';
             this.murmurationButtons = [];
             this.murmurationTone = 'default';
             this.murmurationToneButton = null;
-            this.isControlDragActive = false;
             this.sceneOnlyView = false;
             this.flockLeaderIndices = [];
             this.flockLeaderOrigins = [];
             this.flockLeaderPhases = [0];
             this.root.removeAttribute('data-home-tone');
-            this.sphereKnobDisplayAngle = 315;
+            this.sphereKnobDisplayAngle = 225;
 
             this.backgroundGroup = new THREE.Group();
             this.scene.add(this.backgroundGroup);
@@ -951,9 +947,11 @@
         }
 
         updateSphereState(delta) {
-            if (this.sphereSizePreset === 'none') {
+            if (this.disableCursorSphereInteractions || this.sphereSizePreset === 'none') {
                 this.sphereStage = 0;
                 this.sphereVisible = 0;
+                this.burstActive = false;
+                this.burstProgress = 0;
                 return;
             }
 
@@ -1054,7 +1052,7 @@
         }
 
         advanceSphereInteraction(clientX, clientY, target = null) {
-            if (this.sphereSizePreset === 'none') {
+            if (this.disableCursorSphereInteractions || this.sphereSizePreset === 'none') {
                 return;
             }
 
@@ -1091,7 +1089,7 @@
         }
 
         updatePixelGrid(time, delta) {
-            if (this.hasPointer) {
+            if (this.hasPointer && !this.disableCursorSphereInteractions) {
                 this.raycaster.setFromCamera(this.pointer, this.camera);
                 if (this.raycaster.ray.intersectPlane(this.gridPlane, this.hoverWorldPoint)) {
                     this.hoverPoint.copy(this.hoverWorldPoint);
@@ -1103,7 +1101,7 @@
                 this.hoverPoint.set(9999, 9999, 9999);
             }
 
-            const hasHover = this.sphereSizePreset !== 'none' && this.hoverPoint.x < 9000;
+            const hasHover = !this.disableCursorSphereInteractions && this.sphereSizePreset !== 'none' && this.hoverPoint.x < 9000;
             this.updateSphereState(delta);
             const sphereProfile = this.getSphereStageProfile();
             const sphereAttractionActive = !this.burstActive && (this.sphereVisible > 0.02 || this.sphereStage > 0 || hasHover);
@@ -1612,10 +1610,6 @@
         }
 
         handlePointerMove(event) {
-            if (this.isControlDragActive) {
-                return;
-            }
-
             if (this.activeTouchPointerId !== null && event.pointerId === this.activeTouchPointerId) {
                 this.touchTapTravel = Math.max(
                     this.touchTapTravel,
@@ -1634,7 +1628,7 @@
         }
 
         handlePointerDown(event) {
-            if (this.isControlDragActive || event.pointerType === 'mouse' || this.sphereSizePreset === 'none') {
+            if (this.disableCursorSphereInteractions || event.pointerType === 'mouse' || this.sphereSizePreset === 'none') {
                 return;
             }
 
@@ -1658,6 +1652,10 @@
         }
 
         handlePointerUp(event) {
+            if (this.disableCursorSphereInteractions) {
+                return;
+            }
+
             if (this.activeTouchPointerId === null || event.pointerId !== this.activeTouchPointerId) {
                 return;
             }
@@ -1692,7 +1690,7 @@
         }
 
         handleClick(event) {
-            if (this.sphereSizePreset === 'none' || performance.now() < this.suppressClickUntil) {
+            if (this.disableCursorSphereInteractions || this.sphereSizePreset === 'none' || performance.now() < this.suppressClickUntil) {
                 return;
             }
 
@@ -1898,22 +1896,6 @@
         return configMap[preset] ?? configMap.lots;
     };
 
-    HomeBackgroundScene.prototype.getDensityPresetIndex = function (preset) {
-        const presetOrder = ['none', 'some', 'many', 'lots'];
-        const presetIndex = presetOrder.indexOf(preset);
-        return presetIndex >= 0 ? presetIndex : presetOrder.length - 1;
-    };
-
-    HomeBackgroundScene.prototype.getKnobPointerAngle = function (event, knob) {
-        const rect = knob.getBoundingClientRect();
-        const centerX = rect.left + rect.width * 0.5;
-        const centerY = rect.top + rect.height * 0.5;
-        const dx = event.clientX - centerX;
-        const dy = event.clientY - centerY;
-        const rawAngle = THREE.MathUtils.radToDeg(Math.atan2(dx, -dy));
-        return ((rawAngle % 360) + 360) % 360;
-    };
-
     HomeBackgroundScene.prototype.resolveContinuousAngle = function (targetAngle, referenceAngle) {
         let resolvedAngle = targetAngle;
 
@@ -1928,197 +1910,8 @@
         return resolvedAngle;
     };
 
-    HomeBackgroundScene.prototype.getNearestKnobPreset = function (angle, presetOrder, getConfig) {
-        let nearestPreset = presetOrder[0];
-        let nearestAngle = getConfig.call(this, nearestPreset).angle;
-        let nearestDistance = Infinity;
-
-        presetOrder.forEach((preset) => {
-            const resolvedAngle = this.resolveContinuousAngle(getConfig.call(this, preset).angle, angle);
-            const distance = Math.abs(resolvedAngle - angle);
-
-            if (distance < nearestDistance) {
-                nearestDistance = distance;
-                nearestPreset = preset;
-                nearestAngle = resolvedAngle;
-            }
-        });
-
-        return {
-            preset: nearestPreset,
-            angle: nearestAngle
-        };
-    };
-
-    HomeBackgroundScene.prototype.bindPresetKnob = function (knob, options) {
-        if (!knob) {
-            return;
-        }
-
-        const {
-            presetOrder,
-            getConfig,
-            getCurrentPreset,
-            getCurrentDisplayAngle,
-            setPreset,
-            syncControl,
-            getLastPreset,
-            angleVar,
-            setDisplayAngle
-        } = options;
-
-        const syncAria = () => {
-            knob.setAttribute('role', 'slider');
-            knob.setAttribute('aria-valuemin', '0');
-            knob.setAttribute('aria-valuemax', String(presetOrder.length - 1));
-            syncControl.call(this);
-        };
-
-        const updateFromPointer = (event) => {
-            const pointerAngle = this.resolveContinuousAngle(
-                this.getKnobPointerAngle(event, knob),
-                dragAngle
-            );
-            dragAngle = pointerAngle;
-            setDisplayAngle.call(this, pointerAngle);
-            knob.style.setProperty(angleVar, `${pointerAngle}deg`);
-        };
-
-        let dragAngle = getCurrentDisplayAngle.call(this);
-
-        const startDrag = (event) => {
-            if (event.button !== undefined && event.button !== 0) {
-                return;
-            }
-
-            const startX = event.clientX;
-            const startY = event.clientY;
-            let isDragging = false;
-
-            event.preventDefault();
-            event.stopPropagation();
-
-            if (typeof knob.setPointerCapture === 'function') {
-                knob.setPointerCapture(event.pointerId);
-            }
-
-            dragAngle = getCurrentDisplayAngle.call(this);
-
-            const finishInteraction = (pointerEvent, commitClick = true) => {
-                if (pointerEvent.pointerId !== event.pointerId) {
-                    return;
-                }
-
-                this.isControlDragActive = false;
-                knob.classList.remove('is-dragging');
-
-                if (typeof knob.releasePointerCapture === 'function' && knob.hasPointerCapture?.(pointerEvent.pointerId)) {
-                    knob.releasePointerCapture(pointerEvent.pointerId);
-                }
-
-                knob.removeEventListener('pointermove', handleDrag);
-                knob.removeEventListener('pointerup', handlePointerUp);
-                knob.removeEventListener('pointercancel', handlePointerCancel);
-
-                if (isDragging) {
-                    const snappedPreset = this.getNearestKnobPreset(dragAngle, presetOrder, getConfig);
-                    setPreset.call(this, snappedPreset.preset, { displayAngle: snappedPreset.angle });
-                } else if (commitClick) {
-                    const currentIndex = presetOrder.indexOf(getCurrentPreset.call(this));
-                    const safeIndex = currentIndex >= 0 ? currentIndex : 0;
-                    const nextIndex = (safeIndex + 1) % presetOrder.length;
-                    setPreset.call(this, presetOrder[nextIndex], {
-                        displayAngle: getCurrentDisplayAngle.call(this)
-                    });
-                }
-
-                pointerEvent.preventDefault();
-                pointerEvent.stopPropagation();
-            };
-
-            const handleDrag = (pointerEvent) => {
-                if (pointerEvent.pointerId !== event.pointerId) {
-                    return;
-                }
-
-                const travel = Math.hypot(pointerEvent.clientX - startX, pointerEvent.clientY - startY);
-
-                if (!isDragging) {
-                    if (travel < 6) {
-                        return;
-                    }
-
-                    isDragging = true;
-                    this.isControlDragActive = true;
-                    knob.classList.add('is-dragging');
-                }
-
-                updateFromPointer(pointerEvent);
-                pointerEvent.preventDefault();
-                pointerEvent.stopPropagation();
-            };
-
-            const handlePointerUp = (pointerEvent) => finishInteraction(pointerEvent, true);
-            const handlePointerCancel = (pointerEvent) => finishInteraction(pointerEvent, false);
-
-            knob.addEventListener('pointermove', handleDrag);
-            knob.addEventListener('pointerup', handlePointerUp);
-            knob.addEventListener('pointercancel', handlePointerCancel);
-        };
-
-        knob.addEventListener('pointerdown', startDrag);
-        knob.addEventListener('keydown', (event) => {
-            if (event.key === 'ArrowRight' || event.key === 'ArrowUp') {
-                event.preventDefault();
-                const currentIndex = presetOrder.indexOf(getCurrentPreset.call(this));
-                const nextIndex = Math.min(presetOrder.length - 1, currentIndex + 1);
-                setPreset.call(this, presetOrder[nextIndex]);
-                return;
-            }
-
-            if (event.key === 'ArrowLeft' || event.key === 'ArrowDown') {
-                event.preventDefault();
-                const currentIndex = presetOrder.indexOf(getCurrentPreset.call(this));
-                const nextIndex = Math.max(0, currentIndex - 1);
-                setPreset.call(this, presetOrder[nextIndex]);
-                return;
-            }
-
-            if (event.key === 'Home') {
-                event.preventDefault();
-                setPreset.call(this, presetOrder[0]);
-                return;
-            }
-
-            if (event.key === 'End') {
-                event.preventDefault();
-                setPreset.call(this, getLastPreset);
-            }
-        });
-
-        syncAria();
-    };
-
     HomeBackgroundScene.prototype.syncDensityControl = function () {
-        const config = this.getDensityPresetConfig(this.gridDensityPreset);
-
-        if (this.densityKnob) {
-            this.densityKnob.style.setProperty('--density-knob-angle', `${this.densityKnobDisplayAngle}deg`);
-            this.densityKnob.setAttribute('aria-label', `Adjust bird density. Current amount: ${config.label}`);
-            this.densityKnob.setAttribute('aria-valuenow', String(this.getDensityPresetIndex(this.gridDensityPreset)));
-            this.densityKnob.setAttribute('aria-valuetext', config.label);
-        }
-
-        if (this.densityValue) {
-            this.densityValue.textContent = config.label;
-        }
-    };
-
-    HomeBackgroundScene.prototype.stepDensityPreset = function (direction = 1) {
-        const presetOrder = ['none', 'some', 'many', 'lots'];
-        const currentIndex = this.getDensityPresetIndex(this.gridDensityPreset);
-        const nextIndex = (currentIndex + direction + presetOrder.length) % presetOrder.length;
-        this.setGridDensityPreset(presetOrder[nextIndex]);
+        // Density controls were removed from the live navbar; presets are now driven by scene view state only.
     };
 
     HomeBackgroundScene.prototype.setGridEntropy = function (value) {
@@ -2142,29 +1935,6 @@
         this.applyTheme();
     };
 
-    HomeBackgroundScene.prototype.bindDensityControl = function () {
-        this.densityKnob = document.querySelector('[data-density-knob]');
-        this.densityValue = document.querySelector('[data-density-value]');
-
-        this.bindPresetKnob(this.densityKnob, {
-            presetOrder: ['none', 'some', 'many', 'lots'],
-            getConfig: this.getDensityPresetConfig,
-            getCurrentPreset: function () {
-                return this.gridDensityPreset;
-            },
-            getCurrentDisplayAngle: function () {
-                return this.densityKnobDisplayAngle;
-            },
-            setPreset: this.setGridDensityPreset,
-            syncControl: this.syncDensityControl,
-            getLastPreset: 'lots',
-            angleVar: '--density-knob-angle',
-            setDisplayAngle: function (angle) {
-                this.densityKnobDisplayAngle = angle;
-            }
-        });
-    };
-
     HomeBackgroundScene.prototype.getSpherePresetConfig = function (preset) {
         const configMap = {
             none: { label: 'None', radius: 0, influenceRadius: 0, angle: 225 },
@@ -2176,25 +1946,8 @@
         return configMap[preset] ?? configMap.medium;
     };
 
-    HomeBackgroundScene.prototype.getSpherePresetIndex = function (preset) {
-        const presetOrder = ['none', 'small', 'medium', 'large'];
-        const presetIndex = presetOrder.indexOf(preset);
-        return presetIndex >= 0 ? presetIndex : 2;
-    };
-
     HomeBackgroundScene.prototype.syncSphereControl = function () {
-        const config = this.getSpherePresetConfig(this.sphereSizePreset);
-
-        if (this.sphereSizeKnob) {
-            this.sphereSizeKnob.style.setProperty('--sphere-knob-angle', `${this.sphereKnobDisplayAngle}deg`);
-            this.sphereSizeKnob.setAttribute('aria-label', `Adjust sun size. Current size: ${config.label}`);
-            this.sphereSizeKnob.setAttribute('aria-valuenow', String(this.getSpherePresetIndex(this.sphereSizePreset)));
-            this.sphereSizeKnob.setAttribute('aria-valuetext', config.label);
-        }
-
-        if (this.sphereSizeValue) {
-            this.sphereSizeValue.textContent = config.label;
-        }
+        // Sphere-size controls were removed from the live navbar; presets are now driven by scene view state only.
     };
 
     HomeBackgroundScene.prototype.setSphereSizePreset = function (preset, options = {}) {
@@ -2217,36 +1970,6 @@
         }
 
         this.syncSphereControl();
-    };
-
-    HomeBackgroundScene.prototype.stepSphereSizePreset = function (direction = 1) {
-        const presetOrder = ['none', 'small', 'medium', 'large'];
-        const currentIndex = this.getSpherePresetIndex(this.sphereSizePreset);
-        const nextIndex = (currentIndex + direction + presetOrder.length) % presetOrder.length;
-        this.setSphereSizePreset(presetOrder[nextIndex]);
-    };
-
-    HomeBackgroundScene.prototype.bindSphereControl = function () {
-        this.sphereSizeKnob = document.querySelector('[data-sphere-size-knob]');
-        this.sphereSizeValue = document.querySelector('[data-sphere-size-value]');
-
-        this.bindPresetKnob(this.sphereSizeKnob, {
-            presetOrder: ['none', 'small', 'medium', 'large'],
-            getConfig: this.getSpherePresetConfig,
-            getCurrentPreset: function () {
-                return this.sphereSizePreset;
-            },
-            getCurrentDisplayAngle: function () {
-                return this.sphereKnobDisplayAngle;
-            },
-            setPreset: this.setSphereSizePreset,
-            syncControl: this.syncSphereControl,
-            getLastPreset: 'large',
-            angleVar: '--sphere-knob-angle',
-            setDisplayAngle: function (angle) {
-                this.sphereKnobDisplayAngle = angle;
-            }
-        });
     };
 
     HomeBackgroundScene.prototype.getMurmurationProfile = function (time) {
@@ -2632,8 +2355,6 @@
 
         const scene = new HomeBackgroundScene(container);
         scene.bindEntropyControl();
-        scene.bindDensityControl();
-        scene.bindSphereControl();
         scene.bindMurmurationControls();
         scene.bindMurmurationToneControl();
         scene.bindMusicControl();

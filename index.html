@@ -217,10 +217,6 @@
       <a class="home-navbar__identity" href="#">Nilanjan Banerjee</a>
       <a class="home-navbar__link" href="https://www.linkedin.com/in/neelanzone" target="_blank" rel="noreferrer">LinkedIn ↗</a>
       <a class="home-navbar__link" href="mailto:neelanzone@gmail.com">Get in Touch</a>
-      <!-- Nav burger: HOME / FEATURED / FEED  (mobile portrait, shown before name) -->
-      <button class="navbar-nav-burger" id="navbar-nav-burger" aria-label="Open navigation" aria-expanded="false" aria-controls="nav-dropdown">
-        <span class="navbar-nav-burger__icon" aria-hidden="true"></span>
-      </button>
       <!-- Name / identity burger (mobile portrait) -->
       <button class="navbar-burger" id="navbar-burger" aria-label="Open menu" aria-expanded="false" aria-controls="burger-modal">
         <span class="navbar-burger__name">Nilanjan Banerjee</span>
@@ -232,18 +228,18 @@
 
     <!-- Group 2: section nav (centre) -->
     <div class="home-navbar__center" role="list">
-      <a class="home-navbar__navlink home-navbar__navlink--active" href="#" role="listitem">HOME</a>
-      <a class="home-navbar__navlink" href="#featured" role="listitem">FEATURED</a>
+      <a class="home-navbar__navlink home-navbar__navlink--active" href="#" role="listitem" data-nav-section="home">HOME</a>
+      <a class="home-navbar__navlink" href="#featured" role="listitem" data-nav-section="featured">FEATURED</a>
       <a class="home-navbar__navlink" href="#" role="listitem" hidden>PROCESS</a>
-      <a class="home-navbar__navlink" href="#" role="listitem">FEED</a>
+      <a class="home-navbar__navlink" href="#" role="listitem" data-nav-section="feed">FEED</a>
     </div>
   </nav>
 
   <!-- ─── Nav dropdown (mobile portrait: HOME / FEATURED / FEED) ── -->
   <div class="nav-dropdown" id="nav-dropdown" role="menu" aria-label="Section navigation">
-    <a class="nav-dropdown__link" href="#" role="menuitem">HOME</a>
-    <a class="nav-dropdown__link" href="#featured" role="menuitem">FEATURED</a>
-    <a class="nav-dropdown__link" href="#" role="menuitem" id="nav-dropdown-feed">FEED</a>
+    <a class="nav-dropdown__link" href="#" role="menuitem" data-nav-section="home">HOME</a>
+    <a class="nav-dropdown__link" href="#featured" role="menuitem" data-nav-section="featured">FEATURED</a>
+    <a class="nav-dropdown__link" href="#" role="menuitem" id="nav-dropdown-feed" data-nav-section="feed">FEED</a>
   </div>
 
   <!-- ─── Burger modal (mobile portrait) ──────────────────── -->
@@ -415,8 +411,8 @@
               <p class="work-panel__desc">AI-assisted reporting tool to streamline student reports bringing down reporting cycle from four weeks to one.</p>
               <div class="work-panel__data">
                 <div class="work-panel__data-col">
-                  <span class="work-panel__data-num" data-target="200" data-suffix="+">200+</span>
-                  <span class="work-panel__data-label">sessions analysed</span>
+                  <span class="work-panel__data-num" data-target="800">800</span>
+                  <span class="work-panel__data-label">reports published</span>
                 </div>
               </div>
             </div>

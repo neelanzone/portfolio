@@ -7,17 +7,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const sceneOnlyToggleLabel = document.querySelector('[data-scene-only-toggle-label]');
     const homeSidebar = document.querySelector('[data-home-sidebar]');
     const homeSidebarToggleButtons = Array.from(document.querySelectorAll('[data-home-sidebar-toggle]'));
-    const menuToggleButton = document.getElementById('menu-toggle');
+    const menuToggleButton = document.getElementById('mobile-menu-button');
     const mobileMenu = document.getElementById('mobile-menu');
     const mobileMenuLinks = mobileMenu ? mobileMenu.querySelectorAll('a') : [];
     const mobileWorkToggle = document.getElementById('mobile-work-toggle');
     const mobileWorkProjects = document.getElementById('mobile-work-projects');
-    const homeWorkGroup = document.querySelector('[data-home-work-group]');
-    const homeWorkSummary = document.querySelector('[data-home-work-summary]');
-    const homeHomeGroup = document.querySelector('[data-home-home-group]');
     const homeBirdsGroup = document.querySelector('[data-home-birds-group]');
-    const homeAccordionGroups = Array.from(document.querySelectorAll('[data-home-accordion-item]'));
-    const homeSidebarMeta = document.querySelector('.home-sidebar__meta');
     const homeSidebarBrief = document.querySelector('.home-sidebar__page-brief');
     const homeSidebarLinks = homeSidebar ? Array.from(homeSidebar.querySelectorAll('a[href]')) : [];
     const mobileBirdsDrawer = document.querySelector('[data-mobile-birds-drawer]');
@@ -45,12 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     };
 
-    const getStoredSceneOnly = () => false;
-
-    const setStoredSceneOnly = () => {
-        // Scene-only mode intentionally resets to the portfolio view on each load.
-    };
-
     const getStoredSidebarCollapsed = () => {
         try {
             const stored = localStorage.getItem('home-sidebar-collapsed');
@@ -66,37 +55,6 @@ document.addEventListener('DOMContentLoaded', () => {
         } catch {
             // Ignore storage failures and keep the in-memory sidebar state only.
         }
-    };
-
-    const ensureSidebarGalleryLink = () => {
-        if (!homeSidebar) {
-            return null;
-        }
-
-        const indexNav = homeSidebar.querySelector('.home-sidebar__index');
-        if (!indexNav) {
-            return null;
-        }
-
-        const existing = indexNav.querySelector('[data-home-gallery-link]');
-        if (existing) {
-            return existing;
-        }
-
-        const galleryLink = document.createElement('a');
-        galleryLink.className = 'home-sidebar__index-link';
-        galleryLink.href = '#gallery';
-        galleryLink.textContent = 'Gallery';
-        galleryLink.setAttribute('data-home-gallery-link', '');
-
-        const workGroup = indexNav.querySelector('[data-home-work-group]');
-        if (workGroup) {
-            workGroup.insertAdjacentElement('afterend', galleryLink);
-        } else {
-            indexNav.appendChild(galleryLink);
-        }
-
-        return galleryLink;
     };
 
     const refreshLayout = (source = 'layout') => {
@@ -260,10 +218,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const openPortfolioAboutSection = () => {
+        const targetSelector = window.innerWidth >= 768 ? '#work-anchor' : '#about';
         const finishAboutJump = () => {
             requestAnimationFrame(() => {
                 requestAnimationFrame(() => {
-                    scrollToSectionTarget('#about');
+                    scrollToSectionTarget(targetSelector);
                 });
             });
         };
@@ -278,7 +237,7 @@ document.addEventListener('DOMContentLoaded', () => {
             return;
         }
 
-        scrollToSectionTarget('#about');
+        scrollToSectionTarget(targetSelector);
     };
 
     const closeMobileMenu = () => {
@@ -336,50 +295,17 @@ document.addEventListener('DOMContentLoaded', () => {
         requestAnimationFrame(() => refreshLayout('sidebar'));
     };
 
-    const closeTopSidebarGroups = () => {
-        [homeHomeGroup, homeBirdsGroup].forEach((group) => {
-            if (group) {
-                group.open = false;
-            }
-        });
-    };
-
-    const shouldCollapseTopSidebarForWork = () => {
-        if (
-            !homeWorkGroup
-            || !homeSidebarMeta
-            || document.body.classList.contains('home-alt--sidebar-collapsed')
-            || !homeWorkGroup.open
-        ) {
-            return false;
+    const setDetailsOpen = (group, open) => {
+        if (group?.tagName === 'DETAILS') {
+            group.open = open;
         }
-
-        const workSubmenu = homeWorkGroup.querySelector('.home-sidebar__index-submenu');
-        if (!workSubmenu) {
-            return false;
-        }
-
-        const submenuRect = workSubmenu.getBoundingClientRect();
-        const metaRect = homeSidebarMeta.getBoundingClientRect();
-
-        return submenuRect.bottom >= metaRect.top - 8;
     };
 
     const syncSidebarAccordionForScene = (sceneOnly) => {
-        if (sceneOnly) {
-            if (homeBirdsGroup) {
-                homeBirdsGroup.open = true;
-            }
-            return;
-        }
-
-        if (homeHomeGroup) {
-            homeHomeGroup.open = true;
-        }
+        setDetailsOpen(homeBirdsGroup, sceneOnly);
     };
     const applySceneOnlyPreference = (enabled) => {
         document.body.classList.toggle('home-alt--scene-only', enabled);
-        setStoredSceneOnly(enabled);
         syncSidebarAccordionForScene(enabled);
 
         if (sceneOnlyToggleButton) {
@@ -430,15 +356,10 @@ document.addEventListener('DOMContentLoaded', () => {
     const storedTheme = getStoredTheme();
     applyThemePreference(storedTheme === 'dark' ? 'dark' : 'light');
     applySidebarCollapsedPreference(getStoredSidebarCollapsed());
-    applySceneOnlyPreference(getStoredSceneOnly());
+    applySceneOnlyPreference(false);
     syncMobileFlockBar();
     syncHomeTopbarReveal();
     finishBootSequence();
-
-    const sidebarGalleryLink = ensureSidebarGalleryLink();
-    if (sidebarGalleryLink && !homeSidebarLinks.includes(sidebarGalleryLink)) {
-        homeSidebarLinks.push(sidebarGalleryLink);
-    }
 
     themeToggleButtons.forEach((button) => {
         button.addEventListener('click', () => {
@@ -529,42 +450,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    if (homeWorkSummary && homeWorkGroup) {
-        homeWorkSummary.addEventListener('click', (event) => {
-            event.preventDefault();
-            const shouldOpen = !homeWorkGroup.open;
-            homeWorkGroup.open = shouldOpen;
-
-            if (!shouldOpen) {
-                return;
-            }
-
-            requestAnimationFrame(() => {
-                if (shouldCollapseTopSidebarForWork()) {
-                    closeTopSidebarGroups();
-                }
-            });
-
-            const targetElement = document.querySelector('#work-anchor') || document.querySelector('#work');
-            if (!targetElement) {
-                return;
-            }
-
-            const navOffset = navbar ? navbar.offsetHeight + 18 : 18;
-            const absoluteTop = window.scrollY + targetElement.getBoundingClientRect().top;
-            const destination = Math.max(0, absoluteTop - navOffset);
-
-            if (window.history?.replaceState) {
-                window.history.replaceState(null, '', '#work-anchor');
-            }
-
-            window.scrollTo({
-                top: destination,
-                behavior: 'smooth'
-            });
-        });
-    }
-
     mobileMenuLinks.forEach((link) => {
         link.addEventListener('click', closeMobileMenu);
     });
@@ -649,10 +534,35 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    const workCards = Array.from(document.querySelectorAll('.work-card'));
+    const workCards = Array.from(document.querySelectorAll('.project-carousel-card'));
+    const isDesktopViewport = () => window.innerWidth >= 768;
+
+    const syncRailFocusState = () => {
+        if (!document.body.classList.contains('home-alt')) {
+            return;
+        }
+
+        if (window.innerWidth < 768) {
+            document.body.classList.remove('home-alt--rail-focus');
+            document.body.classList.remove('home-alt--rail-hover');
+            return;
+        }
+
+        const anyCardHovered = workCards.some((card) => card.matches(':hover'));
+        document.body.classList.toggle('home-alt--rail-focus', anyCardHovered);
+        document.body.classList.toggle('home-alt--rail-hover', anyCardHovered);
+    };
+
+    const scheduleRailFocusSync = () => {
+        window.requestAnimationFrame(syncRailFocusState);
+    };
 
     const applyWorkCardTilt = (card, clientX, clientY, scale = 1.02) => {
-        const shell = card?.querySelector('.work-card-shell');
+        if (isDesktopViewport()) {
+            return;
+        }
+
+        const shell = card?.querySelector('.project-carousel-card__shell');
         if (!shell) {
             return;
         }
@@ -680,7 +590,11 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const resetWorkCardTilt = (card) => {
-        const shell = card?.querySelector('.work-card-shell');
+        if (isDesktopViewport()) {
+            return;
+        }
+
+        const shell = card?.querySelector('.project-carousel-card__shell');
         if (!shell) {
             return;
         }
@@ -693,14 +607,40 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 600);
     };
 
+    const clearDesktopWorkCardInlineState = (card) => {
+        const shell = card?.querySelector('.project-carousel-card__shell');
+        const bgImg = card?.querySelector('.project-carousel-card__image video, .project-carousel-card__image img');
+
+        if (shell) {
+            shell.style.removeProperty('transform');
+            shell.style.removeProperty('transition');
+            shell.style.removeProperty('will-change');
+            shell.style.removeProperty('--mouse-x');
+            shell.style.removeProperty('--mouse-y');
+        }
+
+        if (bgImg) {
+            bgImg.style.removeProperty('transition');
+        }
+    };
+
     workCards.forEach((card) => {
-        const shell = card.querySelector('.work-card-shell');
-        const bgImg = card.querySelector('.work-bg-image');
+        const shell = card.querySelector('.project-carousel-card__shell');
+        const bgImg = card.querySelector('.project-carousel-card__image video') || card.querySelector('.project-carousel-card__image img');
         if (!shell) {
             return;
         }
 
+        card.addEventListener('mouseenter', syncRailFocusState);
+        card.addEventListener('mouseleave', scheduleRailFocusSync);
+        card.addEventListener('focusin', syncRailFocusState);
+        card.addEventListener('focusout', scheduleRailFocusSync);
+
         card.addEventListener('mouseenter', () => {
+            if (isDesktopViewport()) {
+                return;
+            }
+
             shell.style.transition = 'transform 0.1s cubic-bezier(0.19, 1, 0.22, 1)';
             shell.style.willChange = 'transform';
             if (bgImg) {
@@ -709,10 +649,18 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         card.addEventListener('mousemove', (event) => {
+            if (isDesktopViewport()) {
+                return;
+            }
+
             applyWorkCardTilt(card, event.clientX, event.clientY, 1.02);
         });
 
         card.addEventListener('mouseleave', () => {
+            if (isDesktopViewport()) {
+                return;
+            }
+
             if (bgImg) {
                 bgImg.style.transition = 'none';
             }
@@ -720,26 +668,43 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    const carouselContainer = document.querySelector('.carousel-container');
-    const carouselTrack = document.querySelector('.carousel-track');
-    const carouselDots = document.getElementById('carousel-dots');
+        const carouselContainer = document.querySelector('.carousel-container');
+        const carouselTrack = document.querySelector('.carousel-track');
+        const carouselDots = document.getElementById('carousel-dots');
 
-    if (carouselContainer && carouselTrack) {
-        const cards = Array.from(carouselTrack.querySelectorAll('.work-card'));
+        if (carouselContainer && carouselTrack) {
+        const cards = Array.from(carouselTrack.querySelectorAll('.project-carousel-card'));
         let filingCards = [];
-        let filingCardWidth = 0;
-        let filingActiveCard = null;
-        let filingActiveIdx = -1;
-        let filingLastMouseX = 0;
-        let filingDxAccum = 0;
         let isDesktopCarousel = false;
         let mobileDots = [];
         let touchCarouselPointerId = null;
         let touchCarouselStartX = 0;
         let touchCarouselStartY = 0;
         let touchCarouselStartScrollLeft = 0;
-        let touchCarouselDragging = false;
-        let suppressCarouselClickUntil = 0;
+            let touchCarouselDragging = false;
+            let suppressCarouselClickUntil = 0;
+            const qualitativeTitleNeedle = 'qualitative reports at scale';
+
+            const getDesktopOrderedCards = (projectCards) => {
+                const reversedCards = projectCards.slice().reverse();
+                const topCard = reversedCards.find((card) => {
+                    const title = card.querySelector('h3')?.textContent?.trim().toLowerCase() || '';
+                    return title.includes(qualitativeTitleNeedle);
+                });
+
+                if (!topCard) {
+                    return reversedCards;
+                }
+
+                return [topCard, ...reversedCards.filter((card) => card !== topCard)];
+            };
+
+            const setDesktopTopCard = (orderedCards) => {
+                cards.forEach((card) => card.classList.remove('is-stack-top'));
+                if (orderedCards.length) {
+                    orderedCards[0].classList.add('is-stack-top');
+                }
+            };
 
         const setMobileActiveDot = (activeIdx) => {
             if (!mobileDots.length) {
@@ -843,58 +808,19 @@ document.addEventListener('DOMContentLoaded', () => {
             releaseTouchCarouselPointerCapture(activePointerId);
         };
 
-        const applyFilingSpread = (hoveredIdx) => {
-            const spreadPx = Math.round(filingCardWidth * 0.5);
-            filingCards.forEach((card, index) => {
-                const base = parseInt(card.dataset.baseFilingX || '0', 10);
-                const shift = index < hoveredIdx ? -spreadPx : index > hoveredIdx ? spreadPx : 0;
-                card.style.setProperty('--filing-x', `${base + shift}px`);
-            });
-        };
-
-        const resetFilingSpread = () => {
-            filingCards.forEach((card) => {
-                card.style.setProperty('--filing-x', `${card.dataset.baseFilingX || 0}px`);
-            });
-        };
-
-        const openFilingCard = (card, idx) => {
-            if (!card || filingActiveCard === card) {
-                return;
-            }
-
-            if (filingActiveCard) {
-                filingActiveCard.classList.remove('is-filing-open');
-            }
-
-            filingActiveCard = card;
-            filingActiveIdx = idx;
-            card.classList.add('is-filing-open');
-            applyFilingSpread(idx);
-        };
-
-        const closeFilingCard = () => {
-            if (filingActiveCard) {
-                filingActiveCard.classList.remove('is-filing-open');
-            }
-
-            filingActiveCard = null;
-            filingActiveIdx = -1;
-            resetFilingSpread();
-        };
-
-        const updateCarouselGeometry = () => {
-            endTouchCarouselGesture();
-            isDesktopCarousel = window.innerWidth >= 768;
-            const containerRect = carouselContainer.getBoundingClientRect();
+            const updateCarouselGeometry = () => {
+                endTouchCarouselGesture();
+                isDesktopCarousel = window.innerWidth >= 768;
+                const containerRect = carouselContainer.getBoundingClientRect();
 
             if (!containerRect.width || !carouselContainer.offsetParent) {
                 return;
             }
 
-            if (!isDesktopCarousel) {
-                carouselTrack.style.width = 'max-content';
-                closeFilingCard();
+                if (!isDesktopCarousel) {
+                    carouselTrack.style.width = 'max-content';
+                document.body.classList.remove('home-alt--rail-focus');
+                document.body.classList.remove('home-alt--rail-hover');
                 cards.forEach((card) => {
                     card.style.left = '';
                     card.style.top = '';
@@ -902,12 +828,14 @@ document.addEventListener('DOMContentLoaded', () => {
                     card.style.removeProperty('--filing-x');
                     card.style.removeProperty('--filing-tilt');
                     card.dataset.baseFilingX = '0';
-                    card.style.display = card.classList.contains('title-card') ? 'none' : '';
                     card.classList.remove('is-active');
+                    card.classList.remove('is-stack-top');
+                    card.classList.remove('is-stack-left');
+                    card.classList.remove('is-stack-right');
+                    card.classList.remove('is-stack-center');
                 });
-                filingCards = cards.filter((card) => !card.classList.contains('title-card'));
-                filingCardWidth = filingCards[0]?.offsetWidth || 280;
-                requestAnimationFrame(() => {
+                    filingCards = cards;
+                    requestAnimationFrame(() => {
                     buildMobileDots();
                     updateMobileActiveDot();
                 });
@@ -916,133 +844,53 @@ document.addEventListener('DOMContentLoaded', () => {
 
             const cardWidth = cards[0]?.offsetWidth || 320;
             const containerWidth = carouselContainer.offsetWidth || 1000;
-            const projCards = cards.filter((card) => !card.classList.contains('title-card'));
+            const projCards = getDesktopOrderedCards(cards);
             const count = projCards.length;
-            const spacing = Math.round(containerWidth / count);
-            const visualCenterBias = Math.round(Math.max(16, Math.min(44, containerWidth * 0.022)));
-            const startX = Math.round(containerWidth / 2 - ((count - 1) / 2) * spacing - cardWidth / 2 - visualCenterBias);
-            const midIdx = (count - 1) / 2;
+            const stackOverlap = Math.round(cardWidth * 1.08);
 
             carouselTrack.style.transform = 'none';
             carouselTrack.style.width = `${containerWidth}px`;
 
             cards.forEach((card) => {
-                if (card.classList.contains('title-card')) {
-                    card.style.display = 'none';
-                    return;
-                }
-
+                clearDesktopWorkCardInlineState(card);
                 card.style.display = '';
+                card.classList.remove('is-stack-left');
+                card.classList.remove('is-stack-right');
+                card.classList.remove('is-stack-center');
             });
 
+            const viewportCenterXInContainer = (window.innerWidth / 2) - containerRect.left - (cardWidth / 2);
+            const centerX = viewportCenterXInContainer;
+            const totalStackWidth = cardWidth + (Math.max(0, count - 1) * stackOverlap);
+            const stackStartX = centerX - ((totalStackWidth - cardWidth) / 2);
+            const verticalOffset = Math.round(Math.max(2, Math.min(6, containerRect.height * 0.02)));
+
             projCards.forEach((card, index) => {
+                const baseX = stackStartX + (index * stackOverlap);
+                const tilt = index % 2 === 0 ? -2 : 2;
                 card.style.left = '0';
-                card.style.top = '0';
-                card.style.setProperty('--filing-x', `${startX + index * spacing}px`);
-                card.style.setProperty('--filing-tilt', `${(index - midIdx) * 3}deg`);
-                card.style.zIndex = String(count - Math.round(Math.abs(index - midIdx)));
-                card.dataset.baseFilingX = String(startX + index * spacing);
+                card.style.top = `${verticalOffset}px`;
+                card.style.setProperty('--filing-x', `${baseX}px`);
+                card.style.setProperty('--filing-tilt', `${tilt}deg`);
+                card.style.zIndex = String(count - index);
+                card.dataset.baseFilingX = String(baseX);
+
+                if (baseX < centerX - 1) {
+                    card.classList.add('is-stack-left');
+                } else if (baseX > centerX + 1) {
+                    card.classList.add('is-stack-right');
+                } else {
+                    card.classList.add('is-stack-center');
+                }
             });
 
             filingCards = projCards;
-            filingCardWidth = cardWidth;
-            closeFilingCard();
-            buildMobileDots();
+            setDesktopTopCard(projCards);
+            if (carouselDots) {
+                carouselDots.innerHTML = '';
+            }
+            syncRailFocusState();
         };
-
-        carouselContainer.addEventListener('mouseenter', (event) => {
-            if (!isDesktopCarousel) {
-                return;
-            }
-
-            const rect = carouselContainer.getBoundingClientRect();
-            filingLastMouseX = event.clientX - rect.left;
-            filingDxAccum = 0;
-        });
-
-        carouselContainer.addEventListener('mousemove', (event) => {
-            if (!isDesktopCarousel || !filingCards.length) {
-                return;
-            }
-
-            const rect = carouselContainer.getBoundingClientRect();
-            const mouseX = event.clientX - rect.left;
-            const dx = mouseX - filingLastMouseX;
-            filingLastMouseX = mouseX;
-
-            if (filingActiveCard && filingActiveIdx !== -1) {
-                if ((dx > 0 && filingDxAccum < 0) || (dx < 0 && filingDxAccum > 0)) {
-                    filingDxAccum = 0;
-                }
-
-                filingDxAccum += dx;
-                const switchThreshold = 75;
-
-                if (filingDxAccum >= switchThreshold) {
-                    const next = filingActiveIdx + 1;
-                    if (next < filingCards.length) {
-                        openFilingCard(filingCards[next], next);
-                    }
-                    filingDxAccum = 0;
-                } else if (filingDxAccum <= -switchThreshold) {
-                    const prev = filingActiveIdx - 1;
-                    if (prev >= 0) {
-                        openFilingCard(filingCards[prev], prev);
-                    }
-                    filingDxAccum = 0;
-                }
-                return;
-            }
-
-            filingDxAccum = 0;
-            let nearest = null;
-            let nearestDist = Infinity;
-            let nearestIdx = -1;
-
-            filingCards.forEach((card, index) => {
-                const edgeX = parseInt(card.dataset.baseFilingX || '0', 10) + filingCardWidth / 2;
-                const dist = Math.abs(mouseX - edgeX);
-                if (dist < nearestDist) {
-                    nearestDist = dist;
-                    nearest = card;
-                    nearestIdx = index;
-                }
-            });
-
-            if (nearest) {
-                openFilingCard(nearest, nearestIdx);
-            }
-        });
-
-        carouselContainer.addEventListener('mouseleave', () => {
-            if (!isDesktopCarousel) {
-                return;
-            }
-
-            closeFilingCard();
-            filingDxAccum = 0;
-        });
-
-        const prevButton = carouselContainer.querySelector('.carousel-control.prev');
-        const nextButton = carouselContainer.querySelector('.carousel-control.next');
-
-        prevButton?.addEventListener('click', () => {
-            if (!isDesktopCarousel) {
-                return;
-            }
-
-            const targetIdx = filingActiveIdx <= 0 ? 0 : filingActiveIdx - 1;
-            openFilingCard(filingCards[targetIdx], targetIdx);
-        });
-
-        nextButton?.addEventListener('click', () => {
-            if (!isDesktopCarousel) {
-                return;
-            }
-
-            const targetIdx = filingActiveIdx < 0 ? 0 : Math.min(filingCards.length - 1, filingActiveIdx + 1);
-            openFilingCard(filingCards[targetIdx], targetIdx);
-        });
 
         carouselContainer.addEventListener('scroll', () => {
             if (!isDesktopCarousel) {

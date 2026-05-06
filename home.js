@@ -285,21 +285,32 @@ document.addEventListener('DOMContentLoaded', () => {
     const navFeatured  = document.querySelector('.home-navbar__navlink[href="#featured"]');
     const navFeed      = Array.from(document.querySelectorAll('.home-navbar__navlink')).find(el => el.textContent.trim() === 'FEED') || null;
     const navHome      = Array.from(document.querySelectorAll('.home-navbar__navlink')).find(el => el.textContent.trim() === 'HOME') || null;
+    const navDropdown  = document.getElementById('nav-dropdown');
     const ACT = 'home-navbar__navlink--active';
     let feedActive = false;
     let navLocked  = false;
     let _navLockTimer = null;
+
+    function getNavSection(link) {
+        return link?.dataset.navSection || link?.textContent.trim().toLowerCase() || '';
+    }
+
+    function getScrollNavActive() {
+        if (!workSection) return navHome;
+        const viewportFocus = window.scrollY + window.innerHeight * 0.5;
+        const workTop = workSection.offsetTop;
+        if (viewportFocus < workTop) return navHome;
+
+        const total = Math.max(1, workSection.offsetHeight - window.innerHeight);
+        const workProgress = Math.max(0, Math.min(1, (window.scrollY - workTop) / total));
+        return workProgress >= 0.75 ? navFeed : navFeatured;
+    }
+
     function _unlockNav() {
         navLocked = false;
         clearTimeout(_navLockTimer);
         window.removeEventListener('scrollend', _unlockNav);
-        if (feedActive) {
-            setNavActive(navFeed);
-        } else {
-            const ws = document.getElementById('featured');
-            const r  = ws ? ws.getBoundingClientRect() : null;
-            setNavActive(r && r.top < window.innerHeight && r.bottom > 0 ? navFeatured : navHome);
-        }
+        setNavActive(getScrollNavActive());
     }
     function lockNav(activeEl) {
         navLocked = true;
@@ -310,8 +321,15 @@ document.addEventListener('DOMContentLoaded', () => {
         _navLockTimer = setTimeout(_unlockNav, 4000);
     }
     function setNavActive(active) {
-        [navHome, navFeatured, navFeed].forEach(el => el && el.classList.remove(ACT));
-        if (active) active.classList.add(ACT);
+        const activeSection = getNavSection(active);
+        [navHome, navFeatured, navFeed].forEach(el => {
+            if (!el) return;
+            const isActive = getNavSection(el) === activeSection;
+            el.classList.toggle(ACT, isActive);
+            if (isActive) el.setAttribute('aria-current', 'page');
+            else el.removeAttribute('aria-current');
+        });
+        syncNavDropdownActive(activeSection);
     }
     const workSlide0   = document.querySelector('.work-slide[data-slide="0"]');
     const workSlide1   = document.querySelector('.work-slide[data-slide="1"]');
@@ -382,6 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
         if (workSlide2) workSlide2.style.clipPath = 'inset(100% 0 0 0)';
 
         let cardNaturalX    = null;
+        let introCardNaturalX = null;
         let cardMediaWidths = [];
         let cardMediaWraps  = [];
         let card0Width      = 0;
@@ -395,8 +414,13 @@ document.addEventListener('DOMContentLoaded', () => {
         let _rtX = 0, _rtY = 0, _rtScrollX0 = 0, _rtAxis = null, _rtPanning = false;
         let _rtVelHistory = [];
         let _panGen = 0;
+        let _singleSetWidth = 0;    // width of one card set before cloning
+        let _infiniteClones = null; // prepend + append clone elements
+        let _railEntryTime  = 0;    // timestamp of last enterRailMode call
         let _loopTouchY = 0, _loopTouchX = 0;
         const FEED_CHROME_TRIGGER_RATIO = 0.40;
+        const RAIL_ENTRY_INPUT_LOCK = 700;
+        const RAIL_WHEEL_DELTA_LIMIT = 80;
         const LOOP_SCROLL_DURATION = 1500;
         const LOOP_CLOUDS_CLASS = 'home-alt--loop-clouds';
         const LOOP_CLOUDS_FADING_CLASS = 'home-alt--loop-clouds-fading';
@@ -413,7 +437,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 dot.className = 'feed-dot';
                 dot.setAttribute('aria-label', `Feed item ${i + 1}`);
                 dot.addEventListener('click', () =>
-                    panFeedTo(Math.max(0, Math.min(railOverflow, cardNaturalX[i])), true));
+                    panFeedTo(cardNaturalX[i], true, undefined, normalizeScrollX));
                 feedDots.appendChild(dot);
             });
             feedDots.style.opacity = '0';
@@ -439,8 +463,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function getFeedChromeOpacity(feedOffsetX) {
-            if (!cardNaturalX || !cardNaturalX.length) return 0;
-            const firstCardLeft = cardNaturalX[0] + feedOffsetX;
+            const introX = introCardNaturalX || cardNaturalX;
+            if (!introX || !introX.length) return 0;
+            const firstCardLeft = introX[0] + feedOffsetX;
             const triggerX = window.innerWidth * FEED_CHROME_TRIGGER_RATIO;
             return firstCardLeft <= triggerX ? 1 : 0;
         }
@@ -477,11 +502,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
             // ── Layout constants (portrait vs landscape) ──────────────
             const FRAME_W    = isPortrait ? workFrame.offsetWidth : 550 * S;
-            const MASK_H_MIN = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 0.72 : 0.65)) : Math.round(200 * S);
-            const MASK_H_MAX = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 1.05 : 0.95)) : Math.round(550 * S);
+            const MASK_H_MIN = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 0.54 : 0.58)) : Math.round(200 * S);
+            const MASK_H_MAX = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 0.76 : 0.80)) : Math.round(550 * S);
             const PANEL_W_MAX = isPortrait ? FRAME_W : Math.round(532 * S);
             // portrait: panel grows in height below the image
-            const PANEL_H_MAX = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 0.85 : 0.75)) : 0;
+            const PANEL_H_MAX = isPortrait ? Math.round(FRAME_W * (window.innerWidth < 768 ? 0.68 : 0.60)) : 0;
             // overlap correction: panel left = 530*S, frame = 550*S → 20*S overlap
             const PANEL_OVERLAP = 20 * S;
 
@@ -541,6 +566,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     feedStrip.style.transform = `translateX(${window.innerWidth}px)`;
                     if (feedTrack) feedTrack.style.transform = '';
                     cardNaturalX    = null;
+                    introCardNaturalX = null;
                     cardMediaWidths = [];
                     card0Width      = 0;
                     railOverflow    = 0;
@@ -560,6 +586,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         feedStrip.style.transform = 'translateX(0)';
                         cardMediaWraps  = feedCards.map(c => c.querySelector('.feed-card__media-wrap'));
                         cardNaturalX    = cardMediaWraps.map(w => w ? w.getBoundingClientRect().left : 0);
+                        introCardNaturalX = cardNaturalX.slice();
                         cardMediaWidths = cardMediaWraps.map(w => w?.offsetWidth || 0);
                         card0Width = cardMediaWidths[0] || 0;
                         railOverflow = feedTrack
@@ -569,21 +596,64 @@ document.addEventListener('DOMContentLoaded', () => {
                     }
 
                     if (feedT < 1) {
-                        if (feedRailActive) exitRailMode();
                         const feedOffsetX = (1 - feedT) * window.innerWidth;
-                        feedStrip.style.transform = `translateX(${feedOffsetX.toFixed(2)}px)`;
-                        if (feedTrack) feedTrack.style.transform = '';
                         const feedChromeOpacity = getFeedChromeOpacity(feedOffsetX);
-                        feedCards.forEach((card, i) => {
-                            card.style.transform     = '';
-                            card.style.pointerEvents = 'auto';
-                            const wrap = cardMediaWraps[i];
-                            if (wrap) wrap.style.clipPath = '';
-                        });
-                        ensureFeedDots();
-                        setFeedChromeOpacity(feedChromeOpacity, false);
-                        setFeedHoverActive(true);
-                        updateDots();
+                        if (feedRailActive) {
+                            if (feedChromeOpacity < 1) {
+                                // Scrolling upward before the 40% handoff should return
+                                // control to the scroll-driven intro instead of staying latched.
+                                exitRailMode();
+                                cardNaturalX = introCardNaturalX ? introCardNaturalX.slice() : null;
+                                feedStrip.style.transform = `translateX(${feedOffsetX.toFixed(2)}px)`;
+                                if (feedTrack) feedTrack.style.transform = '';
+                                feedCards.forEach((card, i) => {
+                                    card.style.transform     = '';
+                                    card.style.pointerEvents = 'auto';
+                                    const wrap = cardMediaWraps[i];
+                                    if (wrap) wrap.style.clipPath = '';
+                                });
+                                ensureFeedDots();
+                                setFeedChromeOpacity(feedChromeOpacity, false);
+                                setFeedHoverActive(true);
+                                updateDots();
+                            } else {
+                                // Once the rail is live, keep it latched. The scroll intro
+                                // only owns the handoff; side-scroll owns movement after that.
+                                feedStrip.style.transform = 'translateX(0)';
+                                setFeedChromeOpacity(1, true);
+                                setFeedHoverActive(true);
+                                updateDots();
+                            }
+                        } else {
+                            if (feedChromeOpacity >= 1) {
+                                // Dots are visible — hand off to rail immediately instead of
+                                // waiting for feedT to reach 1
+                                const triggerX = window.innerWidth * FEED_CHROME_TRIGGER_RATIO;
+                                const introFirstLeft = introCardNaturalX
+                                    ? introCardNaturalX[0] + feedOffsetX
+                                    : triggerX;
+                                const handoffFirstLeft = Math.max(introFirstLeft, triggerX);
+                                feedCards.forEach((card, i) => {
+                                    card.style.transform     = '';
+                                    card.style.pointerEvents = 'auto';
+                                    if (cardMediaWraps[i]) cardMediaWraps[i].style.clipPath = '';
+                                });
+                                enterRailMode(handoffFirstLeft);
+                            } else {
+                                feedStrip.style.transform = `translateX(${feedOffsetX.toFixed(2)}px)`;
+                                if (feedTrack) feedTrack.style.transform = '';
+                                feedCards.forEach((card, i) => {
+                                    card.style.transform     = '';
+                                    card.style.pointerEvents = 'auto';
+                                    const wrap = cardMediaWraps[i];
+                                    if (wrap) wrap.style.clipPath = '';
+                                });
+                                ensureFeedDots();
+                                setFeedChromeOpacity(feedChromeOpacity, false);
+                                setFeedHoverActive(true);
+                                updateDots();
+                            }
+                        }
                     } else {
                         // Stacking complete — hand off to interactive rail
                         feedCards.forEach((card, i) => {
@@ -695,20 +765,27 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!feedDots || !cardNaturalX || hoveredCardIdx !== -1) return;
             let activeIdx = 0, minDist = Infinity;
             cardNaturalX.forEach((x, i) => {
-                const d = Math.abs(x - feedScrollX);
+                const d = _singleSetWidth > 0
+                    ? Math.min(
+                        Math.abs(x - feedScrollX),
+                        Math.abs(x - _singleSetWidth - feedScrollX),
+                        Math.abs(x + _singleSetWidth - feedScrollX)
+                      )
+                    : Math.abs(x - feedScrollX);
                 if (d < minDist) { minDist = d; activeIdx = i; }
             });
             Array.from(feedDots.children).forEach((dot, i) =>
                 dot.classList.toggle('feed-dot--active', i === activeIdx));
         }
 
-        function panFeedTo(targetX, animate, duration) {
-            const clamp = Math.max(0, Math.min(railOverflow, targetX));
+        function panFeedTo(targetX, animate, duration, onComplete) {
+            const clamp = _singleSetWidth > 0 ? targetX : Math.max(0, Math.min(railOverflow, targetX));
             const gen = ++_panGen;
             if (!animate) {
                 feedScrollX = clamp;
                 if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
                 updateDots();
+                if (onComplete) onComplete();
                 return;
             }
             const dur = duration || 380;
@@ -720,7 +797,24 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
                 updateDots();
                 if (t < 1) requestAnimationFrame(tick);
+                else if (onComplete) onComplete();
             })(t0);
+        }
+
+        function normalizeScrollX() {
+            if (!_singleSetWidth || !feedTrack || !cardNaturalX) return;
+            const lo = cardNaturalX[0];
+            const min = lo - _singleSetWidth;
+            const max = lo + _singleSetWidth;
+            let normalized = feedScrollX;
+            if (feedScrollX < min) normalized += _singleSetWidth;
+            else if (feedScrollX >= max) normalized -= _singleSetWidth;
+
+            if (Math.abs(normalized - feedScrollX) > 0.5) {
+                feedScrollX = normalized;
+                feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
+                updateDots();
+            }
         }
 
         function removeIdsFromClone(el) {
@@ -864,7 +958,7 @@ document.addEventListener('DOMContentLoaded', () => {
             section.className = 'loop-feed-end-clone';
             section.setAttribute('aria-hidden', 'true');
 
-            const overflow = feedTrack ? Math.max(0, feedTrack.offsetWidth - window.innerWidth) : 0;
+            const overflow = feedRailActive ? feedScrollX : (feedTrack ? Math.max(0, feedTrack.offsetWidth - window.innerWidth) : 0);
             const feedClone = feedStrip.cloneNode(true);
             removeIdsFromClone(feedClone);
             feedClone.classList.add('is-feed-hover-active', 'is-rail-active');
@@ -954,8 +1048,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     resetLoopClouds();
                     updateWork();
                     if (!feedRailActive) enterRailMode();
-                    railOverflow = feedTrack ? Math.max(0, feedTrack.offsetWidth - window.innerWidth) : 0;
-                    panFeedTo(railOverflow, false);
+                    panFeedTo(cardNaturalX[cardNaturalX.length - 1], false);
                     setFeedChromeOpacity(1, true);
                     setFeedHoverActive(true);
                     endLoop();
@@ -982,18 +1075,31 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 return;
             }
-            // Both axes drive the carousel; prefer the dominant axis.
-            const delta = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            // Left edge still lets the page scroll naturally upward.
-            // Right edge scrolls down into a temporary Home panel before the hidden reset.
-            if (delta > 0 && feedScrollX >= railOverflow - 1) {
+
+            // The wheel gesture that scrolls the page into Feed often continues
+            // for a few inertial frames. Block it before interpreting any axis,
+            // otherwise entry momentum immediately drives the rail/loop.
+            if (performance.now() - _railEntryTime < RAIL_ENTRY_INPUT_LOCK) {
                 e.preventDefault();
-                loopFeedToHome();
                 return;
             }
-            if (delta < 0 && feedScrollX <= 0) return;
+
+            const absX = Math.abs(e.deltaX);
+            const absY = Math.abs(e.deltaY);
+            const isH = absX > Math.max(4, absY * 1.15);
+
+            if (!isH) {
+                if (e.deltaY > 0) {
+                    e.preventDefault();
+                    loopFeedToHome();
+                }
+                return;
+            }
+
             e.preventDefault();
-            panFeedTo(feedScrollX + delta, false);
+            const deltaX = Math.max(-RAIL_WHEEL_DELTA_LIMIT, Math.min(RAIL_WHEEL_DELTA_LIMIT, e.deltaX));
+            panFeedTo(feedScrollX + deltaX, false);
+            if (_singleSetWidth > 0) normalizeScrollX();
         }
 
         function onRailTouchStart(e) {
@@ -1027,44 +1133,96 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function onRailTouchEnd(e) {
-            if (feedLooping || !_rtPanning) return;
+            if (feedLooping) return;
             const dx = e.changedTouches[0].clientX - _rtX;
+            const dy = e.changedTouches[0].clientY - _rtY;
 
-            if (feedScrollX >= railOverflow - 1 && dx < -30) {
-                loopFeedToHome();
-                return;
-            }
+            if (_rtAxis === 'v' && dy < -40) { loopFeedToHome(); return; }
+            if (!_rtPanning) return;
 
-            // Compute velocity (px/ms), positive = scrolling rightward in scroll space
+            // Build snap points across all three clone zones for seamless wrap
+            const snapPoints = cardNaturalX
+                ? (_singleSetWidth > 0
+                    ? [
+                        ...cardNaturalX.map(x => x - _singleSetWidth),
+                        ...cardNaturalX,
+                        ...cardNaturalX.map(x => x + _singleSetWidth)
+                      ]
+                    : cardNaturalX.map(x => Math.max(0, Math.min(railOverflow, x))))
+                : [0];
+
             let vel = 0;
             if (_rtVelHistory.length >= 2) {
                 const a = _rtVelHistory[0], b = _rtVelHistory[_rtVelHistory.length - 1];
                 const dt = b.t - a.t;
                 if (dt > 5) vel = -(b.x - a.x) / dt;
             }
-
-            // Project where momentum would carry; 320ms throw constant
             const projected = feedScrollX + vel * 320;
 
-            // Snap to nearest card natural position
-            const snapPoints = cardNaturalX ? cardNaturalX.map(x => Math.max(0, Math.min(railOverflow, x))) : [0];
             const snapTarget = snapPoints.reduce((best, pt) =>
                 Math.abs(pt - projected) < Math.abs(best - projected) ? pt : best, snapPoints[0]);
-
-            // Scale duration with throw distance so fast flicks feel fast
             const dist = Math.abs(snapTarget - feedScrollX);
             const dur  = Math.max(280, Math.min(600, dist * 0.9));
-            panFeedTo(snapTarget, true, dur);
+            panFeedTo(snapTarget, true, dur, normalizeScrollX);
         }
 
-        function enterRailMode() {
+        function enterRailMode(handoffFirstCardLeft) {
             if (feedRailActive) return;
             feedRailActive = true;
-            feedScrollX = 0;
-            railOverflow = feedTrack ? Math.max(0, feedTrack.offsetWidth - window.innerWidth) : 0;
+            _railEntryTime = performance.now();
+
+            // Capture the first card's current screen position before the rail
+            // swaps into clone mode, so the handoff doesn't visually jump.
+            const stripMatch = feedStrip.style.transform.match(/translateX\(([^)]+)px\)/);
+            const priorStripOffsetX = stripMatch ? parseFloat(stripMatch[1]) : 0;
+            const firstCardWrap = feedCards[0]?.querySelector('.feed-card__media-wrap') || feedCards[0];
+            const measuredFirstCardLeft = firstCardWrap
+                ? firstCardWrap.getBoundingClientRect().left
+                : ((introCardNaturalX && introCardNaturalX[0]) || 0) + priorStripOffsetX;
+            const priorFirstCardLeft = Number.isFinite(handoffFirstCardLeft)
+                ? handoffFirstCardLeft
+                : measuredFirstCardLeft;
+
             feedStrip.style.transform = 'translateX(0)';
             feedStrip.classList.add('is-rail-active');
             if (feedTrack) feedTrack.style.transform = 'translateX(0)';
+
+            // Force captions to visible BEFORE cloning so clones inherit opacity: 1
+            setFeedChromeOpacity(1, false);
+
+            if (feedTrack) {
+                // Measure the single-set width before cloning
+                _singleSetWidth = feedTrack.scrollWidth || feedTrack.offsetWidth;
+
+                // Prepend + append clones for seamless infinite scroll
+                const origChildren = Array.from(feedTrack.children);
+                const prepend = document.createDocumentFragment();
+                const append  = document.createDocumentFragment();
+                origChildren.forEach(child => {
+                    const ca = child.cloneNode(true);
+                    const cb = child.cloneNode(true);
+                    removeIdsFromClone(ca);
+                    removeIdsFromClone(cb);
+                    ca.setAttribute('data-infinite-clone', 'true');
+                    cb.setAttribute('data-infinite-clone', 'true');
+                    prepend.appendChild(ca);
+                    append.appendChild(cb);
+                });
+                feedTrack.insertBefore(prepend, feedTrack.firstChild);
+                feedTrack.appendChild(append);
+                _infiniteClones = true;
+                feedTrack.getBoundingClientRect(); // force reflow
+            }
+
+            // Re-measure cardNaturalX — original cards now in the middle set
+            const wraps = feedCards.map(c => c.querySelector('.feed-card__media-wrap') || c);
+            cardNaturalX = wraps.map(w => w.getBoundingClientRect().left);
+
+            // Position the cloned middle set exactly where the scroll intro left
+            // the first card, so activation feels continuous.
+            feedScrollX = cardNaturalX[0] - priorFirstCardLeft;
+            railOverflow = feedTrack ? Math.max(0, feedTrack.scrollWidth - window.innerWidth) : 0;
+            if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
 
             setFeedHoverActive(true);
             ensureFeedDots();
@@ -1084,6 +1242,15 @@ document.addEventListener('DOMContentLoaded', () => {
             feedStrip.removeEventListener('touchstart', onRailTouchStart);
             feedStrip.removeEventListener('touchmove',  onRailTouchMove);
             feedStrip.removeEventListener('touchend',   onRailTouchEnd);
+
+            // Remove infinite clone sets and reset state
+            if (_infiniteClones && feedTrack) {
+                feedTrack.querySelectorAll('[data-infinite-clone]').forEach(el => el.remove());
+            }
+            _singleSetWidth = 0;
+            _infiniteClones = null;
+            cardNaturalX = null;
+
             if (feedDots) {
                 feedDots.style.opacity = '0';
                 feedDots.style.pointerEvents = 'none';
@@ -1113,17 +1280,25 @@ document.addEventListener('DOMContentLoaded', () => {
             _loopTouchY = e.touches[0].clientY;
             _loopTouchX = e.touches[0].clientX;
         }
+        function onHomeLoopTouchMove(e) {
+            // At page top, intercept downward swipe to prevent browser pull-to-refresh
+            // from stealing the gesture before touchend fires.
+            if (feedLooping || window.scrollY > 10) return;
+            const dy = e.touches[0].clientY - _loopTouchY;
+            if (dy > 8) e.preventDefault();
+        }
         function onHomeLoopTouchEnd(e) {
-            if (feedLooping || window.scrollY > 1) return;
+            if (feedLooping || window.scrollY > 10) return;
             const dy = e.changedTouches[0].clientY - _loopTouchY;
             const dx = e.changedTouches[0].clientX - _loopTouchX;
             const delta = Math.abs(dx) >= Math.abs(dy) ? dx : dy;
-            if (delta > 40) loopHomeToFeedEnd();
+            if (delta > 30) loopHomeToFeedEnd();
         }
 
         window.addEventListener('scroll', updateWork, { passive: true });
         window.addEventListener('wheel', onPageLoopWheel, { passive: false });
         window.addEventListener('touchstart', onHomeLoopTouchStart, { passive: true });
+        window.addEventListener('touchmove',  onHomeLoopTouchMove,  { passive: false });
         window.addEventListener('touchend',   onHomeLoopTouchEnd,   { passive: true });
         updateWork();
 
@@ -1132,7 +1307,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 feedActive = true;
                 lockNav(navFeed);
-                const target = workSection.offsetTop + 0.77 * (workSection.offsetHeight - window.innerHeight);
+                const target = workSection.offsetTop + 0.93 * (workSection.offsetHeight - window.innerHeight);
                 window.scrollTo({ top: target, behavior: 'smooth' });
             });
         }
@@ -1147,69 +1322,34 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     /* ─── Nav burger (mobile portrait: HOME / FEATURED / FEED) ── */
-    const navBurgerBtn  = document.getElementById('navbar-nav-burger');
-    const navDropdown   = document.getElementById('nav-dropdown');
-    const navDropFeed   = document.getElementById('nav-dropdown-feed');
-
-    function openNavDropdown() {
-        if (!navDropdown || !navBurgerBtn) return;
-        navDropdown.classList.add('is-open');
-        navBurgerBtn.classList.add('is-open');
-        navBurgerBtn.setAttribute('aria-expanded', 'true');
-    }
-
-    function closeNavDropdown() {
-        if (!navDropdown || !navBurgerBtn) return;
-        navDropdown.classList.remove('is-open');
-        navBurgerBtn.classList.remove('is-open');
-        navBurgerBtn.setAttribute('aria-expanded', 'false');
-    }
-
-    if (navBurgerBtn) {
-        navBurgerBtn.addEventListener('click', e => {
-            e.stopPropagation();
-            navDropdown.classList.contains('is-open') ? closeNavDropdown() : openNavDropdown();
-        });
-    }
-
+    // Route the bottom sheet links through the same handlers as the desktop nav.
     if (navDropdown) {
-        // Close when any link is tapped
         navDropdown.querySelectorAll('.nav-dropdown__link').forEach(link => {
-            link.addEventListener('click', () => closeNavDropdown());
+            link.addEventListener('click', e => {
+                const section = getNavSection(link);
+                const target = [navHome, navFeatured, navFeed].find(nav => getNavSection(nav) === section);
+                if (!target) return;
+                e.preventDefault();
+                target.click();
+            });
         });
     }
-
-    // Wire FEED link in dropdown to the same scroll behaviour as the navbar FEED link
-    if (navDropFeed && navFeed) {
-        navDropFeed.addEventListener('click', e => {
-            e.preventDefault();
-            closeNavDropdown();
-            navFeed.click();
-        });
-    }
-
-    // Close on outside tap
-    document.addEventListener('click', e => {
-        if (navDropdown && navDropdown.classList.contains('is-open') &&
-            !navDropdown.contains(e.target) && e.target !== navBurgerBtn) {
-            closeNavDropdown();
-        }
-    });
 
     // Keep active state in sync with the main nav active state
-    function syncNavDropdownActive() {
+    function syncNavDropdownActive(activeSection) {
         if (!navDropdown) return;
+        if (typeof activeSection !== 'string') {
+            activeSection = getNavSection(document.querySelector('.home-navbar__navlink--active'));
+        }
         navDropdown.querySelectorAll('.nav-dropdown__link').forEach(link => {
-            link.classList.remove('nav-dropdown__link--active');
-        });
-        // Match by href against the currently active center navlink
-        const activeHref = document.querySelector('.home-navbar__navlink--active')?.getAttribute('href');
-        navDropdown.querySelectorAll('.nav-dropdown__link').forEach(link => {
-            if (link.getAttribute('href') === activeHref) link.classList.add('nav-dropdown__link--active');
+            const isActive = getNavSection(link) === activeSection;
+            link.classList.toggle('nav-dropdown__link--active', isActive);
+            if (isActive) link.setAttribute('aria-current', 'page');
+            else link.removeAttribute('aria-current');
         });
     }
 
-    window.addEventListener('scroll', syncNavDropdownActive, { passive: true });
+    window.addEventListener('scroll', () => syncNavDropdownActive(), { passive: true });
     syncNavDropdownActive();
 
     /* ─── Burger menu (mobile portrait) ────────────────────── */
@@ -1418,28 +1558,21 @@ document.addEventListener('DOMContentLoaded', () => {
         const featuredSection = document.getElementById('featured');
 
         if (navCenterLinks.length && navFeaturedLink && featuredSection) {
-            function setActiveNav(link) {
-                navCenterLinks.forEach(l => l.classList.remove('home-navbar__navlink--active'));
-                link.classList.add('home-navbar__navlink--active');
-            }
-
             function updateNavActive() {
-                if (feedActive || navLocked) return;
-                const rect = featuredSection.getBoundingClientRect();
-                const inFeatured = rect.top < window.innerHeight && rect.bottom > 0;
-                setActiveNav(inFeatured ? navFeaturedLink : navCenterLinks[0]);
+                if (navLocked) return;
+                setNavActive(getScrollNavActive());
             }
 
             window.addEventListener('scroll', updateNavActive, { passive: true });
             updateNavActive();
 
-            // Slow scroll to p=0.56 (panel fully open on first card)
+            // Slow scroll to pAnim=0.56 (first project panel fully open): scrolled = 0.56*0.65*total = 0.364*total
             navFeaturedLink.addEventListener('click', (e) => {
                 e.preventDefault();
                 feedActive = false;
                 lockNav(navFeaturedLink);
                 const total  = featuredSection.offsetHeight - window.innerHeight;
-                const target = featuredSection.getBoundingClientRect().top + window.scrollY + 0.56 * total;
+                const target = featuredSection.getBoundingClientRect().top + window.scrollY + 0.364 * total;
                 const start  = window.scrollY;
                 const dist   = target - start;
                 const dur    = 1400;

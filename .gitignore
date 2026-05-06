@@ -5,3 +5,6 @@ alternate-style.css
 .edge-headless-profile/
 .claude/
 *.env
+*.aep
+*.psd
+*_AME/
