@@ -392,6 +392,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let hoveredCardIdx  = -1;
         let feedHoverActive = false;
         let feedLooping     = false;
+        let _rtX = 0, _rtY = 0, _rtScrollX0 = 0, _rtAxis = null, _rtPanning = false;
+        let _loopTouchY = 0, _loopTouchX = 0;
         const FEED_CHROME_TRIGGER_RATIO = 0.40;
         const LOOP_SCROLL_DURATION = 1500;
         const LOOP_CLOUDS_CLASS = 'home-alt--loop-clouds';
@@ -989,6 +991,37 @@ document.addEventListener('DOMContentLoaded', () => {
             panFeedTo(feedScrollX + delta, false);
         }
 
+        function onRailTouchStart(e) {
+            if (feedLooping) return;
+            _rtX = e.touches[0].clientX;
+            _rtY = e.touches[0].clientY;
+            _rtScrollX0 = feedScrollX;
+            _rtAxis = null;
+            _rtPanning = false;
+        }
+
+        function onRailTouchMove(e) {
+            if (feedLooping) { e.preventDefault(); return; }
+            const dx = e.touches[0].clientX - _rtX;
+            const dy = e.touches[0].clientY - _rtY;
+            if (!_rtAxis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
+                _rtAxis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
+            }
+            if (_rtAxis === 'h') {
+                e.preventDefault();
+                _rtPanning = true;
+                panFeedTo(_rtScrollX0 - dx, false);
+            }
+        }
+
+        function onRailTouchEnd(e) {
+            if (feedLooping || !_rtPanning) return;
+            const dx = e.changedTouches[0].clientX - _rtX;
+            if (feedScrollX >= railOverflow - 1 && dx < -30) {
+                loopFeedToHome();
+            }
+        }
+
         function enterRailMode() {
             if (feedRailActive) return;
             feedRailActive = true;
@@ -1003,6 +1036,9 @@ document.addEventListener('DOMContentLoaded', () => {
             setFeedChromeOpacity(1, true);
             updateDots();
             window.addEventListener('wheel', onRailWheel, { passive: false });
+            feedStrip.addEventListener('touchstart', onRailTouchStart, { passive: true });
+            feedStrip.addEventListener('touchmove',  onRailTouchMove,  { passive: false });
+            feedStrip.addEventListener('touchend',   onRailTouchEnd,   { passive: true });
         }
 
         function exitRailMode() {
@@ -1010,6 +1046,9 @@ document.addEventListener('DOMContentLoaded', () => {
             feedRailActive = false;
             feedStrip.classList.remove('is-rail-active');
             window.removeEventListener('wheel', onRailWheel);
+            feedStrip.removeEventListener('touchstart', onRailTouchStart);
+            feedStrip.removeEventListener('touchmove',  onRailTouchMove);
+            feedStrip.removeEventListener('touchend',   onRailTouchEnd);
             if (feedDots) {
                 feedDots.style.opacity = '0';
                 feedDots.style.pointerEvents = 'none';
@@ -1035,8 +1074,22 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
+        function onHomeLoopTouchStart(e) {
+            _loopTouchY = e.touches[0].clientY;
+            _loopTouchX = e.touches[0].clientX;
+        }
+        function onHomeLoopTouchEnd(e) {
+            if (feedLooping || window.scrollY > 1) return;
+            const dy = e.changedTouches[0].clientY - _loopTouchY;
+            const dx = e.changedTouches[0].clientX - _loopTouchX;
+            const delta = Math.abs(dx) >= Math.abs(dy) ? dx : dy;
+            if (delta > 40) loopHomeToFeedEnd();
+        }
+
         window.addEventListener('scroll', updateWork, { passive: true });
         window.addEventListener('wheel', onPageLoopWheel, { passive: false });
+        window.addEventListener('touchstart', onHomeLoopTouchStart, { passive: true });
+        window.addEventListener('touchend',   onHomeLoopTouchEnd,   { passive: true });
         updateWork();
 
         if (navFeed) {
