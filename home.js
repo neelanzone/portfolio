@@ -393,6 +393,8 @@ document.addEventListener('DOMContentLoaded', () => {
         let feedHoverActive = false;
         let feedLooping     = false;
         let _rtX = 0, _rtY = 0, _rtScrollX0 = 0, _rtAxis = null, _rtPanning = false;
+        let _rtVelHistory = [];
+        let _panGen = 0;
         let _loopTouchY = 0, _loopTouchX = 0;
         const FEED_CHROME_TRIGGER_RATIO = 0.40;
         const LOOP_SCROLL_DURATION = 1500;
@@ -700,17 +702,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 dot.classList.toggle('feed-dot--active', i === activeIdx));
         }
 
-        function panFeedTo(targetX, animate) {
+        function panFeedTo(targetX, animate, duration) {
             const clamp = Math.max(0, Math.min(railOverflow, targetX));
+            const gen = ++_panGen;
             if (!animate) {
                 feedScrollX = clamp;
                 if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
                 updateDots();
                 return;
             }
+            const dur = duration || 380;
             const start = feedScrollX, t0 = performance.now();
             (function tick(now) {
-                const t = Math.min(1, (now - t0) / 380);
+                if (_panGen !== gen) return;
+                const t = Math.min(1, (now - t0) / dur);
                 feedScrollX = start + (clamp - start) * (1 - Math.pow(1 - t, 3));
                 if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
                 updateDots();
@@ -998,12 +1003,15 @@ document.addEventListener('DOMContentLoaded', () => {
             _rtScrollX0 = feedScrollX;
             _rtAxis = null;
             _rtPanning = false;
+            _rtVelHistory = [{ x: e.touches[0].clientX, t: performance.now() }];
+            _panGen++; // cancel any in-flight snap animation
         }
 
         function onRailTouchMove(e) {
             if (feedLooping) { e.preventDefault(); return; }
-            const dx = e.touches[0].clientX - _rtX;
-            const dy = e.touches[0].clientY - _rtY;
+            const touch = e.touches[0];
+            const dx = touch.clientX - _rtX;
+            const dy = touch.clientY - _rtY;
             if (!_rtAxis && (Math.abs(dx) > 6 || Math.abs(dy) > 6)) {
                 _rtAxis = Math.abs(dx) >= Math.abs(dy) ? 'h' : 'v';
             }
@@ -1011,15 +1019,42 @@ document.addEventListener('DOMContentLoaded', () => {
                 e.preventDefault();
                 _rtPanning = true;
                 panFeedTo(_rtScrollX0 - dx, false);
+                const now = performance.now();
+                _rtVelHistory.push({ x: touch.clientX, t: now });
+                // keep only last 80ms
+                while (_rtVelHistory.length > 1 && now - _rtVelHistory[0].t > 80) _rtVelHistory.shift();
             }
         }
 
         function onRailTouchEnd(e) {
             if (feedLooping || !_rtPanning) return;
             const dx = e.changedTouches[0].clientX - _rtX;
+
             if (feedScrollX >= railOverflow - 1 && dx < -30) {
                 loopFeedToHome();
+                return;
             }
+
+            // Compute velocity (px/ms), positive = scrolling rightward in scroll space
+            let vel = 0;
+            if (_rtVelHistory.length >= 2) {
+                const a = _rtVelHistory[0], b = _rtVelHistory[_rtVelHistory.length - 1];
+                const dt = b.t - a.t;
+                if (dt > 5) vel = -(b.x - a.x) / dt;
+            }
+
+            // Project where momentum would carry; 320ms throw constant
+            const projected = feedScrollX + vel * 320;
+
+            // Snap to nearest card natural position
+            const snapPoints = cardNaturalX ? cardNaturalX.map(x => Math.max(0, Math.min(railOverflow, x))) : [0];
+            const snapTarget = snapPoints.reduce((best, pt) =>
+                Math.abs(pt - projected) < Math.abs(best - projected) ? pt : best, snapPoints[0]);
+
+            // Scale duration with throw distance so fast flicks feel fast
+            const dist = Math.abs(snapTarget - feedScrollX);
+            const dur  = Math.max(280, Math.min(600, dist * 0.9));
+            panFeedTo(snapTarget, true, dur);
         }
 
         function enterRailMode() {
