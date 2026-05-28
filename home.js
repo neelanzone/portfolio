@@ -408,24 +408,16 @@ document.addEventListener('DOMContentLoaded', () => {
         let feedScrollX     = 0;
         let feedRailActive  = false;
         let feedDots        = null;
+        let feedNavArrows   = null;
         let hoveredCardIdx  = -1;
         let feedHoverActive = false;
-        let feedLooping     = false;
         let _rtX = 0, _rtY = 0, _rtScrollX0 = 0, _rtAxis = null, _rtPanning = false;
         let _rtVelHistory = [];
         let _panGen = 0;
-        let _singleSetWidth = 0;    // width of one card set before cloning
-        let _infiniteClones = null; // prepend + append clone elements
         let _railEntryTime  = 0;    // timestamp of last enterRailMode call
-        let _loopTouchY = 0, _loopTouchX = 0;
         const FEED_CHROME_TRIGGER_RATIO = 0.40;
         const RAIL_ENTRY_INPUT_LOCK = 700;
         const RAIL_WHEEL_DELTA_LIMIT = 80;
-        const LOOP_SCROLL_DURATION = 1500;
-        const LOOP_CLOUDS_CLASS = 'home-alt--loop-clouds';
-        const LOOP_CLOUDS_FADING_CLASS = 'home-alt--loop-clouds-fading';
-        const LOOP_HOME_HELD_CLASS = 'home-alt--loop-home-held';
-        const LOOP_CLOUD_FADE_DURATION = 600;
 
         function ensureFeedDots() {
             if (feedDots || !feedStrip?.parentElement) return feedDots;
@@ -436,14 +428,54 @@ document.addEventListener('DOMContentLoaded', () => {
                 const dot = document.createElement('button');
                 dot.className = 'feed-dot';
                 dot.setAttribute('aria-label', `Feed item ${i + 1}`);
-                dot.addEventListener('click', () =>
-                    panFeedTo(cardNaturalX[i], true, undefined, normalizeScrollX));
+                dot.addEventListener('click', () => panFeedTo(centeredX(i), true));
                 feedDots.appendChild(dot);
             });
             feedDots.style.opacity = '0';
             feedDots.style.pointerEvents = 'none';
             feedStrip.parentElement.appendChild(feedDots);
             return feedDots;
+        }
+
+        function makeSvgChevron(dir) {
+            const svg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+            svg.setAttribute('viewBox', '0 0 20 20');
+            svg.setAttribute('fill', 'none');
+            const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+            path.setAttribute('d', dir === 'left'
+                ? 'M13 4L7 10L13 16'
+                : 'M7 4L13 10L7 16');
+            path.setAttribute('stroke', 'white');
+            path.setAttribute('stroke-width', '1.5');
+            path.setAttribute('stroke-linecap', 'round');
+            path.setAttribute('stroke-linejoin', 'round');
+            svg.appendChild(path);
+            return svg;
+        }
+
+        function ensureFeedArrows() {
+            if (feedNavArrows || !feedStrip?.parentElement) return;
+
+            feedNavArrows = document.createElement('div');
+            feedNavArrows.className = 'feed-nav-arrows';
+
+            const prev = document.createElement('button');
+            prev.className = 'feed-nav-arrow feed-nav-arrow--prev';
+            prev.setAttribute('aria-label', 'Previous');
+            prev.appendChild(makeSvgChevron('left'));
+            prev.addEventListener('click', () => navigateFeed(-1));
+
+            const next = document.createElement('button');
+            next.className = 'feed-nav-arrow feed-nav-arrow--next';
+            next.setAttribute('aria-label', 'Next');
+            next.appendChild(makeSvgChevron('right'));
+            next.addEventListener('click', () => navigateFeed(1));
+
+            feedNavArrows.appendChild(prev);
+            feedNavArrows.appendChild(next);
+            feedNavArrows.style.opacity = '0';
+            feedNavArrows.style.pointerEvents = 'none';
+            feedStrip.parentElement.appendChild(feedNavArrows);
         }
 
         function setFeedChromeOpacity(opacity, enableDots) {
@@ -459,6 +491,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 Array.from(feedDots.children).forEach(dot => {
                     dot.style.pointerEvents = dotsEnabled ? 'auto' : 'none';
                 });
+            }
+            if (feedNavArrows) {
+                const arrowsEnabled = enableDots && value > 0;
+                feedNavArrows.style.opacity = value;
+                feedNavArrows.style.pointerEvents = arrowsEnabled ? 'auto' : 'none';
             }
         }
 
@@ -761,25 +798,31 @@ document.addEventListener('DOMContentLoaded', () => {
 
         /* ─── Feed rail controller ───────────────────────────── */
 
+        function centeredX(i) {
+            return cardNaturalX[i] + (cardMediaWidths[i] || 0) / 2 - window.innerWidth / 2;
+        }
+
+        function closestCardIndex() {
+            if (!cardNaturalX) return 0;
+            let best = 0, minDist = Infinity;
+            cardNaturalX.forEach((_, i) => {
+                const d = Math.abs(centeredX(i) - feedScrollX);
+                if (d < minDist) { minDist = d; best = i; }
+            });
+            return best;
+        }
+
         function updateDots() {
             if (!feedDots || !cardNaturalX || hoveredCardIdx !== -1) return;
-            let activeIdx = 0, minDist = Infinity;
-            cardNaturalX.forEach((x, i) => {
-                const d = _singleSetWidth > 0
-                    ? Math.min(
-                        Math.abs(x - feedScrollX),
-                        Math.abs(x - _singleSetWidth - feedScrollX),
-                        Math.abs(x + _singleSetWidth - feedScrollX)
-                      )
-                    : Math.abs(x - feedScrollX);
-                if (d < minDist) { minDist = d; activeIdx = i; }
-            });
+            const activeIdx = closestCardIndex();
             Array.from(feedDots.children).forEach((dot, i) =>
                 dot.classList.toggle('feed-dot--active', i === activeIdx));
         }
 
         function panFeedTo(targetX, animate, duration, onComplete) {
-            const clamp = _singleSetWidth > 0 ? targetX : Math.max(0, Math.min(railOverflow, targetX));
+            const lo = cardNaturalX?.length ? centeredX(0) : 0;
+            const hi = cardNaturalX?.length ? centeredX(cardNaturalX.length - 1) : railOverflow;
+            const clamp = Math.max(lo, Math.min(hi, targetX));
             const gen = ++_panGen;
             if (!animate) {
                 feedScrollX = clamp;
@@ -801,284 +844,21 @@ document.addEventListener('DOMContentLoaded', () => {
             })(t0);
         }
 
-        function normalizeScrollX() {
-            if (!_singleSetWidth || !feedTrack || !cardNaturalX) return;
-            const lo = cardNaturalX[0];
-            const min = lo - _singleSetWidth;
-            const max = lo + _singleSetWidth;
-            let normalized = feedScrollX;
-            if (feedScrollX < min) normalized += _singleSetWidth;
-            else if (feedScrollX >= max) normalized -= _singleSetWidth;
 
-            if (Math.abs(normalized - feedScrollX) > 0.5) {
-                feedScrollX = normalized;
-                feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
-                updateDots();
-            }
-        }
+        let _wheelSnapTimer = null;
 
-        function removeIdsFromClone(el) {
-            el.removeAttribute('id');
-            el.querySelectorAll('[id]').forEach(child => child.removeAttribute('id'));
-            el.setAttribute('aria-hidden', 'true');
-            el.querySelectorAll('a, button, input, select, textarea, [tabindex]').forEach(child => {
-                child.setAttribute('tabindex', '-1');
-            });
-        }
-
-        function jumpScrollInstant(top) {
-            const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-            document.documentElement.style.scrollBehavior = 'auto';
-            window.scrollTo({ top, left: 0, behavior: 'auto' });
-            document.documentElement.style.scrollBehavior = previousScrollBehavior;
-            window.dispatchEvent(new Event('scroll'));
-        }
-
-        function animateScrollTo(target, duration, onComplete, onUpdate) {
-            const previousScrollBehavior = document.documentElement.style.scrollBehavior;
-            document.documentElement.style.scrollBehavior = 'auto';
-            const start = window.scrollY;
-            const dist = target - start;
-            const t0 = performance.now();
-
-            function step(now) {
-                const t = Math.min(1, (now - t0) / duration);
-                const ease = t * t * t * (t * (t * 6 - 15) + 10);
-                window.scrollTo(0, start + dist * ease);
-                if (onUpdate) onUpdate(ease, t);
-                if (t < 1) {
-                    requestAnimationFrame(step);
-                } else {
-                    document.documentElement.style.scrollBehavior = previousScrollBehavior;
-                    if (onComplete) onComplete();
-                }
-            }
-
-            requestAnimationFrame(step);
-        }
-
-        function blockLoopWheel(e) {
-            if (feedLooping) e.preventDefault();
-        }
-
-        function beginLoop() {
-            feedLooping = true;
-            window.addEventListener('wheel', blockLoopWheel, { passive: false, capture: true });
-            window.addEventListener('touchmove', blockLoopWheel, { passive: false, capture: true });
-        }
-
-        function endLoop() {
-            feedLooping = false;
-            window.removeEventListener('wheel', blockLoopWheel, { capture: true });
-            window.removeEventListener('touchmove', blockLoopWheel, { capture: true });
-        }
-
-        function setLoopCloudOpacity(opacity) {
-            document.body.style.setProperty('--loop-cloud-opacity', String(Math.max(0, Math.min(1, opacity))));
-        }
-
-        function prepareLoopClouds(opacity) {
-            document.body.classList.add(LOOP_CLOUDS_CLASS);
-            document.body.classList.remove(LOOP_CLOUDS_FADING_CLASS);
-            setLoopCloudOpacity(opacity);
-        }
-
-        function resetLoopClouds() {
-            document.body.classList.remove(LOOP_CLOUDS_CLASS, LOOP_CLOUDS_FADING_CLASS);
-            document.body.style.removeProperty('--loop-cloud-opacity');
-        }
-
-        function fadeLoopCloudsInAfterHome(onComplete) {
-            prepareLoopClouds(0);
-            document.body.offsetHeight;
-            requestAnimationFrame(() => {
-                document.body.classList.add(LOOP_CLOUDS_FADING_CLASS);
-                setLoopCloudOpacity(1);
-                window.setTimeout(() => {
-                    resetLoopClouds();
-                    if (onComplete) onComplete();
-                }, LOOP_CLOUD_FADE_DURATION);
-            });
-        }
-
-        function fadeLoopCloudsOutBeforeFeed(onComplete) {
-            prepareLoopClouds(1);
-            document.body.offsetHeight;
-            requestAnimationFrame(() => {
-                document.body.classList.add(LOOP_CLOUDS_FADING_CLASS);
-                setLoopCloudOpacity(0);
-                window.setTimeout(() => {
-                    if (onComplete) onComplete();
-                }, LOOP_CLOUD_FADE_DURATION);
-            });
-        }
-
-        function showHomeHeroForLoop() {
-            const heroStack = document.querySelector('.hero-stack');
-            document.body.classList.add(LOOP_HOME_HELD_CLASS);
-            if (!heroStack) return;
-
-            heroStack.style.visibility = 'visible';
-            heroStack.style.pointerEvents = '';
-            Array.from(heroStack.children).forEach(child => {
-                child.style.opacity = '1';
-            });
-        }
-
-        function releaseHomeHeroForLoop() {
-            document.body.classList.remove(LOOP_HOME_HELD_CLASS);
-        }
-
-        function createHomeLoopClone() {
-            const heroStage = document.querySelector('.home-hero-stage');
-            if (!heroStage) return null;
-
-            const clone = heroStage.cloneNode(true);
-            clone.classList.add('loop-home-clone');
-            removeIdsFromClone(clone);
-
-            const clonedHeroStack = clone.querySelector('.hero-stack');
-            if (clonedHeroStack) {
-                clonedHeroStack.style.visibility = 'visible';
-                clonedHeroStack.style.pointerEvents = '';
-                Array.from(clonedHeroStack.children).forEach(child => {
-                    child.style.opacity = '1';
-                });
-            }
-
-            workSection.insertAdjacentElement('afterend', clone);
-            return clone;
-        }
-
-        function createFeedEndLoopClone() {
-            if (!feedStrip) return null;
-
-            ensureFeedDots();
-            const section = document.createElement('section');
-            section.className = 'loop-feed-end-clone';
-            section.setAttribute('aria-hidden', 'true');
-
-            const overflow = feedRailActive ? feedScrollX : (feedTrack ? Math.max(0, feedTrack.offsetWidth - window.innerWidth) : 0);
-            const feedClone = feedStrip.cloneNode(true);
-            removeIdsFromClone(feedClone);
-            feedClone.classList.add('is-feed-hover-active', 'is-rail-active');
-            feedClone.style.transform = 'translateX(0)';
-            feedClone.style.pointerEvents = 'none';
-            feedClone.querySelectorAll('.feed-card').forEach(card => {
-                card.classList.remove('feed-card--hovered');
-                card.style.pointerEvents = 'none';
-                card.style.transform = '';
-            });
-            feedClone.querySelectorAll('.feed-card__three-container').forEach(container => {
-                container.style.transform = '';
-            });
-            feedClone.querySelectorAll('.feed-card__caption').forEach(cap => {
-                cap.style.opacity = '1';
-            });
-            const clonedTrack = feedClone.querySelector('.feed-rail-track');
-            if (clonedTrack) clonedTrack.style.transform = `translateX(${-overflow}px)`;
-            section.appendChild(feedClone);
-
-            if (feedDots) {
-                const dotsClone = feedDots.cloneNode(true);
-                removeIdsFromClone(dotsClone);
-                dotsClone.style.opacity = '1';
-                dotsClone.style.pointerEvents = 'none';
-                const dots = Array.from(dotsClone.children);
-                dots.forEach((dot, i) => {
-                    dot.style.pointerEvents = 'none';
-                    dot.classList.toggle('feed-dot--active', i === dots.length - 1);
-                });
-                section.appendChild(dotsClone);
-            }
-
-            const heroStage = document.querySelector('.home-hero-stage');
-            if (heroStage) {
-                heroStage.insertAdjacentElement('beforebegin', section);
-            } else {
-                document.body.insertBefore(section, document.body.firstChild);
-            }
-            return section;
-        }
-
-        function loopFeedToHome() {
-            if (feedLooping) return;
-            const homeClone = createHomeLoopClone();
-            if (!homeClone) return;
-
-            beginLoop();
-            feedActive = false;
-            navLocked = false;
-            clearTimeout(_navLockTimer);
-            window.removeEventListener('scrollend', _unlockNav);
-            setNavActive(navHome);
-            prepareLoopClouds(0);
-
-            animateScrollTo(homeClone.offsetTop, LOOP_SCROLL_DURATION, () => {
-                feedScrollX = 0;
-                jumpScrollInstant(0);
-                homeClone.remove();
-                requestAnimationFrame(() => {
-                    updateWork();
-                    fadeLoopCloudsInAfterHome(endLoop);
-                });
-            });
-        }
-
-        function loopHomeToFeedEnd() {
-            if (feedLooping) return;
-            const feedClone = createFeedEndLoopClone();
-            if (!feedClone) return;
-
-            beginLoop();
-            showHomeHeroForLoop();
-            jumpScrollInstant(feedClone.offsetHeight);
-            feedActive = true;
-            navLocked = false;
-            clearTimeout(_navLockTimer);
-            window.removeEventListener('scrollend', _unlockNav);
-            setNavActive(navFeed);
-
-            fadeLoopCloudsOutBeforeFeed(() => {
-                animateScrollTo(0, LOOP_SCROLL_DURATION, () => {
-                    releaseHomeHeroForLoop();
-                    feedClone.remove();
-                    const total = workSection.offsetHeight - window.innerHeight;
-                    jumpScrollInstant(workSection.offsetTop + total * 0.925);
-                    resetLoopClouds();
-                    updateWork();
-                    if (!feedRailActive) enterRailMode();
-                    panFeedTo(cardNaturalX[cardNaturalX.length - 1], false);
-                    setFeedChromeOpacity(1, true);
-                    setFeedHoverActive(true);
-                    endLoop();
-                });
-            });
-        }
-
-        function isSidebarWheelZone(e) {
-            if (!homeSidebar || !indexBlock) return false;
-            if (indexBlock.scrollHeight <= indexBlock.clientHeight + 1) return false;
-            return e.clientX <= homeSidebar.getBoundingClientRect().right + 32;
-        }
-
-        function onPageLoopWheel(e) {
-            if (feedLooping || e.defaultPrevented || window.scrollY > 1 || isSidebarWheelZone(e)) return;
-            const delta = Math.abs(e.deltaX) >= Math.abs(e.deltaY) ? e.deltaX : e.deltaY;
-            if (delta >= 0) return;
-            e.preventDefault();
-            loopHomeToFeedEnd();
+        function scheduleWheelSnap() {
+            if (_wheelSnapTimer) clearTimeout(_wheelSnapTimer);
+            _wheelSnapTimer = setTimeout(() => {
+                _wheelSnapTimer = null;
+                if (!feedRailActive || !cardNaturalX) return;
+                const snapX = centeredX(closestCardIndex());
+                panFeedTo(snapX, true);
+            }, 150);
         }
 
         function onRailWheel(e) {
-            if (feedLooping) {
-                e.preventDefault();
-                return;
-            }
-
-            // The wheel gesture that scrolls the page into Feed often continues
-            // for a few inertial frames. Block it before interpreting any axis,
-            // otherwise entry momentum immediately drives the rail/loop.
+            // Block inertial frames from entry scroll gesture
             if (performance.now() - _railEntryTime < RAIL_ENTRY_INPUT_LOCK) {
                 e.preventDefault();
                 return;
@@ -1088,22 +868,15 @@ document.addEventListener('DOMContentLoaded', () => {
             const absY = Math.abs(e.deltaY);
             const isH = absX > Math.max(4, absY * 1.15);
 
-            if (!isH) {
-                if (e.deltaY > 0) {
-                    e.preventDefault();
-                    loopFeedToHome();
-                }
-                return;
-            }
+            if (!isH) return;
 
             e.preventDefault();
             const deltaX = Math.max(-RAIL_WHEEL_DELTA_LIMIT, Math.min(RAIL_WHEEL_DELTA_LIMIT, e.deltaX));
             panFeedTo(feedScrollX + deltaX, false);
-            if (_singleSetWidth > 0) normalizeScrollX();
+            scheduleWheelSnap();
         }
 
         function onRailTouchStart(e) {
-            if (feedLooping) return;
             _rtX = e.touches[0].clientX;
             _rtY = e.touches[0].clientY;
             _rtScrollX0 = feedScrollX;
@@ -1114,7 +887,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function onRailTouchMove(e) {
-            if (feedLooping) { e.preventDefault(); return; }
             const touch = e.touches[0];
             const dx = touch.clientX - _rtX;
             const dy = touch.clientY - _rtY;
@@ -1133,22 +905,10 @@ document.addEventListener('DOMContentLoaded', () => {
         }
 
         function onRailTouchEnd(e) {
-            if (feedLooping) return;
-            const dx = e.changedTouches[0].clientX - _rtX;
-            const dy = e.changedTouches[0].clientY - _rtY;
-
-            if (_rtAxis === 'v' && dy < -40) { loopFeedToHome(); return; }
             if (!_rtPanning) return;
 
-            // Build snap points across all three clone zones for seamless wrap
             const snapPoints = cardNaturalX
-                ? (_singleSetWidth > 0
-                    ? [
-                        ...cardNaturalX.map(x => x - _singleSetWidth),
-                        ...cardNaturalX,
-                        ...cardNaturalX.map(x => x + _singleSetWidth)
-                      ]
-                    : cardNaturalX.map(x => Math.max(0, Math.min(railOverflow, x))))
+                ? cardNaturalX.map((_, i) => centeredX(i))
                 : [0];
 
             let vel = 0;
@@ -1163,7 +923,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 Math.abs(pt - projected) < Math.abs(best - projected) ? pt : best, snapPoints[0]);
             const dist = Math.abs(snapTarget - feedScrollX);
             const dur  = Math.max(280, Math.min(600, dist * 0.9));
-            panFeedTo(snapTarget, true, dur, normalizeScrollX);
+            panFeedTo(snapTarget, true, dur);
+        }
+
+        function navigateFeed(dir) {
+            if (!feedRailActive || !cardNaturalX || !cardMediaWidths) return;
+            const n = cardNaturalX.length;
+            const next = Math.max(0, Math.min(n - 1, closestCardIndex() + dir));
+            panFeedTo(centeredX(next), true);
+        }
+
+        function onRailKeyDown(e) {
+            if (!feedRailActive) return;
+            if (e.key === 'ArrowRight') { e.preventDefault(); navigateFeed(1); }
+            else if (e.key === 'ArrowLeft')  { e.preventDefault(); navigateFeed(-1); }
         }
 
         function enterRailMode(handoffFirstCardLeft) {
@@ -1187,48 +960,25 @@ document.addEventListener('DOMContentLoaded', () => {
             feedStrip.classList.add('is-rail-active');
             if (feedTrack) feedTrack.style.transform = 'translateX(0)';
 
-            // Force captions to visible BEFORE cloning so clones inherit opacity: 1
             setFeedChromeOpacity(1, false);
+            if (feedTrack) feedTrack.getBoundingClientRect(); // force reflow
 
-            if (feedTrack) {
-                // Measure the single-set width before cloning
-                _singleSetWidth = feedTrack.scrollWidth || feedTrack.offsetWidth;
+            // Measure card positions with zero transform applied
+            const cardRects = feedCards.map(c => c.getBoundingClientRect());
+            cardNaturalX    = cardRects.map(r => r.left);
+            cardMediaWidths = cardRects.map(r => r.width);
 
-                // Prepend + append clones for seamless infinite scroll
-                const origChildren = Array.from(feedTrack.children);
-                const prepend = document.createDocumentFragment();
-                const append  = document.createDocumentFragment();
-                origChildren.forEach(child => {
-                    const ca = child.cloneNode(true);
-                    const cb = child.cloneNode(true);
-                    removeIdsFromClone(ca);
-                    removeIdsFromClone(cb);
-                    ca.setAttribute('data-infinite-clone', 'true');
-                    cb.setAttribute('data-infinite-clone', 'true');
-                    prepend.appendChild(ca);
-                    append.appendChild(cb);
-                });
-                feedTrack.insertBefore(prepend, feedTrack.firstChild);
-                feedTrack.appendChild(append);
-                _infiniteClones = true;
-                feedTrack.getBoundingClientRect(); // force reflow
-            }
-
-            // Re-measure cardNaturalX — original cards now in the middle set
-            const wraps = feedCards.map(c => c.querySelector('.feed-card__media-wrap') || c);
-            cardNaturalX = wraps.map(w => w.getBoundingClientRect().left);
-
-            // Position the cloned middle set exactly where the scroll intro left
-            // the first card, so activation feels continuous.
             feedScrollX = cardNaturalX[0] - priorFirstCardLeft;
             railOverflow = feedTrack ? Math.max(0, feedTrack.scrollWidth - window.innerWidth) : 0;
             if (feedTrack) feedTrack.style.transform = `translateX(${-feedScrollX}px)`;
 
             setFeedHoverActive(true);
             ensureFeedDots();
+            ensureFeedArrows();
             setFeedChromeOpacity(1, true);
             updateDots();
             window.addEventListener('wheel', onRailWheel, { passive: false });
+            document.addEventListener('keydown', onRailKeyDown);
             feedStrip.addEventListener('touchstart', onRailTouchStart, { passive: true });
             feedStrip.addEventListener('touchmove',  onRailTouchMove,  { passive: false });
             feedStrip.addEventListener('touchend',   onRailTouchEnd,   { passive: true });
@@ -1238,22 +988,22 @@ document.addEventListener('DOMContentLoaded', () => {
             if (!feedRailActive) return;
             feedRailActive = false;
             feedStrip.classList.remove('is-rail-active');
+            if (_wheelSnapTimer) { clearTimeout(_wheelSnapTimer); _wheelSnapTimer = null; }
             window.removeEventListener('wheel', onRailWheel);
+            document.removeEventListener('keydown', onRailKeyDown);
             feedStrip.removeEventListener('touchstart', onRailTouchStart);
             feedStrip.removeEventListener('touchmove',  onRailTouchMove);
             feedStrip.removeEventListener('touchend',   onRailTouchEnd);
 
-            // Remove infinite clone sets and reset state
-            if (_infiniteClones && feedTrack) {
-                feedTrack.querySelectorAll('[data-infinite-clone]').forEach(el => el.remove());
-            }
-            _singleSetWidth = 0;
-            _infiniteClones = null;
             cardNaturalX = null;
 
             if (feedDots) {
                 feedDots.style.opacity = '0';
                 feedDots.style.pointerEvents = 'none';
+            }
+            if (feedNavArrows) {
+                feedNavArrows.style.opacity = '0';
+                feedNavArrows.style.pointerEvents = 'none';
             }
             setFeedHoverActive(false);
         }
@@ -1276,30 +1026,7 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
 
-        function onHomeLoopTouchStart(e) {
-            _loopTouchY = e.touches[0].clientY;
-            _loopTouchX = e.touches[0].clientX;
-        }
-        function onHomeLoopTouchMove(e) {
-            // At page top, intercept downward swipe to prevent browser pull-to-refresh
-            // from stealing the gesture before touchend fires.
-            if (feedLooping || window.scrollY > 10) return;
-            const dy = e.touches[0].clientY - _loopTouchY;
-            if (dy > 8) e.preventDefault();
-        }
-        function onHomeLoopTouchEnd(e) {
-            if (feedLooping || window.scrollY > 10) return;
-            const dy = e.changedTouches[0].clientY - _loopTouchY;
-            const dx = e.changedTouches[0].clientX - _loopTouchX;
-            const delta = Math.abs(dx) >= Math.abs(dy) ? dx : dy;
-            if (delta > 30) loopHomeToFeedEnd();
-        }
-
         window.addEventListener('scroll', updateWork, { passive: true });
-        window.addEventListener('wheel', onPageLoopWheel, { passive: false });
-        window.addEventListener('touchstart', onHomeLoopTouchStart, { passive: true });
-        window.addEventListener('touchmove',  onHomeLoopTouchMove,  { passive: false });
-        window.addEventListener('touchend',   onHomeLoopTouchEnd,   { passive: true });
         updateWork();
 
         if (navFeed) {
@@ -1518,15 +1245,6 @@ document.addEventListener('DOMContentLoaded', () => {
         let _heroVisible = true;
 
         function updateHeroOpacity() {
-            if (document.body.classList.contains('home-alt--loop-home-held')) {
-                heroChildren.forEach(el => { el.style.opacity = '1'; });
-                heroStack.style.visibility    = 'visible';
-                heroStack.style.pointerEvents = '';
-                cloudLayers.forEach(l => l.style.transform = 'translateY(0)');
-                if (starsEl) starsEl.style.transform = 'translateY(0)';
-                return;
-            }
-
             const sy = window.scrollY;
             const opacity = Math.max(0, 1 - sy / fadeOver);
             heroChildren.forEach(el => { el.style.opacity = opacity; });

@@ -2384,6 +2384,46 @@ html.dark-theme  .proj-card__desc { color: rgba(180, 195, 255, 0.65); }
     transform: scale(1.6);
 }
 
+.feed-nav-arrows {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    z-index: 11;
+}
+
+.feed-nav-arrow {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgb(255 255 255 / 0.10);
+    border: 1px solid rgb(255 255 255 / 0.18);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    pointer-events: auto;
+    transition: background 0.2s ease;
+    flex-shrink: 0;
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+.feed-nav-arrow:hover {
+    background: rgb(255 255 255 / 0.24);
+}
+
+.feed-nav-arrow svg {
+    width: 18px;
+    height: 18px;
+    display: block;
+}
+
 .work-sticky {
     position: sticky;
     top: 0;
