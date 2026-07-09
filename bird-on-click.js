@@ -427,10 +427,11 @@ class Bird {
 
 // ─── HomepagePerchManager ─────────────────────────────────────────────────────
 //
-// Perch layout for the homepage:
-//  - 5 perches along the top edge of .hero__headline-row ("Design is a little like")
-//  - 1 perch at HOME (12 o'clock) on the sticker ring
-//  - 5 scattered positions covering the rest of the viewport
+// Perch layout (algorithmic, DOM-based):
+//  [0]   one bird on the illustration head (.proxy-illustration)
+//  [1-4] four birds along the top edge of the featured module (.proj-list)
+//  [5-6] two birds on the navbar bottom edge
+//  [7-10] four birds scattered in the upper viewport
 //
 // In DEBUG mode each perch gets an orange draggable handle; dragging one and
 // releasing logs all positions so they can be hardcoded for breakpoints.
@@ -443,12 +444,51 @@ class HomepagePerchManager {
   }
 
   rebuild() {
-    // Desktop positions hand-tuned at 1568×730. Mobile TODO — separate pass.
-    const pts = [
-      {x:613, y:376}, {x:688, y:375}, {x:738, y:377}, {x:830, y:373}, {x:870, y:372},
-      {x:784, y:118},
-      {x:763, y:546}, {x:959, y:378}, {x:931, y:374}, {x:538, y:546}, {x:991, y:548},
-    ];
+    const pts = [];
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+
+    // ── Illustration — head region: perch 0 (boot) only; perch 19 added last ──
+    const illus = document.querySelector('.proxy-illustration');
+    let illusR = null;
+    if (illus) {
+      illusR = illus.getBoundingClientRect();
+      pts.push({ x: Math.round(illusR.left + illusR.width * 0.50), y: Math.round(illusR.top + illusR.height * 0.12) }); // 0
+    }
+
+    // ── Featured module — top edge, asymmetric (perches 1–18) ────────────────
+    const featured = document.querySelector('.proj-list');
+    if (featured) {
+      const r = featured.getBoundingClientRect();
+      const y = Math.round(r.top + 10);
+      // boot cluster (1–5)
+      pts.push({ x: Math.round(r.left + r.width * 0.11), y: y + 0  }); //  1
+      pts.push({ x: Math.round(r.left + r.width * 0.19), y: y - 5  }); //  2
+      pts.push({ x: Math.round(r.left + r.width * 0.64), y: y + 4  }); //  3
+      pts.push({ x: Math.round(r.left + r.width * 0.70), y: y - 2  }); //  4
+      pts.push({ x: Math.round(r.left + r.width * 0.80), y: y + 1  }); //  5
+      // extras — asymmetric fill (6–18)
+      pts.push({ x: Math.round(r.left + r.width * 0.05), y: y + 2  }); //  6
+      pts.push({ x: Math.round(r.left + r.width * 0.26), y: y - 3  }); //  7
+      pts.push({ x: Math.round(r.left + r.width * 0.33), y: y + 5  }); //  8
+      pts.push({ x: Math.round(r.left + r.width * 0.38), y: y - 1  }); //  9
+      pts.push({ x: Math.round(r.left + r.width * 0.44), y: y + 3  }); // 10
+      pts.push({ x: Math.round(r.left + r.width * 0.48), y: y - 4  }); // 11
+      pts.push({ x: Math.round(r.left + r.width * 0.53), y: y + 2  }); // 12
+      pts.push({ x: Math.round(r.left + r.width * 0.58), y: y - 2  }); // 13
+      pts.push({ x: Math.round(r.left + r.width * 0.75), y: y + 4  }); // 14
+      pts.push({ x: Math.round(r.left + r.width * 0.84), y: y - 3  }); // 15
+      pts.push({ x: Math.round(r.left + r.width * 0.88), y: y + 1  }); // 16
+      pts.push({ x: Math.round(r.left + r.width * 0.92), y: y - 5  }); // 17
+      pts.push({ x: Math.round(r.left + r.width * 0.96), y: y + 3  }); // 18
+    }
+
+    // ── Illustration — second head perch, empty on load (perch 19) ───────────
+    if (illusR) {
+      pts.push({ x: Math.round(illusR.left + illusR.width * 0.44), y: Math.round(illusR.top + illusR.height * 0.09) }); // 19
+    }
+
+
     this.perches = pts.map(p => ({ ...p, occupied: false, bird: null }));
 
     if (DEBUG) this._syncDebugHandles();
@@ -691,6 +731,18 @@ document.addEventListener('DOMContentLoaded', async () => {
   const bm = new BirdManager(canvas, pm, sheets);
   bm.start();
   window._birdManager = bm;
+
+  // Spawn 6 birds already sitting — skip the fly-in by jumping straight to idle
+  for (let i = 0; i < 6; i++) {
+    const perch = pm.perches[i];
+    if (!perch) break;
+    const bird = new Bird(perch.x, perch.y, perch, sheets, canvas, pm);
+    bird.x = perch.x;
+    bird.y = perch.y;
+    bird._enterState('idle');
+    pm.markOccupied(perch, bird);
+    bm.birds.push(bird);
+  }
 
   let _rt = null;
   window.addEventListener('resize', () => {

@@ -1235,6 +1235,83 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+    /* ─── Featured project list accordion ───────────────── */
+    const projList = document.getElementById('proj-list');
+    if (projList) {
+        function animateProjCounter(el) {
+            const target = parseInt(el.dataset.target, 10);
+            const suffix = el.dataset.suffix || '';
+            if (isNaN(target)) return;
+            const dur = 700, t0 = performance.now();
+            (function tick(now) {
+                const t = Math.min(1, (now - t0) / dur);
+                const v = 1 - Math.pow(1 - t, 3);
+                el.textContent = Math.round(v * target) + suffix;
+                if (t < 1) requestAnimationFrame(tick);
+            })(t0);
+        }
+
+        projList.querySelectorAll('.proj-list__item').forEach(item => {
+            const header = item.querySelector('.proj-list__header');
+            if (!header) return;
+            let countersFired = item.classList.contains('is-open');
+            if (countersFired) {
+                item.querySelectorAll('.proj-list__data-num[data-target]').forEach(animateProjCounter);
+            }
+            header.addEventListener('click', () => {
+                const isOpen = item.classList.contains('is-open');
+                projList.querySelectorAll('.proj-list__item.is-open').forEach(open => {
+                    open.classList.remove('is-open');
+                    const h = open.querySelector('.proj-list__header');
+                    if (h) h.setAttribute('aria-expanded', 'false');
+                });
+                if (!isOpen) {
+                    item.classList.add('is-open');
+                    header.setAttribute('aria-expanded', 'true');
+                    if (!countersFired) {
+                        countersFired = true;
+                        item.querySelectorAll('.proj-list__data-num[data-target]').forEach(animateProjCounter);
+                    }
+                }
+            });
+        });
+    }
+
+    /* ─── Nav: featured + feed scroll targets ────────────── */
+    const featuredSectionEl = document.getElementById('featured');
+    const feedSectionEl     = document.getElementById('feed-section');
+
+    if (navFeatured && featuredSectionEl) {
+        navFeatured.addEventListener('click', e => {
+            e.preventDefault();
+            lockNav(navFeatured);
+            featuredSectionEl.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+    if (navFeed && feedSectionEl) {
+        navFeed.addEventListener('click', e => {
+            e.preventDefault();
+            lockNav(navFeed);
+            feedSectionEl.scrollIntoView({ behavior: 'smooth' });
+        });
+    }
+
+    /* ─── Nav active state for new section layout ────────── */
+    function getNavSectionForScroll() {
+        if (!featuredSectionEl) return navHome;
+        const sy = window.scrollY;
+        const vpMid = sy + window.innerHeight * 0.5;
+        if (vpMid < featuredSectionEl.offsetTop + 80) return navHome;
+        if (feedSectionEl && vpMid >= feedSectionEl.offsetTop - 80) return navFeed;
+        return navFeatured;
+    }
+
+    window.addEventListener('scroll', () => {
+        if (navLocked) return;
+        setNavActive(getNavSectionForScroll());
+    }, { passive: true });
+    setNavActive(getNavSectionForScroll());
+
     /* ─── Hero fade on scroll ────────────────────────────── */
     const heroStack  = document.querySelector('.hero-stack');
     const heroStage  = document.querySelector('.home-hero-stage');
